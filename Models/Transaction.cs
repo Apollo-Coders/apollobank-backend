@@ -1,4 +1,6 @@
-﻿namespace ApolloBank.Models
+﻿using ApolloBank.Enums;
+
+namespace ApolloBank.Models
 {
     public class Transaction
     {
@@ -8,11 +10,10 @@
         public string? From { get; private set; }
         public DateTime Date { get; private set; }
         public string Description { get; private set; }
-        //Criar Enuns
-        public string Transaction_Type { get; private set; }
+        public TransactionType Transaction_Type { get; private set; }
         public int Account_Id { get; set; }
 
-        public Transaction(int id, int amount, string? to, string? from, DateTime date, string description, string transaction_Type, int account_Id)
+        public Transaction(int id, int amount, string? to, string? from, DateTime date, string description, TransactionType transaction_Type, int account_Id)
         {
             Id = id;
             Amount = amount;
