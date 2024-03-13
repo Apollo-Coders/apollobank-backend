@@ -1,4 +1,4 @@
-﻿namespace ApolloBank.Services.Interfaces
+﻿namespace ApolloBank.Services
 {
     public class TransactionService
     {

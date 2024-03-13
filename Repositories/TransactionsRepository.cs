@@ -7,11 +7,11 @@ namespace ApolloBank.Repositories
 {
     public class TransactionsRepository : ITransactionsRepository
     {
-        private AppDbContext appDbContext;
+        private AppDbContext _appDbContext;
 
         public TransactionsRepository(AppDbContext appDbContext)
         {
-            this.appDbContext = appDbContext;
+            _appDbContext = appDbContext;
         }
 
         public Task<Transaction> AddTransaction(Transaction TransactionTo, Transaction? TransactionFrom)
