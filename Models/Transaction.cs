@@ -11,9 +11,10 @@ namespace ApolloBank.Models
         public DateTime Date { get; private set; }
         public string? Description { get; private set; }
         public TransactionType Transaction_Type { get; private set; }
+        public double Direction { get; set; }
         public int Account_Id { get; set; }
 
-        public Transaction(int id, double amount, string? to, string? from, DateTime date, string description, TransactionType transaction_Type, int account_Id)
+        public Transaction(int id, double amount, string? to, string? from, DateTime date, string? description, TransactionType transaction_Type, double direction, int account_Id)
         {
             Id = id;
             Amount = amount;
@@ -22,6 +23,7 @@ namespace ApolloBank.Models
             Date = date;
             Description = description;
             Transaction_Type = transaction_Type;
+            Direction = direction;
             Account_Id = account_Id;
         }
     }
