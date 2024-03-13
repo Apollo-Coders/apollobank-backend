@@ -1,9 +1,8 @@
-﻿using ApolloBank.DTOs;
-using ApolloBank.Models;
+﻿using ApolloBank.Models;
 using AutoMapper;
 
 
-namespace ApolloBank.Data.Mappings
+namespace ApolloBank.DTOs.Mappings
 {
     public class CommandMappingProfile : Profile
     {

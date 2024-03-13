@@ -1,36 +1,55 @@
 ﻿using ApolloBank.DTOs;
+using ApolloBank.Models;
 using ApolloBank.Repositories.Interfaces;
 using ApolloBank.Services.Interfaces;
+using AutoMapper;
+
 
 namespace ApolloBank.Services
 {
     public class TransactionService : ITransactionService
     {
         private readonly ITransactionsRepository _transactionsRepository;
+        private readonly IMapper _mapper;
 
-        public TransactionService(ITransactionsRepository transactionsRepository)
+        public TransactionService(ITransactionsRepository transactionsRepository, IMapper mapper)
         {
             _transactionsRepository = transactionsRepository;
+            _mapper = mapper;
         }
 
-        public Task<TransactionDTO> AddTransaction(TransactionDTO TransactionTo, TransactionDTO? TransactionFrom)
+
+
+
+        #region Métodos que recebem um objeto DTO e o convertem em uma entidade 
+        public async Task AddTransaction(TransactionDTO TransactionTo, TransactionDTO TransactionFrom)
         {
-            throw new NotImplementedException();
+            var transactionTo = _mapper.Map<Transaction>(TransactionTo);
+            var transactionFrom = _mapper.Map<Transaction>(TransactionFrom);
+
+            await _transactionsRepository.AddTransaction(transactionTo, transactionFrom);
+        }
+        #endregion
+
+
+        #region Métodos que recebem uma entidade e a convertem em um objeto DTO
+        public async Task<IEnumerable<TransactionDTO>> GetAllTransactions(int? id)
+        {
+            var transaction = await _transactionsRepository.GetAllTransactions(id);
+            return _mapper.Map<IEnumerable<TransactionDTO>>(transaction);
         }
 
-        public Task<IEnumerable<TransactionDTO>> GetAllTransactions(int? id)
+        public async Task<IEnumerable<TransactionDTO>> GetCurrentMonthTransactions(int? id)
         {
-            throw new NotImplementedException();
+            var transaction = await _transactionsRepository.GetCurrentMonthTransactions(id);
+            return _mapper.Map<IEnumerable<TransactionDTO>>(transaction);
         }
 
-        public Task<TransactionDTO> GetCurrentMonthTransactions(int? id)
+        public async Task<IEnumerable<TransactionDTO>> GetLastSixMonthsTransactions(int? id)
         {
-            throw new NotImplementedException();
+            var transaction = await _transactionsRepository.GetLastSixMonthsTransactions(id);
+            return _mapper.Map<IEnumerable<TransactionDTO>>(transaction);
         }
-
-        public Task<TransactionDTO> GetLastSixMonthsTransactions(int? id)
-        {
-            throw new NotImplementedException();
-        }
+        #endregion
     }
 }
