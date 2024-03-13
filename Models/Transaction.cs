@@ -9,7 +9,7 @@ namespace ApolloBank.Models
         public string? To { get; private set; }
         public string? From { get; private set; }
         public DateTime Date { get; private set; }
-        public string Description { get; private set; }
+        public string? Description { get; private set; }
         public TransactionType Transaction_Type { get; private set; }
         public int Account_Id { get; set; }
 
