@@ -34,5 +34,9 @@ namespace ApolloBank.DTOs
         public bool Active { get; set; } = true;
         public int? AddressId { get; set; }
         public virtual Address? Address { get; set; }
+        public int AccountId { get; set; }
+        
     }
+
+  
 }

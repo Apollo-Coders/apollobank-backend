@@ -24,5 +24,7 @@ namespace ApolloBank.Models
         public bool Active { get; set; } = true;
         public int? AddressId { get; set; }
         public virtual Address? Address { get; set; }
+        public int AccountId { get; set; }
+        public virtual Account Account { get; set; }= null!;
     }
 }
