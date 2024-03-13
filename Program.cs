@@ -17,6 +17,7 @@ builder.Services.AddSwaggerGen();
 
 //DI de Services
 builder.Services.AddTransient<IAuthService, AuthService>();
+builder.Services.AddTransient<ITransactionService, TransactionService>();
 
 //DI de Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
