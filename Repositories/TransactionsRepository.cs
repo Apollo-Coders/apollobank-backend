@@ -1,4 +1,5 @@
-﻿using ApolloBank.Models;
+﻿using ApolloBank.Data;
+using ApolloBank.Models;
 using ApolloBank.Repositories.Interfaces;
 
 
@@ -6,6 +7,13 @@ namespace ApolloBank.Repositories
 {
     public class TransactionsRepository : ITransactionsRepository
     {
+        private AppDbContext appDbContext;
+
+        public TransactionsRepository(AppDbContext appDbContext)
+        {
+            this.appDbContext = appDbContext;
+        }
+
         public Task<Transaction> AddTransaction(Transaction TransactionTo, Transaction? TransactionFrom)
         {
             throw new NotImplementedException();
