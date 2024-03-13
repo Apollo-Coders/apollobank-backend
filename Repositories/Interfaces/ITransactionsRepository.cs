@@ -1,4 +1,4 @@
-﻿using System.Transactions;
+﻿using ApolloBank.Models;
 
 namespace ApolloBank.Repositories.Interfaces
 {
@@ -7,6 +7,6 @@ namespace ApolloBank.Repositories.Interfaces
         Task<IEnumerable<Transaction>> GetAllTransactions(int? id);
         Task<Transaction> GetLastSixMonthsTransactions(int? id);
         Task<Transaction> GetCurrentMonthTransactions(int? id);
-        Task<Transaction> AddTransaction(Transaction Transactionto, Transaction TransactionFrom = null);
+        Task<Transaction> AddTransaction(Transaction TransactionTo, Transaction? TransactionFrom);
     }
 }

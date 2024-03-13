@@ -1,4 +1,5 @@
 ﻿using ApolloBank.Enums;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace ApolloBank.DTOs
@@ -16,6 +17,10 @@ namespace ApolloBank.DTOs
         
         public DateTime Date { get;  set; }
         
+        
+        [MinLength(5)]
+        [MaxLength(200)]
+        [DisplayName("Description")]
         public string? Description { get; set; }
         
         public TransactionType Transaction_Type { get; set; }

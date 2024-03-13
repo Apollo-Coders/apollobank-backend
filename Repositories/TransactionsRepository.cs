@@ -1,11 +1,12 @@
-﻿using ApolloBank.Repositories.Interfaces;
-using System.Transactions;
+﻿using ApolloBank.Models;
+using ApolloBank.Repositories.Interfaces;
+
 
 namespace ApolloBank.Repositories
 {
     public class TransactionsRepository : ITransactionsRepository
     {
-        public Task<Transaction> AddTransaction(Transaction Transactionto, Transaction TransactionFrom = null)
+        public Task<Transaction> AddTransaction(Transaction TransactionTo, Transaction? TransactionFrom)
         {
             throw new NotImplementedException();
         }
