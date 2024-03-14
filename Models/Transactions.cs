@@ -1,6 +1,6 @@
 ﻿namespace ApolloBank.Models
 {
-    public class Transaction
+    public class Transactions
     {
     }
 }
