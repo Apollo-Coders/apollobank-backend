@@ -22,12 +22,10 @@ namespace ApolloBank.Services
 
 
         #region Métodos que recebem um objeto DTO e o convertem em uma entidade 
-        public async Task AddTransaction(TransactionDTO TransactionTo, TransactionDTO TransactionFrom)
+        public async Task AddTransaction(TransactionDTO Transaction)
         {
-            var transactionTo = _mapper.Map<Transaction>(TransactionTo);
-            var transactionFrom = _mapper.Map<Transaction>(TransactionFrom);
-
-            await _transactionsRepository.AddTransaction(transactionTo, transactionFrom);
+            var transaction = _mapper.Map<Transaction>(Transaction);
+            await _transactionsRepository.AddTransaction(transaction);
         }
         #endregion
 

@@ -7,6 +7,6 @@ namespace ApolloBank.Services.Interfaces
         Task<IEnumerable<TransactionDTO>> GetAllTransactions(int? id);
         Task<IEnumerable<TransactionDTO>> GetLastSixMonthsTransactions(int? id);
         Task<IEnumerable<TransactionDTO>> GetCurrentMonthTransactions(int? id);
-        Task AddTransaction(TransactionDTO TransactionTo, TransactionDTO TransactionFrom);
+        Task AddTransaction(TransactionDTO Transaction);
     }
 }
