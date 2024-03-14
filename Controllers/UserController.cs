@@ -13,9 +13,9 @@ namespace ApolloBank.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private ApolloBankContext _appDbContext;
+        private AppDbContext _appDbContext;
 
-        public UserController(ApolloBankContext appDbContext)
+        public UserController(AppDbContext appDbContext)
         {
             _appDbContext = appDbContext;
         }
@@ -23,12 +23,12 @@ namespace ApolloBank.Controllers
         [HttpPost]
         public ActionResult<User> CreateUser(User user)
         {
-            var existingUser = _appDbContext.User.FirstOrDefault(u => u.Email == user.Email);
+            var existingUser = _appDbContext.Users.FirstOrDefault(u => u.Email == user.Email);
             if (existingUser != null)
             {
                 return BadRequest("Usuário já cadastrado");
             }
-            _appDbContext.User.Add(user);
+            _appDbContext.Users.Add(user);
             _appDbContext.SaveChanges();
             return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
         }
@@ -36,7 +36,7 @@ namespace ApolloBank.Controllers
         [HttpGet("{id}")]
         public ActionResult<User> GetUser(int id)
         {
-            var existingUser = _appDbContext.User.FirstOrDefault(u => u.Id == id);
+            var existingUser = _appDbContext.Users.FirstOrDefault(u => u.Id == id);
             if (existingUser == null)
             {
                 return NotFound();
@@ -47,7 +47,7 @@ namespace ApolloBank.Controllers
         [HttpPut("{id}")]
         public IActionResult UpdateUser(int id, User updatedUser)
         {
-            var existingUser = _appDbContext.User.FirstOrDefault(u => u.Id == id);
+            var existingUser = _appDbContext.Users.FirstOrDefault(u => u.Id == id);
             if (existingUser == null)
             {
                 return BadRequest("Usuário não encontrado");
@@ -67,19 +67,19 @@ namespace ApolloBank.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteUser(int id)
         {
-            var existingUser = _appDbContext.User.FirstOrDefault(u => u.Id == id);
+            var existingUser = _appDbContext.Users.FirstOrDefault(u => u.Id == id);
             if (existingUser == null)
             {
                 return BadRequest("Usuário não encontrado");
             }
-           _appDbContext.User.Remove(existingUser);
+           _appDbContext.Users.Remove(existingUser);
             return NoContent();
         }
 
         [HttpGet("GetUserByEmail")]
         public IActionResult GetUserByEmail(string email)
         {
-            var existingUser = _appDbContext.User.FirstOrDefault(u => u.Email == email);
+            var existingUser = _appDbContext.Users.FirstOrDefault(u => u.Email == email);
             if (existingUser == null)
             {
                 return BadRequest("Usuário não encontrado");
@@ -90,7 +90,7 @@ namespace ApolloBank.Controllers
         [HttpGet("GetUserByCPF")]
         public IActionResult GetUserByCPF(string cpf)
         {
-            var existingUser = _appDbContext.User.FirstOrDefault(u => u.CPF == cpf);
+            var existingUser = _appDbContext.Users.FirstOrDefault(u => u.CPF == cpf);
             if (existingUser == null)
             {
                 return BadRequest("Usuário não encontrado");
