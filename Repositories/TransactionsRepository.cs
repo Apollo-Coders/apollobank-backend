@@ -3,6 +3,7 @@ using ApolloBank.Enums;
 using ApolloBank.Models;
 using ApolloBank.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 
 namespace ApolloBank.Repositories
@@ -16,9 +17,58 @@ namespace ApolloBank.Repositories
             _appDbContext = appDbContext;
         }
 
-        public Task<Transaction> AddTransaction(Transaction Transaction)
+        public Task<Transaction> AddScheduledTransaction(Transaction Transaction)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<Transaction> AddTransaction(Transaction transaction)
+        {
+
+            //Quem envia
+            Account accountfrom = await GetTransactionByCode(Convert.ToInt16(transaction.From));
+            //Para
+            Account accountTo = await GetTransactionByCode(Convert.ToInt16(transaction.To));
+
+
+
+
+            var fromTransaction = new Transaction(
+                 amount: transaction.Amount, //valor da transaçao 
+                 to: transaction.To,
+                 from: transaction.From,
+                 date: transaction.Date,
+                 description: transaction.Description,
+                 transaction_Type: transaction.Transaction_Type,
+                 direction: 'I', 
+                 account_Id: accountfrom.Id
+              );
+
+            var toTransaction = new Transaction(
+                 amount: transaction.Amount, //valor da transaçao 
+                 to: transaction.To,
+                 from: transaction.From,
+                 date: transaction.Date,
+                 description: transaction.Description,
+                 transaction_Type: transaction.Transaction_Type,
+                 direction: 'O', 
+                 account_Id: accountTo.Id
+             );
+
+                    
+                    accountfrom.Balance -= transaction.Amount;
+                    accountTo.Balance += transaction.Amount;
+
+                    _appDbContext.Transactions.Add(fromTransaction);
+                    _appDbContext.Transactions.Add(toTransaction);
+          
+                    _appDbContext.Accounts.Update(accountfrom);
+                    _appDbContext.Accounts.Update(accountTo);
+          
+            
+            await _appDbContext.SaveChangesAsync();
+
+            return transaction;
         }
 
         public async Task<IEnumerable<Transaction>> GetAllTransactions(int? id)
@@ -61,8 +111,13 @@ namespace ApolloBank.Repositories
                 .ToListAsync();
         }
 
+        public async Task<Account> GetTransactionByCode(int code)
+        {
+            return await _appDbContext.Accounts.SingleOrDefaultAsync(x => x.AccountNumber == code);
+      
+        }
 
-     
+
 
 
 

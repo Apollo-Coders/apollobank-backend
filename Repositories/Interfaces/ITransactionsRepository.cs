@@ -9,7 +9,7 @@ namespace ApolloBank.Repositories.Interfaces
         Task<IEnumerable<Transaction>> GetCurrentMonthTransactions(int? id);
         
         
-        Task<Transaction> AddTransaction(Transaction Transaction);
+        Task<Transaction> AddTransaction(Transaction transaction);
         
         Task<Transaction> AddScheduledTransaction(Transaction Transaction);
 
