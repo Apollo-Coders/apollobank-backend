@@ -11,11 +11,14 @@ namespace ApolloBank.Models
 
         public InvoiceStatus status { get; private set; }
 
-        public Invoice(int id, DateTime invoiceDate, double invoiceTotalAmount, double invoicePaid){
+        public Account Account { get; set; }
+
+        public Invoice(int id, DateTime invoiceDate, double invoiceTotalAmount, double invoicePaid, Account? account){
             Id = id;
             InvoiceDate = invoiceDate;
             InvoiceTotalAmount = invoiceTotalAmount;
             InvoicePaid = invoicePaid;
+            Account = account;
         }
 
         public void payInvoice(double amount){

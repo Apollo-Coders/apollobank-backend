@@ -5,31 +5,35 @@
         public float TotalCreditLimit { get; private set; }
         public float TotalCreditUsed { get; private set; }
         public float TotalAlocatedCredit { get; private set; }
-        public Account IdAccount { get; private set; }
-        public List<CreditCard> creditCards = new List<CreditCard>();
-        public CreditCards(float totalCreditLimit, float totalCreditUsed, float totalAlocatedCredit)
+        public Account Account { get; set; }
+        public CreditCards(float totalCreditLimit, float totalCreditUsed, float totalAlocatedCredit, Account? account)
         {
             TotalCreditLimit = totalCreditLimit;
             TotalCreditUsed = totalCreditUsed;
             TotalAlocatedCredit = totalAlocatedCredit;
+            Account = account;
         }
 
-        public void createCreditCard(CreditCard card)
+        public CreditCard? createCreditCard(CreditCard card)
         {
-            IdAccount.CreditCard.Add(card);
+            Account.CreditCard.Add(card);
+
+            return card;
         }
-        public void blockCreditCard(int cardId)
+        public CreditCard? blockCreditCard(int cardId)
         {
-            CreditCard cardToRemove = IdAccount.CreditCard.FirstOrDefault(x => x.Id == cardId);
+            CreditCard cardToRemove = Account.CreditCard.FirstOrDefault(x => x.Id == cardId);
             if (cardToRemove != null)
             {
-                IdAccount.CreditCard.Remove(cardToRemove);
+                Account.CreditCard.Remove(cardToRemove);
                 Console.WriteLine($"Credit Card com ID {cardId} removido com sucesso.");
             }
             else
             {
                 Console.WriteLine($"Credit Card com ID {cardId} não encontrado.");
             }
+
+            return cardToRemove;
         }
     }
 
