@@ -1,4 +1,5 @@
-﻿using ApolloBank.Models;
+﻿using ApolloBank.MapConfig;
+using ApolloBank.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApolloBank.Data
@@ -8,8 +9,8 @@ namespace ApolloBank.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Address> Address { get; set; }
-        public DbSet<CreditCards> CreditCardsSet { get; set;}
-        public DbSet<CreditCard> CreditCards { get; set; }
+        public DbSet<CreditCards> CreditCards { get; set;}
+        public DbSet<CreditCard> CreditCard { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
 
@@ -21,6 +22,17 @@ namespace ApolloBank.Data
         {
             base.OnConfiguring(optionsBuilder);
             optionsBuilder.UseSqlite("DataSource=app.db;Cache=shared");
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new UserMap());
+            modelBuilder.ApplyConfiguration(new AccountMap());
+            modelBuilder.ApplyConfiguration(new AddressMap());
+            modelBuilder.ApplyConfiguration(new CreditCardMap());
+            modelBuilder.ApplyConfiguration(new CreditCardsMap());
+            modelBuilder.ApplyConfiguration(new InvoiceMap());
+            modelBuilder.ApplyConfiguration(new TransactionMap());
         }
 
     }
