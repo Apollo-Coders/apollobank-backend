@@ -22,8 +22,10 @@ namespace ApolloBank.Models
         public DateTime CreatedAt { get; set; }= DateTime.Now;
         public DateTime UpdatedAt { get; set; }= DateTime.Now;
         public bool Active { get; set; } = true;
+
         public int? AddressId { get; set; }
         public virtual Address? Address { get; set; }
+
         public int AccountId { get; set; }
         public virtual Account Account { get; set; }= null!;
     }

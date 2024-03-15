@@ -31,9 +31,8 @@ builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
 //Automapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-builder.Services.AddDbContext<AppDbContext>(
-    options => options.UseSqlite(builder.Configuration.GetConnectionString("ApolloBankContext"))
-);
+builder.Services.AddDbContext<AppDbContext>();
+/*options => options.UseSqlite(builder.Configuration.GetConnectionString("ApolloBankContext"))*/
 
 var app = builder.Build();
 
