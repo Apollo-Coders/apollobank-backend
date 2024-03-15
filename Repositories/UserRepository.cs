@@ -1,4 +1,5 @@
-﻿using ApolloBank.Models;
+﻿using ApolloBank.Data;
+using ApolloBank.Models;
 using ApolloBank.Repositories.Interfaces;
 using System;
 
@@ -6,6 +7,14 @@ namespace ApolloBank.Repositories
 {
     public class UserRepository : IUserRepository
     {
+        private readonly AppDbContext _appDbContext;
+
+        public UserRepository(AppDbContext appDbContext)
+        {
+            _appDbContext = appDbContext;
+        }
+
+
         public Task<User> CreateUser(User user)
         {
             throw new NotImplementedException();
