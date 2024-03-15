@@ -18,11 +18,14 @@ namespace ApolloBank.DTOs
         [EmailAddress(ErrorMessage = "O campo 'Email' deve ser um email válido.")]
         public string Email { get; set; } = null!;
 
+        [Required(ErrorMessage = "O campo 'DDD' é obrigatório.")]
         public int DDD { get; set; }
 
         [Phone(
             ErrorMessage = "O campo 'número de telefone' deve ser um número de telefone válido."
         )]
+
+        [Required(ErrorMessage = "O campo 'Número de telefone' é obrigatório.")]
         public int PhoneNumber { get; set; }
         public DateTime BirthDay { get; set; }
 
