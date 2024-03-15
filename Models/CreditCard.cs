@@ -9,6 +9,9 @@
         public double CreditUsed { get; private set; }
         public double CreditLimit { get; private set; }
 
+        public int? Account_Id { get; set; }
+        public Account? Account { get; set; }
+
         public CreditCard(int id, int number, int cvc, DateTime expirationTime, double creditUsed, double creditLimit){
             Id = id;
             Number = number;
