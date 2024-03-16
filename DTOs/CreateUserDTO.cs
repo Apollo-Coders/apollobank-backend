@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using ApolloBank.Enums;
-using ApolloBank.Models;
 
-namespace ApolloBank.DTOs
+using System.ComponentModel.DataAnnotations;
+
+
+namespace ApolloBank.DTOs  
 {
     public class CreateUserDTO
     {
@@ -18,12 +14,12 @@ namespace ApolloBank.DTOs
         [EmailAddress(ErrorMessage = "O campo 'Email' deve ser um email válido.")]
         public string Email { get; set; } = null!;
 
+        [Required(ErrorMessage = "O campo 'Senha' é obrigatório.")]
+        [MinLength(6, ErrorMessage = "O campo 'Senha' deve ter no mínimo 6 caracteres.")]
+        public string Password { get; set; } = null!;
+
         [Required(ErrorMessage = "O campo 'DDD' é obrigatório.")]
         public int DDD { get; set; }
-
-        [Phone(
-            ErrorMessage = "O campo 'número de telefone' deve ser um número de telefone válido."
-        )]
 
         [Required(ErrorMessage = "O campo 'Número de telefone' é obrigatório.")]
         public int PhoneNumber { get; set; }
@@ -32,14 +28,26 @@ namespace ApolloBank.DTOs
         [Required(ErrorMessage = "O campo 'CPF' é obrigatório.")]
         [StringLength(11, ErrorMessage = "O campo 'CPF' deve ter 11 caracteres.")]
         public string CPF { get; set; } = null!;
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public DateTime UpdatedAt { get; set; } = DateTime.Now;
-        public bool Active { get; set; } = true;
-        public int? AddressId { get; set; }
-        public virtual Address? Address { get; set; }
-        public int AccountId { get; set; }
-        
-    }
 
-  
+        public bool Active { get; set; } = true;
+
+        [Required(ErrorMessage = "O campo 'Rua' é obrigatório.")]
+        public string Street { get; set; } = null!;
+
+        [Required(ErrorMessage = "O campo 'Número' é obrigatório.")]
+        public string Number { get; set; }= null!;
+
+        public string Complement { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "O campo 'Bairro' é obrigatório.")]
+        public string Neighborhood { get; set; } = null!;
+
+        [Required(ErrorMessage = "O campo 'Cidade' é obrigatório.")]
+        public string City { get; set; }= null!;
+
+        [Required(ErrorMessage = "O campo 'Estado' é obrigatório.")]
+        public string State { get; set; }= null!;
+        public int AccountId { get; set; }
+    }
 }
+
