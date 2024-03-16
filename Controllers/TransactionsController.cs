@@ -1,6 +1,6 @@
 ﻿using ApolloBank.DTOs;
 using ApolloBank.Services;
-using Microsoft.AspNetCore.Http;
+using ApolloBank.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApolloBank.Controllers
@@ -9,9 +9,9 @@ namespace ApolloBank.Controllers
     [ApiController]
     public class TransactionsController : ControllerBase
     {
-        private readonly TransactionService _transactionService;
+        private readonly ITransactionService _transactionService;
 
-        public TransactionsController(TransactionService transactionService)
+        public TransactionsController(ITransactionService transactionService)
         {
             _transactionService = transactionService;
         }
