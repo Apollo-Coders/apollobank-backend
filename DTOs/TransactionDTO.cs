@@ -27,5 +27,9 @@ namespace ApolloBank.DTOs
         public char Direction { get; set; }
 
         public int Account_Id { get; set; }
+
+        public TransactionDTO()
+        {
+        }
     }
 }
