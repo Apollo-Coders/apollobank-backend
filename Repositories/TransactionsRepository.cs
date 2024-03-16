@@ -26,9 +26,9 @@ namespace ApolloBank.Repositories
         {
 
             //Quem envia
-            Account accountfrom = await GetTransactionByCode(Convert.ToInt16(transaction.From));
+            Account accountfrom = await GetTransactionByCode(Convert.ToInt32(transaction.From));
             //Para
-            Account accountTo = await GetTransactionByCode(Convert.ToInt16(transaction.To));
+            Account accountTo = await GetTransactionByCode(Convert.ToInt32(transaction.To));
 
 
 
@@ -55,17 +55,35 @@ namespace ApolloBank.Repositories
                  account_Id: accountTo.Id
              );
 
-                    
-                    accountfrom.Balance -= transaction.Amount;
-                    accountTo.Balance += transaction.Amount;
 
-                    _appDbContext.Transactions.Add(fromTransaction);
-                    _appDbContext.Transactions.Add(toTransaction);
-          
-                    _appDbContext.Accounts.Update(accountfrom);
-                    _appDbContext.Accounts.Update(accountTo);
-          
-            
+             _appDbContext.Transactions.Add(fromTransaction);
+             _appDbContext.Transactions.Add(toTransaction);
+
+
+
+            using (var transactionn = _appDbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    string updateSql = $@"
+                            UPDATE Accounts
+                            SET Balance = CASE
+                                WHEN AccountNumber = '{accountfrom.AccountNumber}' THEN Balance - {transaction.Amount}
+                                WHEN AccountNumber = '{accountTo.AccountNumber}' THEN Balance + {transaction.Amount}
+                                ELSE Balance
+                            END
+                            WHERE AccountNumber IN ('{accountfrom.AccountNumber}', '{accountTo.AccountNumber}');";
+
+                             _appDbContext.Database.ExecuteSqlRaw(updateSql);
+
+                             transactionn.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transactionn.Rollback();
+                    // Lidar com a exceção, se necessário
+                }
+            }
             await _appDbContext.SaveChangesAsync();
 
             return transaction;
