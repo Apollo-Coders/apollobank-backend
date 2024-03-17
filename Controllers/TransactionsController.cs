@@ -16,15 +16,37 @@ namespace ApolloBank.Controllers
             _transactionService = transactionService;
         }
 
-        [HttpPost]
-        public async Task<ActionResult> Post([FromBody] TransactionDTO transactionDTO)
+        [HttpPost("add")]
+        public async Task<ActionResult> AddTransaction([FromBody] TransactionDTO transactionDTO)
         {
             if (transactionDTO == null)
                 return BadRequest("Data Invalid");
 
             await _transactionService.AddTransaction(transactionDTO);
 
-             return Ok(); 
+            return Ok();
+        }
+
+        [HttpPost("withdraw")]
+        public async Task<ActionResult> MakeWithdrawal([FromBody] TransactionDTO transactionDTO)
+        {
+            if (transactionDTO == null)
+                return BadRequest("Data Invalid");
+
+            await _transactionService.Makewithdrawal(transactionDTO);
+
+            return Ok();
+        }
+
+        [HttpPost("makedeposit")]
+        public async Task<ActionResult> Makedeposit([FromBody] TransactionDTO transactionDTO)
+        {
+            if (transactionDTO == null)
+                return BadRequest("Data Invalid");
+
+            await _transactionService.Makedeposit(transactionDTO);
+
+            return Ok();
         }
 
         [HttpGet("current/{id}")]
