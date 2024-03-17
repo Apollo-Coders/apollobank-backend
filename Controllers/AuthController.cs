@@ -22,7 +22,7 @@ namespace ApolloBank.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<ActionResult> Authenticate([FromBody] RequestDTO data)
+        public async Task<ActionResult> Authenticate([FromBody] UserRequestDTO data)
         {
             if (data == null)
             {
@@ -40,6 +40,7 @@ namespace ApolloBank.Controllers
             if(AuthenticateAsync)
             {
                 User user = await _userRepository.GetUserByCPF(data.cpf);
+                //adicionar account id
                 var token = _authService.GenerateToken(user);
                 return Ok(token);
             }
