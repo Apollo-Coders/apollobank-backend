@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ApolloBank.Data;
-using ApolloBank.DTOs;
-using ApolloBank.Models;
+﻿using ApolloBank.DTOs;
 using ApolloBank.Repositories.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
 namespace ApolloBank.Controllers
 {
     [Route("user")]
@@ -22,7 +15,7 @@ namespace ApolloBank.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<User>> CreateUser(CreateUserDTO createUserDTO)
+        public async Task<ActionResult<CreateUserDTO>> CreateUser(CreateUserDTO createUserDTO)
         {
             try
             {
@@ -36,7 +29,7 @@ namespace ApolloBank.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(Guid id)
+        public async Task<ActionResult<UserDetailsDTO>> GetUser(Guid id)
         {
             var user = await _userRepository.GetUserById(id);
             if (user == null)
@@ -48,7 +41,7 @@ namespace ApolloBank.Controllers
 
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(Guid id, UpdateUserDTO updateUserDTO)
+        public async Task<ActionResult<UserDetailsDTO>> UpdateUser(Guid id, UpdateUserDTO updateUserDTO)
         {
             if (id != Guid.Parse(updateUserDTO.Id.ToString()))
             {
@@ -71,7 +64,7 @@ namespace ApolloBank.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(Guid id)
+        public async Task<ActionResult<UserDetailsDTO>> DeleteUser(Guid id)
         {
             var user = await _userRepository.DeleteUser(id);
             if (user == null)
@@ -82,7 +75,7 @@ namespace ApolloBank.Controllers
         }
 
         [HttpGet("GetUserByEmail")]
-        public async Task<IActionResult> GetUserByEmail(string email)
+        public async Task<ActionResult<UserDetailsDTO>> GetUserByEmail(string email)
         {
             var user = await _userRepository.GetUserByEmail(email);
             if (user == null)
@@ -93,7 +86,7 @@ namespace ApolloBank.Controllers
         }
 
         [HttpGet("GetUserByCPF")]
-        public async Task<IActionResult> GetUserByCPF(string cpf)
+        public async Task<ActionResult<UserDetailsDTO>> GetUserByCPF(string cpf)
         {
             var user = await _userRepository.GetUserByCPF(cpf);
             if (user == null)
@@ -104,7 +97,7 @@ namespace ApolloBank.Controllers
         }
         
         [HttpGet("GetUsers")]
-        public async Task<IActionResult> GetUsers()
+        public async Task<ActionResult<UserDetailsDTO>> GetUsers()
         {
             var users = await _userRepository.GetUsers();
             return Ok(users);
