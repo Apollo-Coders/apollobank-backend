@@ -17,10 +17,7 @@ namespace ApolloBank.Repositories
 
         #region Methods of adding transactions
 
-        public Task<Transaction> AddScheduledTransaction(Transaction Transaction)
-        {
-            throw new NotImplementedException();
-        }
+      
 
         //Fazer deposito
         public async Task<Transaction> Makedeposit(Transaction transaction)
@@ -211,8 +208,72 @@ namespace ApolloBank.Repositories
             return await _appDbContext.Accounts.SingleOrDefaultAsync(x => x.AccountNumber == code);
 
         }
-       
-        
 
+        public async Task<IEnumerable<Transaction>> GetScheduledTransaction(Transaction transaction)
+        {
+            // Obtém a data atual
+            DateTime today = DateTime.Today;
+
+            // Consulta o banco de dados para obter as transações agendadas para hoje
+            return await _appDbContext.Transactions
+                .Where(t => t.ScheduledDate == today && t.TransactionStatusChecker == "Inprogress")
+                .ToListAsync();
+        }
+
+        //completed
+        //inprogress
+
+        public Task<Transaction> Scheduletransaction(Transaction Transaction)
+        {
+            throw new NotImplementedException();
+        }
+        public async Task<Transaction> AddScheduledTransaction(Transaction transaction)
+        {
+            Account account = await GetTransactionByCode(Convert.ToInt32(transaction.From));
+            if (account == null) throw new Exception("Source account holder not found.");
+
+            var fromTransaction = new Transaction(
+            amount: transaction.Amount,
+            to: transaction.To,
+            from: transaction.From,
+            date: transaction.Date,
+            scheduledDate: transaction.ScheduledDate,
+            transactionStatusChecker: "Inprogress",
+            description: transaction.Description,
+            transaction_Type: transaction.Transaction_Type,
+            direction: 'O', //"Outgoing" (Saída).
+            account_Id: account.Id
+         );
+
+            _appDbContext.Transactions.Add(transaction);
+
+            using (var transactionn = _appDbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    string updateSql = $@"
+                            UPDATE Accounts
+                            SET Balance = CASE
+                                WHEN AccountNumber = '{account.AccountNumber}' THEN Balance + {transaction.Amount}
+                                ELSE Balance
+                            END
+                            WHERE AccountNumber IN ('{account.AccountNumber}');";
+
+                    _appDbContext.Database.ExecuteSqlRaw(updateSql);
+
+                    transactionn.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transactionn.Rollback();
+                    throw new Exception("An error occurred while processing the transaction.'");
+                }
+            }
+            await _appDbContext.SaveChangesAsync();
+
+            return transaction;
+        }
+
+      
     }
 }

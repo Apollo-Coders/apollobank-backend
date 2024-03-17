@@ -18,7 +18,12 @@ namespace ApolloBank.Repositories.Interfaces
 
         Task<Transaction> Makedeposit(Transaction transaction);
 
+        
+        Task<IEnumerable<Transaction>> GetScheduledTransaction(Transaction Transaction);
+        Task<Transaction> Scheduletransaction(Transaction Transaction);
         Task<Transaction> AddScheduledTransaction(Transaction Transaction);
+   
+        
 
 
 
