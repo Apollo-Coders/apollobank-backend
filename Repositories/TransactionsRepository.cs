@@ -50,7 +50,7 @@ namespace ApolloBank.Repositories
                 catch (Exception ex)
                 {
                     transactionn.Rollback();
-                    // Lidar com a exceção, se necessário
+                    throw new Exception("An error occurred while processing the transaction.'");
                 }
             }
             await _appDbContext.SaveChangesAsync();
@@ -87,7 +87,7 @@ namespace ApolloBank.Repositories
                 catch (Exception ex)
                 {
                     transactionn.Rollback();
-                    // Lidar com a exceção, se necessário
+                    throw new Exception("An error occurred while processing the transaction.'");
                 }
             }
             await _appDbContext.SaveChangesAsync();
@@ -155,7 +155,7 @@ namespace ApolloBank.Repositories
                 catch (Exception ex)
                 {
                     transactionn.Rollback();
-                    // Lidar com a exceção, se necessário
+                    throw new Exception("An error occurred while processing the transaction.'");
                 }
             }
             await _appDbContext.SaveChangesAsync();
