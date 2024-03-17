@@ -1,11 +1,19 @@
-﻿using ApolloBank.Models;
+﻿using ApolloBank.Data;
+using ApolloBank.Models;
 using ApolloBank.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 
 namespace ApolloBank.Repositories
 {
     public class UserRepository : IUserRepository
     {
+        private readonly AppDbContext _appDbContext;
+
+        public UserRepository(AppDbContext appDbContext)
+        {
+            _appDbContext = appDbContext;
+        }
         public Task<User> CreateUser(User user)
         {
             throw new NotImplementedException();
@@ -16,9 +24,9 @@ namespace ApolloBank.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<User> GetUserByCPF(string cpf)
+        public async Task<User> GetUserByCPF(string cpf)
         {
-            throw new NotImplementedException();
+            return await _appDbContext.Users.FirstOrDefaultAsync(u => u.CPF == cpf);
         }
 
         public Task<User> GetUserByEmail(string email)
