@@ -36,21 +36,21 @@ namespace ApolloBank.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(int id)
+        public async Task<ActionResult<User>> GetUser(Guid id)
         {
             var user = await _userRepository.GetUserById(id);
             if (user == null)
             {
                 return NotFound();
             }
-            return user;
+            return Ok(user);
         }
 
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(int id, UpdateUserDTO updateUserDTO)
+        public async Task<IActionResult> UpdateUser(Guid id, UpdateUserDTO updateUserDTO)
         {
-            if (id != updateUserDTO.Id)
+            if (id != Guid.Parse(updateUserDTO.Id.ToString()))
             {
                 return BadRequest("User not found.");
             }
@@ -71,7 +71,7 @@ namespace ApolloBank.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
+        public async Task<IActionResult> DeleteUser(Guid id)
         {
             var user = await _userRepository.DeleteUser(id);
             if (user == null)

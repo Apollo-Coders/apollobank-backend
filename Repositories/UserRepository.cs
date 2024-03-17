@@ -1,4 +1,5 @@
-﻿using ApolloBank.Data;
+﻿using System.Linq;
+using ApolloBank.Data;
 using ApolloBank.DTOs;
 using ApolloBank.Models;
 using ApolloBank.Repositories.Interfaces;
@@ -19,7 +20,7 @@ namespace ApolloBank.Repositories
             _hashService = hashService;
         }
 
-        public async Task<User> CreateUser(CreateUserDTO createUserDTO)
+        public async Task<UserDetailsDTO> CreateUser(CreateUserDTO createUserDTO)
         {
             var existingEmail = await _appDbContext.Users.AnyAsync(
                 u => u.Email == createUserDTO.Email
@@ -55,13 +56,28 @@ namespace ApolloBank.Repositories
                     State = createUserDTO.State
                 },
                 Account = new Account { AccountNumber = GenerateRandomAccountNumber() }
-            };         
-
+            };
 
             var createdUser = await _appDbContext.Users.AddAsync(user);
             await _appDbContext.SaveChangesAsync();
 
-            return createdUser.Entity;
+            return new UserDetailsDTO
+            {
+                Id = createdUser.Entity.Id,
+                FullName = createdUser.Entity.FullName,
+                Email = createdUser.Entity.Email,
+                DDD = createdUser.Entity.DDD,
+                PhoneNumber = createdUser.Entity.PhoneNumber,
+                BirthDay = createdUser.Entity.BirthDay,
+                CPF = createdUser.Entity.CPF,
+                Active = createdUser.Entity.Active,
+                Street = createdUser.Entity.Address.Street,
+                Number = createdUser.Entity.Address.Number,
+                Complement = createdUser.Entity.Address.Complement ?? string.Empty,
+                Neighborhood = createdUser.Entity.Address.Neighborhood,
+                City = createdUser.Entity.Address.City,
+                State = createdUser.Entity.Address.State,
+            };
         }
 
         private int GenerateRandomAccountNumber(int length = 6)
@@ -75,7 +91,7 @@ namespace ApolloBank.Repositories
             return int.Parse(number);
         }
 
-        public async Task<User> DeleteUser(int id)
+        public async Task<User> DeleteUser(Guid id)
         {
             var user = await _appDbContext.Users.FindAsync(id);
             if (user == null)
@@ -89,47 +105,135 @@ namespace ApolloBank.Repositories
             return user;
         }
 
-        public async Task<User> GetUserByCPF(string cpf)
+        public async Task<UserDetailsDTO> GetUserByCPF(string cpf)
         {
-            var user = await _appDbContext.Users.FindAsync(cpf);
+            var user = await _appDbContext
+                .Users.Include(u => u.Address)
+                .Include(u => u.Account)
+                .FirstOrDefaultAsync(u => u.CPF == cpf);
+
             if (user == null)
             {
                 throw new KeyNotFoundException("User not found");
             }
-
-            return user;
+            return new UserDetailsDTO
+            {
+                Id = user.Id,
+                FullName = user.FullName,
+                Email = user.Email,
+                DDD = user.DDD,
+                PhoneNumber = user.PhoneNumber,
+                BirthDay = user.BirthDay,
+                CPF = user.CPF,
+                Active = user.Active,
+                Street = user.Address.Street,
+                Number = user.Address.Number,
+                Complement = user.Address.Complement ?? string.Empty,
+                Neighborhood = user.Address.Neighborhood,
+                City = user.Address.City,
+                State = user.Address.State,
+                AccountNumber = user.Account.AccountNumber
+            };
         }
 
-        public async Task<User> GetUserByEmail(string email)
+        public async Task<UserDetailsDTO> GetUserByEmail(string email)
         {
-            var user = await _appDbContext.Users.FindAsync(email);
+            var user = await _appDbContext
+                .Users.Include(u => u.Address)
+                .Include(u => u.Account)
+                .FirstOrDefaultAsync(u => u.Email == email);
+
             if (user == null)
             {
                 throw new KeyNotFoundException("User not found");
             }
-
-            return user;
+            return new UserDetailsDTO
+            {
+                Id = user.Id,
+                FullName = user.FullName,
+                Email = user.Email,
+                DDD = user.DDD,
+                PhoneNumber = user.PhoneNumber,
+                BirthDay = user.BirthDay,
+                CPF = user.CPF,
+                Active = user.Active,
+                Street = user.Address.Street,
+                Number = user.Address.Number,
+                Complement = user.Address.Complement ?? string.Empty,
+                Neighborhood = user.Address.Neighborhood,
+                City = user.Address.City,
+                State = user.Address.State,
+                AccountNumber = user.Account.AccountNumber
+            };
         }
 
-        public async Task<User> GetUserById(int id)
+        public async Task<UserDetailsDTO> GetUserById(Guid id)
         {
-            var user = await _appDbContext.Users.FindAsync(id);
+            var user = await _appDbContext
+                .Users.Include(u => u.Address)
+                .Include(u => u.Account)
+                .FirstOrDefaultAsync(u => u.Id == id);
+
             if (user == null)
             {
                 throw new KeyNotFoundException("User not found");
             }
-            return user;
+            return new UserDetailsDTO
+            {
+                Id = user.Id,
+                FullName = user.FullName,
+                Email = user.Email,
+                DDD = user.DDD,
+                PhoneNumber = user.PhoneNumber,
+                BirthDay = user.BirthDay,
+                CPF = user.CPF,
+                Active = user.Active,
+                Street = user.Address.Street,
+                Number = user.Address.Number,
+                Complement = user.Address.Complement ?? string.Empty,
+                Neighborhood = user.Address.Neighborhood,
+                City = user.Address.City,
+                State = user.Address.State,
+                AccountNumber = user.Account.AccountNumber
+            };
         }
 
-        public async Task<List<User>> GetUsers()
+        public async Task<List<UserDetailsDTO>> GetUsers()
         {
-            return await _appDbContext.Users.ToListAsync();
+            var users = await _appDbContext
+                .Users.Include(u => u.Address)
+                .Include(u => u.Account)
+                .ToListAsync();
+            var listUserDTOs = users
+                .Select(
+                    u =>
+                        new UserDetailsDTO
+                        {
+                            Id = u.Id,
+                            FullName = u.FullName,
+                            Email = u.Email,
+                            DDD = u.DDD,
+                            PhoneNumber = u.PhoneNumber,
+                            BirthDay = u.BirthDay,
+                            CPF = u.CPF,
+                            Active = u.Active,
+                            Street = u.Address.Street,
+                            Number = u.Address.Number,
+                            Complement = u.Address.Complement ?? string.Empty,
+                            Neighborhood = u.Address.Neighborhood,
+                            City = u.Address.City,
+                            State = u.Address.State,
+                            AccountNumber = u.Account.AccountNumber
+                        }
+                )
+                .ToList();
+            return listUserDTOs;
         }
 
         public async Task<User> UpdateUser(UpdateUserDTO updateUserDTO)
         {
             var existingUser = await _appDbContext
-                .Users.Include(u => u.Address) 
+                .Users.Include(u => u.Address)
                 .FirstOrDefaultAsync(u => u.Id == Guid.Parse(updateUserDTO.Id.ToString()));
 
             if (existingUser == null)

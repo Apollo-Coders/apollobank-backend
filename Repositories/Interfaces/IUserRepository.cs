@@ -5,13 +5,13 @@ namespace ApolloBank.Repositories.Interfaces
 {
     public interface IUserRepository
     {
-        Task<User> CreateUser(CreateUserDTO createUserDTO); 
-        Task<User> GetUserById(int id);
-        Task<User> GetUserByEmail(string email);
-        Task<User> GetUserByCPF(string cpf);
+        Task<UserDetailsDTO> CreateUser(CreateUserDTO createUserDTO); 
+        Task<UserDetailsDTO> GetUserById(Guid id);
+        Task<UserDetailsDTO> GetUserByEmail(string email);
+        Task<UserDetailsDTO> GetUserByCPF(string cpf);
         Task<User> UpdateUser(UpdateUserDTO updateUserDTOser);
-        Task<User> DeleteUser(int id);
-        Task<List<User>> GetUsers();
+        Task<User> DeleteUser(Guid id);
+        Task<List<UserDetailsDTO>> GetUsers();
 
 
     }
