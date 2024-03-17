@@ -17,6 +17,8 @@ namespace ApolloBank.Repositories
             _appDbContext = appDbContext;
         }
 
+        #region Methods of adding transactions
+
         public Task<Transaction> AddScheduledTransaction(Transaction Transaction)
         {
             throw new NotImplementedException();
@@ -27,37 +29,38 @@ namespace ApolloBank.Repositories
 
             //Quem envia
             Account accountfrom = await GetTransactionByCode(Convert.ToInt32(transaction.From));
+            if (accountfrom == null) throw new Exception("Source account holder not found.");
             //Para
             Account accountTo = await GetTransactionByCode(Convert.ToInt32(transaction.To));
+            if (accountTo == null) throw new Exception("Destination account holder not found.");
 
-
-
+            if (accountfrom == accountTo) throw new Exception("The destination account cannot be the same as the source account.");
 
             var fromTransaction = new Transaction(
-                 amount: transaction.Amount, //valor da transaçao 
+                 amount: transaction.Amount,
                  to: transaction.To,
                  from: transaction.From,
                  date: transaction.Date,
                  description: transaction.Description,
                  transaction_Type: transaction.Transaction_Type,
-                 direction: 'I', 
+                 direction: 'O', //"Outgoing" (Saída).
                  account_Id: accountfrom.Id
               );
 
             var toTransaction = new Transaction(
-                 amount: transaction.Amount, //valor da transaçao 
+                 amount: transaction.Amount,
                  to: transaction.To,
                  from: transaction.From,
                  date: transaction.Date,
                  description: transaction.Description,
                  transaction_Type: transaction.Transaction_Type,
-                 direction: 'O', 
+                 direction: 'I', // "Incoming" (Entrada)
                  account_Id: accountTo.Id
              );
 
 
-             _appDbContext.Transactions.Add(fromTransaction);
-             _appDbContext.Transactions.Add(toTransaction);
+            _appDbContext.Transactions.Add(fromTransaction);
+            _appDbContext.Transactions.Add(toTransaction);
 
 
 
@@ -74,9 +77,9 @@ namespace ApolloBank.Repositories
                             END
                             WHERE AccountNumber IN ('{accountfrom.AccountNumber}', '{accountTo.AccountNumber}');";
 
-                             _appDbContext.Database.ExecuteSqlRaw(updateSql);
+                    _appDbContext.Database.ExecuteSqlRaw(updateSql);
 
-                             transactionn.Commit();
+                    transactionn.Commit();
                 }
                 catch (Exception ex)
                 {
@@ -88,7 +91,9 @@ namespace ApolloBank.Repositories
 
             return transaction;
         }
+        #endregion
 
+        #region Methods of search
         public async Task<IEnumerable<Transaction>> GetAllTransactions(int? id)
         {
             return await _appDbContext.Transactions.Where(x => x.Account_Id == id).ToListAsync();
@@ -128,15 +133,13 @@ namespace ApolloBank.Repositories
                 .Where(x => x.Account_Id == id && x.Date >= firstDayOfSixMonthsAgo && x.Date < firstDayOfCurrentMonth)
                 .ToListAsync();
         }
+        #endregion
 
         public async Task<Account> GetTransactionByCode(int code)
         {
             return await _appDbContext.Accounts.SingleOrDefaultAsync(x => x.AccountNumber == code);
-      
+
         }
-
-
-
 
 
     }

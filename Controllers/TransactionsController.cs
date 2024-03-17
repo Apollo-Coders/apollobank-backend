@@ -26,5 +26,39 @@ namespace ApolloBank.Controllers
 
              return Ok(); 
         }
+
+        [HttpGet("current/{id}")]
+        public async Task<ActionResult<TransactionDTO>> GetCurrentMonthTransactions(int id)
+        {
+            var produto = await _transactionService.GetCurrentMonthTransactions(id);
+            if (produto == null)
+            {
+                return NotFound("Transaction not found");
+            }
+            return Ok(produto);
+        }
+
+        [HttpGet("lastsix/{id}")]
+        public async Task<ActionResult<TransactionDTO>> GetLastSixMonthsTransactions(int id)
+        {
+            var produto = await _transactionService.GetLastSixMonthsTransactions(id);
+            if (produto == null)
+            {
+                return NotFound("Transaction not found");
+            }
+            return Ok(produto);
+        }
+
+        [HttpGet("all/{id}")]
+        public async Task<ActionResult<TransactionDTO>> GetAllTransactions(int id)
+        {
+            var produto = await _transactionService.GetAllTransactions(id);
+            if (produto == null)
+            {
+                return NotFound("Transaction not found");
+            }
+            return Ok(produto);
+        }
+
     }
 }
