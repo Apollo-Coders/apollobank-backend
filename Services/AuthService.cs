@@ -50,6 +50,7 @@ namespace ApolloBank.Services
             {
                 new Claim("id", user.Id.ToString()),
                 new Claim("email", user.Email),
+                new Claim("accountID", user.AccountId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
             var privateKey = new SymmetricSecurityKey(Encoding.UTF8.
