@@ -3,7 +3,7 @@ using ApolloBank.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 namespace ApolloBank.Controllers
 {
-    [Route("user")]
+    [Route("users")]
     [ApiController]
     public class UserController : ControllerBase
     {
