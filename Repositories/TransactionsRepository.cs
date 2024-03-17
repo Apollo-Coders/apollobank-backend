@@ -1,9 +1,7 @@
 ﻿using ApolloBank.Data;
-using ApolloBank.Enums;
 using ApolloBank.Models;
 using ApolloBank.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 
 namespace ApolloBank.Repositories
@@ -22,6 +20,79 @@ namespace ApolloBank.Repositories
         public Task<Transaction> AddScheduledTransaction(Transaction Transaction)
         {
             throw new NotImplementedException();
+        }
+
+        //Fazer deposito
+        public async Task<Transaction> Makedeposit(Transaction transaction)
+        {
+            Account account = await GetTransactionByCode(Convert.ToInt32(transaction.From));
+            if (account == null) throw new Exception("Source account holder not found.");
+
+
+            _appDbContext.Transactions.Add(transaction);
+
+            using (var transactionn = _appDbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    string updateSql = $@"
+                            UPDATE Accounts
+                            SET Balance = CASE
+                                WHEN AccountNumber = '{account.AccountNumber}' THEN Balance + {transaction.Amount}
+                                ELSE Balance
+                            END
+                            WHERE AccountNumber IN ('{account.AccountNumber}');";
+
+                    _appDbContext.Database.ExecuteSqlRaw(updateSql);
+
+                    transactionn.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transactionn.Rollback();
+                    // Lidar com a exceção, se necessário
+                }
+            }
+            await _appDbContext.SaveChangesAsync();
+
+            return transaction;
+
+        }
+
+        //Fazer saque
+        public async Task<Transaction> Makewithdrawal(Transaction transaction)
+        {
+            Account account = await GetTransactionByCode(Convert.ToInt32(transaction.From));
+            if (account == null) throw new Exception("Source account holder not found.");
+
+
+            _appDbContext.Transactions.Add(transaction);
+
+            using (var transactionn = _appDbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    string updateSql = $@"
+                            UPDATE Accounts
+                            SET Balance = CASE
+                                WHEN AccountNumber = '{account.AccountNumber}' THEN Balance - {transaction.Amount}
+                                ELSE Balance
+                            END
+                            WHERE AccountNumber IN ('{account.AccountNumber}');";
+
+                    _appDbContext.Database.ExecuteSqlRaw(updateSql);
+
+                    transactionn.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transactionn.Rollback();
+                    // Lidar com a exceção, se necessário
+                }
+            }
+            await _appDbContext.SaveChangesAsync();
+
+            return transaction;
         }
 
         public async Task<Transaction> AddTransaction(Transaction transaction)
@@ -140,7 +211,8 @@ namespace ApolloBank.Repositories
             return await _appDbContext.Accounts.SingleOrDefaultAsync(x => x.AccountNumber == code);
 
         }
-
+       
+        
 
     }
 }

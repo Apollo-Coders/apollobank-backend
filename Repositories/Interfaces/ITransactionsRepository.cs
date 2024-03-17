@@ -10,7 +10,14 @@ namespace ApolloBank.Repositories.Interfaces
         
         
         Task<Transaction> AddTransaction(Transaction transaction);
-        
+
+        //Fazer saque
+        Task<Transaction> Makewithdrawal(Transaction transaction);
+
+        //Fazer deposito
+
+        Task<Transaction> Makedeposit(Transaction transaction);
+
         Task<Transaction> AddScheduledTransaction(Transaction Transaction);
 
 
