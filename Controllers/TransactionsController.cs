@@ -49,7 +49,7 @@ namespace ApolloBank.Controllers
             return Ok();
         }
 
-        [HttpGet("current/{id}")]
+        [HttpGet("currentmonth/{id}")]
         public async Task<ActionResult<TransactionDTO>> GetCurrentMonthTransactions(int id)
         {
             var produto = await _transactionService.GetCurrentMonthTransactions(id);
@@ -82,5 +82,42 @@ namespace ApolloBank.Controllers
             return Ok(produto);
         }
 
+
+        [HttpGet]
+        public async Task<ActionResult<TransactionDTO>> GetScheduledTransaction()
+        {
+            var produto = await _transactionService.GetScheduledTransaction();
+            if (produto == null)
+            {
+                return NotFound("Transaction not found");
+            }
+            return Ok(produto);
+        }
+
+
+        [HttpPost("CompleteScheduled/{id}")]
+        public async Task<ActionResult<bool>> CompleteScheduledTransaction(int? id)
+        {
+            var produto = await _transactionService.CompleteScheduledTransaction(id);
+            if (produto == false)
+            {
+                return NotFound("Transaction not found");
+            }
+            return true;
+        }
+
+
+        [HttpPost("Scheduletransaction")]
+        public async Task<ActionResult> Scheduletransaction([FromBody] TransactionDTO transactionDTO)
+        {
+            if (transactionDTO == null)
+                return BadRequest("Data Invalid");
+
+            await _transactionService.Scheduletransaction(transactionDTO);
+
+            return Ok();
+        }
+
+       
     }
 }
