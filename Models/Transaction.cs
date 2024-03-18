@@ -12,7 +12,7 @@ namespace ApolloBank.Models
         public string? From { get; private set; }
         public DateTime Date { get; private set; } = DateTime.Now;
         public DateTime? ScheduledDate { get; private set; }
-        public string? TransactionStatusChecker { get; private set; }
+        public string? TransactionStatusChecker { get; set; }
         public string? Description { get; private set; }
         public TransactionType Transaction_Type { get; private set; }
         public char Direction { get; private set; }
@@ -62,6 +62,11 @@ namespace ApolloBank.Models
             Transaction_Type = transaction_Type;
             Direction = direction;
             Account_Id = account_Id;
+        }
+
+        public Transaction(string? transactionStatusChecker)
+        {
+            TransactionStatusChecker = transactionStatusChecker;
         }
 
 

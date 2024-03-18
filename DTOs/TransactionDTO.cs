@@ -16,8 +16,10 @@ namespace ApolloBank.DTOs
         public string? From { get; set; }
         
         public DateTime Date { get;  set; }
-        
-        
+        public DateTime? ScheduledDate { get; set; }
+        public string? TransactionStatusChecker { get; set; }
+
+
         [MinLength(5)]
         [MaxLength(200)]
         [DisplayName("Description")]
