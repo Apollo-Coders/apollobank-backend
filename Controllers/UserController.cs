@@ -1,101 +1,106 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ApolloBank.Data;
-using ApolloBank.DTOs;
-using ApolloBank.Models;
-using Microsoft.AspNetCore.Http;
+﻿using ApolloBank.DTOs;
+using ApolloBank.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-
 namespace ApolloBank.Controllers
 {
-    [Route("user")]
+    [Route("users")]
     [ApiController]
     public class UserController : ControllerBase
     {
-        private AppDbContext _appDbContext;
+        private readonly IUserRepository _userRepository;
 
-        public UserController(AppDbContext appDbContext)
+        public UserController(IUserRepository userRepository)
         {
-            _appDbContext = appDbContext;
+            _userRepository = userRepository;
         }
 
         [HttpPost]
-        public ActionResult<User> CreateUser(User user)
+        public async Task<ActionResult<CreateUserDTO>> CreateUser(CreateUserDTO createUserDTO)
         {
-            var existingUser = _appDbContext.Users.FirstOrDefault(u => u.Email == user.Email);
-            if (existingUser != null)
+            try
             {
-                return BadRequest("Usuário já cadastrado");
+                var user = await _userRepository.CreateUser(createUserDTO);
+                return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
             }
-            _appDbContext.Users.Add(user);
-            _appDbContext.SaveChanges();
-            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("{id}")]
-        public ActionResult<User> GetUser(int id)
+        public async Task<ActionResult<UserDetailsDTO>> GetUser(Guid id)
         {
-            var existingUser = _appDbContext.Users.FirstOrDefault(u => u.Id == id);
-            if (existingUser == null)
+            var user = await _userRepository.GetUserById(id);
+            if (user == null)
             {
                 return NotFound();
             }
-            return existingUser;
+            return Ok(user);
         }
 
+
         [HttpPut("{id}")]
-        public IActionResult UpdateUser(int id, User updatedUser)
+        public async Task<ActionResult<UserDetailsDTO>> UpdateUser(Guid id, UpdateUserDTO updateUserDTO)
         {
-            var existingUser = _appDbContext.Users.FirstOrDefault(u => u.Id == id);
-            if (existingUser == null)
+            if (id != Guid.Parse(updateUserDTO.Id.ToString()))
             {
-                return BadRequest("Usuário não encontrado");
+                return BadRequest("User not found.");
             }
 
-            existingUser.FullName = updatedUser.FullName;
-            existingUser.Email = updatedUser.Email;
-            existingUser.Password = updatedUser.Password;
-            existingUser.DDD = updatedUser.DDD;
-            existingUser.PhoneNumber = updatedUser.PhoneNumber;
-            existingUser.BirthDay = updatedUser.BirthDay;
-            existingUser.CPF = updatedUser.CPF;
-
-            return NoContent();
+            try
+            {
+                var updatedUser = await _userRepository.UpdateUser(updateUserDTO);
+                if (updatedUser == null)
+                {
+                    return NotFound();
+                }
+                return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteUser(int id)
+        public async Task<ActionResult<UserDetailsDTO>> DeleteUser(Guid id)
         {
-            var existingUser = _appDbContext.Users.FirstOrDefault(u => u.Id == id);
-            if (existingUser == null)
+            var user = await _userRepository.DeleteUser(id);
+            if (user == null)
             {
-                return BadRequest("Usuário não encontrado");
+                return NotFound();
             }
-           _appDbContext.Users.Remove(existingUser);
             return NoContent();
         }
 
         [HttpGet("GetUserByEmail")]
-        public IActionResult GetUserByEmail(string email)
+        public async Task<ActionResult<UserDetailsDTO>> GetUserByEmail(string email)
         {
-            var existingUser = _appDbContext.Users.FirstOrDefault(u => u.Email == email);
-            if (existingUser == null)
+            var user = await _userRepository.GetUserByEmail(email);
+            if (user == null)
             {
-                return BadRequest("Usuário não encontrado");
+                return NotFound();
             }
-            return Ok(existingUser);
+            return Ok(user);
         }
 
         [HttpGet("GetUserByCPF")]
-        public IActionResult GetUserByCPF(string cpf)
+        public async Task<ActionResult<UserDetailsDTO>> GetUserByCPF(string cpf)
         {
-            var existingUser = _appDbContext.Users.FirstOrDefault(u => u.CPF == cpf);
-            if (existingUser == null)
+            var user = await _userRepository.GetUserByCPF(cpf);
+            if (user == null)
             {
-                return BadRequest("Usuário não encontrado");
+                return NotFound();
             }
-            return Ok(existingUser);
+            return Ok(user);
+        }
+        
+        [HttpGet("GetUsers")]
+        public async Task<ActionResult<UserDetailsDTO>> GetUsers()
+        {
+            var users = await _userRepository.GetUsers();
+            return Ok(users);
         }
     }
 }
