@@ -15,5 +15,13 @@ namespace ApolloBank.Services.Interfaces
         //Fazer deposito
 
         Task Makedeposit(TransactionDTO transactiondto);
+
+
+
+
+
+        Task<IEnumerable<TransactionDTO>> GetScheduledTransaction();
+        Task Scheduletransaction(TransactionDTO transactionDto);
+        Task<bool> CompleteScheduledTransaction(int? id);
     }
 }
