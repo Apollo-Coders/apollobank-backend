@@ -17,11 +17,10 @@ namespace ApolloBank.Repositories.Interfaces
         //Fazer deposito
 
         Task<Transaction> Makedeposit(Transaction transaction);
-
         
-        Task<IEnumerable<Transaction>> GetScheduledTransaction(Transaction Transaction);
-        Task<Transaction> Scheduletransaction(Transaction Transaction);
-        Task<Transaction> AddScheduledTransaction(Transaction Transaction);
+        Task<IEnumerable<Transaction>> GetScheduledTransaction();
+        Task<Transaction> Scheduletransaction(Transaction transaction);
+        Task<bool> CompleteScheduledTransaction(int? id);
    
         
 
