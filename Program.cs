@@ -24,7 +24,7 @@ builder.Services.AddControllersWithViews()
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<HashService>();
+builder.Services.AddScoped<IHashService, HashService>(); //estava apenas com o "HashService", então não conseguia fazer a injeção.
 
 //DI de Services
 builder.Services.AddTransient<IAuthService, AuthService>();
