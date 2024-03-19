@@ -16,7 +16,8 @@ namespace ApolloBank.Controllers
         private readonly IAuthService _authService;
         private readonly IUserRepository _userRepository;
 
-        public AuthController(IUserRepository userRepository, IAuthService authService){
+        public AuthController(IUserRepository userRepository, IAuthService authService)
+        {
             _authService = authService;
             _userRepository = userRepository;
         }
@@ -31,20 +32,19 @@ namespace ApolloBank.Controllers
 
             var existsUser = await _authService.FoundExistingUser(data.cpf);
 
-            if(!existsUser)
+            if (!existsUser)
             {
-                return Unauthorized("Usuário não existe.");
+                return BadRequest("Usuário não encontrado");
             }
-            
-            bool AuthenticateAsync = _authService.AuthenticateAsync(data.cpf, data.password);
-            if(AuthenticateAsync)
+
+            bool isAuthenticated = await _authService.AuthenticateAsync(data.cpf, data.password);
+            if (isAuthenticated)
             {
-                User user = await _userRepository.GetUserByCPF(data.cpf);
-                //adicionar account id
+                User user = await _authService.FoundUserByCpf(data.cpf);
                 var token = _authService.GenerateToken(user);
                 return Ok(token);
             }
-            return BadRequest("Credenciais incorretas.");
+            return Unauthorized("Credenciais inválidas");
         }
     }
 }
