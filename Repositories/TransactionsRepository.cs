@@ -10,16 +10,20 @@ namespace ApolloBank.Repositories
     public class TransactionsRepository : ITransactionsRepository
     {
         private readonly AppDbContext _appDbContext;
+        private readonly IAccountRepository _accountRepository;
 
-        public TransactionsRepository(AppDbContext appDbContext)
+        public TransactionsRepository(AppDbContext appDbContext, IAccountRepository accountRepository)
         {
             _appDbContext = appDbContext;
+            _accountRepository = accountRepository;
         }
+
+
 
         #region Methods of adding transactions
         public async Task<Transaction> Makedeposit(Transaction transaction)
         {
-            Account account = await GetTransactionByCode(Convert.ToInt32(transaction.From));
+            Account account = await _accountRepository.GetAccountByAccountNumber(Convert.ToInt32(transaction.From));
             if (account == null) throw new Exception("Source account holder not found.");
 
 
@@ -54,7 +58,7 @@ namespace ApolloBank.Repositories
         }
         public async Task<Transaction> Makewithdrawal(Transaction transaction)
         {
-            Account account = await GetTransactionByCode(Convert.ToInt32(transaction.From));
+            Account account = await _accountRepository.GetAccountByAccountNumber(Convert.ToInt32(transaction.From));
             if (account == null) throw new Exception("Source account holder not found.");
 
 
@@ -89,11 +93,11 @@ namespace ApolloBank.Repositories
         public async Task<Transaction> AddTransaction(Transaction transaction)
         {
 
-          
-            Account accountfrom = await GetTransactionByCode(Convert.ToInt32(transaction.From));
+
+            Account accountfrom = await _accountRepository.GetAccountByAccountNumber(Convert.ToInt32(transaction.From));
             if (accountfrom == null) throw new Exception("Source account holder not found.");
 
-            Account accountTo = await GetTransactionByCode(Convert.ToInt32(transaction.To));
+            Account accountTo = await _accountRepository.GetAccountByAccountNumber(Convert.ToInt32(transaction.To));
             if (accountTo == null) throw new Exception("Destination account holder not found.");
 
             if (accountfrom == accountTo) throw new Exception("The destination account cannot be the same as the source account.");
@@ -149,7 +153,7 @@ namespace ApolloBank.Repositories
                     throw new Exception("An error occurred while processing the transaction.'");
                 }
             }
-          
+
             await _appDbContext.SaveChangesAsync();
 
             return transaction;
@@ -163,19 +167,19 @@ namespace ApolloBank.Repositories
         }
         public async Task<IEnumerable<Transaction>> GetCurrentMonthTransactions(int? id)
         {
-         
+
             DateTime currentDate = DateTime.Now;
             DateTime firstDayOfMonth = new DateTime(currentDate.Year, currentDate.Month, 1);
             DateTime firstDayOfNextMonth = firstDayOfMonth.AddMonths(1);
 
-       
+
             return await _appDbContext.Transactions
                 .Where(x => x.Account_Id == id && x.Date >= firstDayOfMonth && x.Date < firstDayOfNextMonth)
                 .ToListAsync();
         }
         public async Task<IEnumerable<Transaction>> GetLastSixMonthsTransactions(int? id)
         {
-    
+
             DateTime currentDate = DateTime.Now;
             DateTime firstDayOfCurrentMonth = new DateTime(currentDate.Year, currentDate.Month, 1);
             DateTime firstDayOfSixMonthsAgo = firstDayOfCurrentMonth.AddMonths(-6);
@@ -188,7 +192,7 @@ namespace ApolloBank.Repositories
         #region Methods for scheduled transaction
         public async Task<List<Transaction>> GetScheduledTransaction()
         {
-           
+
             DateTime today = DateTime.Now.Date;
             var teste = await _appDbContext.Transactions
             .Where(t => t.ScheduledDate != null && ((DateTime)t.ScheduledDate).Date == today && t.TransactionStatusChecker == "Inprogress")
@@ -199,9 +203,9 @@ namespace ApolloBank.Repositories
         public async Task<Transaction> Scheduletransaction(Transaction transaction)
         {
 
-            Account accountfrom = await GetTransactionByCode(Convert.ToInt32(transaction.From));
+            Account accountfrom = await _accountRepository.GetAccountByAccountNumber(Convert.ToInt32(transaction.From));
             if (accountfrom == null) throw new Exception("Source account holder not found.");
-            Account accountTo = await GetTransactionByCode(Convert.ToInt32(transaction.To));
+            Account accountTo = await _accountRepository.GetAccountByAccountNumber(Convert.ToInt32(transaction.To));
             if (accountTo == null) throw new Exception("Destination account holder not found.");
             if (accountfrom == accountTo) throw new Exception("The destination account cannot be the same as the source account.");
 
@@ -230,11 +234,11 @@ namespace ApolloBank.Repositories
 
 
             Transaction transaction = await _appDbContext.Transactions.SingleAsync(x => x.Id == id);
-           
+
             if (transaction == null) throw new Exception("Transaction not found");
-            Account accountfrom = await GetTransactionByCode(Convert.ToInt32(transaction.From));
+            Account accountfrom = await _accountRepository.GetAccountByAccountNumber(Convert.ToInt32(transaction.From));
             if (accountfrom == null) throw new Exception("Source account holder not found.");
-            Account accountTo = await GetTransactionByCode(Convert.ToInt32(transaction.To));
+            Account accountTo = await _accountRepository.GetAccountByAccountNumber(Convert.ToInt32(transaction.To));
             if (accountTo == null) throw new Exception("Destination account holder not found.");
             if (accountfrom == accountTo) throw new Exception("The destination account cannot be the same as the source account.");
 
@@ -251,12 +255,12 @@ namespace ApolloBank.Repositories
                  transactionStatusChecker: "Complete",
                  description: transaction.Description,
                  transaction_Type: transaction.Transaction_Type,
-                 direction: 'I', 
+                 direction: 'I',
                  account_Id: accountTo.Id
              );
 
             _appDbContext.Transactions.Add(toTransaction);
-            
+
 
             using (var transactionn = _appDbContext.Database.BeginTransaction())
             {
@@ -287,12 +291,5 @@ namespace ApolloBank.Repositories
             return true;
         }
         #endregion
-
-        public async Task<Account> GetTransactionByCode(int code)
-        {
-            return await _appDbContext.Accounts.SingleAsync(x => x.AccountNumber == code);
-
-        }
-
     }
 }
