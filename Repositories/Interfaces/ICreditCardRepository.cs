@@ -1,15 +1,13 @@
-﻿using ApolloBank.Models;
+﻿using ApolloBank.DTOs;
+using ApolloBank.Models;
 
 namespace ApolloBank.Repositories.Interfaces
 {
     public interface ICreditCardRepository
     {
-        Task<CreditCard> CreateCreditCard(CreditCard creditCard);
-        Task<CreditCard> BlockCreditCard(int cardId); 
+        void SetLimit(float limit);
 
-        Task SetLimit(float limit);
-
-        Task AddTransactionToInvoice(Transaction transaction);
+        void AddTransactionToInvoice(Transaction transaction);
 
         Task<bool> VerifyCreditLimit(int cardNumber); 
 

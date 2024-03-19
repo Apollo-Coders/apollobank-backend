@@ -2,19 +2,20 @@
 {
     public class CreditCards
     {
+        public int? Id { get; set; }
         public float TotalCreditLimit { get; private set; }
         public float TotalCreditUsed { get; private set; }
         public float TotalAlocatedCredit { get; private set; }
-        public Account Account { get; set; }
-        public CreditCards(float totalCreditLimit, float totalCreditUsed, float totalAlocatedCredit, Account? account)
+        public int? Account_Id { get; set; }
+        public Account? Account { get; set; }
+        public CreditCards(float totalCreditLimit, float totalCreditUsed, float totalAlocatedCredit)
         {
             TotalCreditLimit = totalCreditLimit;
             TotalCreditUsed = totalCreditUsed;
             TotalAlocatedCredit = totalAlocatedCredit;
-            Account = account;
         }
 
-        public CreditCard? createCreditCard(CreditCard card)
+        /*public CreditCard? createCreditCard(CreditCard card)
         {
             Account.CreditCard.Add(card);
 
@@ -34,7 +35,7 @@
             }
 
             return cardToRemove;
-        }
+        }*/
     }
 
 }

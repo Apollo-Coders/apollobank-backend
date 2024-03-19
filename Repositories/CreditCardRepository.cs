@@ -14,34 +14,14 @@ namespace ApolloBank.Repositories
         {
             _appDbContext = appDbContext;
         }
-        public Task<CreditCard> CreateCreditCard(CreateCreditCardDTO createCreditCard)
-        {
-            DateTime expirationDate = DateTime.UtcNow; //corrigir
-            double creditLimit = 0;
-            double creditUsed = 0;
-            string number = "31313013130919";
-            int cvc = 231;
-            CreditCard newCreditCard = new CreditCard(number, cvc, expirationDate, creditUsed, creditLimit, createCreditCard.AccountId);
-
-            var creditCard = _appDbContext.CreditCard.AddAsync(newCreditCard);
-            _appDbContext.SaveChanges();
-
-            return creditCard //retornar a entidade criada
-        }
-
-        public Task<CreditCard> BlockCreditCard(/*esperar o numero do cartão*/)
-        {
-            throw new NotImplementedException();
-        }
-        
-        public Task SetLimit(/*esperar o numero do cartão*/)
+        public void SetLimit(float limit/*esperar o numero do cartão*/)
         {
             throw new NotImplementedException();
         }
 
-        public Task AddTransactionToInvoice(Transaction transaction)
+        public void AddTransactionToInvoice(Transaction transaction)
         {
-            transaction.From 
+            //transaction.From 
                 /*AQUI VAI ESTAR O NUMERO DO CARTÃO O QUAL FOI FEITO A TRANSAÇÃO, ADICIONAR O VALOR DA TRANSACTION NA FATURA DO CARTÃO E NA FATURA GERAL*/
             throw new NotImplementedException();
         }

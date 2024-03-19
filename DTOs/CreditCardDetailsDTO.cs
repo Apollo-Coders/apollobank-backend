@@ -1,8 +1,6 @@
-﻿using ApolloBank.Models;
-
-namespace ApolloBank.DTOs
+﻿namespace ApolloBank.DTOs
 {
-    public class CreateCreditCardDTO
+    public class CreditCardDetailsDTO
     {
         public int Id { get; set; }
         public bool IsBlocked { get; set; }
