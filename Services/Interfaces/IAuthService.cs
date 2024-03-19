@@ -7,8 +7,9 @@ namespace ApolloBank.Services.Interfaces
     public interface IAuthService
     {
         Task<bool> FoundExistingUser(string cpf);
-        bool AuthenticateAsync(string email, string senha);
+        Task<bool> AuthenticateAsync(string cpf, string senha);
         public string GenerateToken(User user);
-        
+        public Task<User> FoundUserByCpf(string cpf);
+
     }
 }
