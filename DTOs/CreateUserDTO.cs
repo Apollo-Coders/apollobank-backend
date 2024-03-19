@@ -1,15 +1,12 @@
-
 using System.ComponentModel.DataAnnotations;
 
-
-namespace ApolloBank.DTOs  
+namespace ApolloBank.DTOs
 {
-    public class CreateUserDTO:BaseUserDTO
+    public class CreateUserDTO : BaseUserDTO
     {
-        [Required(ErrorMessage = "O campo 'Senha' é obrigatório.")]
-        [MinLength(6, ErrorMessage = "O campo 'Senha' deve ter no mínimo 6 caracteres.")]
+        [Required(ErrorMessage = "Password is required.")]
+        [MaxLength(6, ErrorMessage = "Password must have 6 digits.")]
+        [RegularExpression(@"^[0-9]*$", ErrorMessage = "Password must have only numbers.")]
         public string Password { get; set; } = null!;
-        public int AccountNumber { get; set; }
     }
 }
-
