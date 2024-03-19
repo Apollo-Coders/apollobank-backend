@@ -18,7 +18,6 @@ namespace ApolloBank.DTOs
 
         [Required(ErrorMessage = "Email is required.")]
         [EmailAddress(ErrorMessage = "The email address must be a valid email.")]
-        []
         
         public string Email { get; set; } = null!;
 
