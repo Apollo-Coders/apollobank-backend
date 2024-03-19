@@ -4,6 +4,7 @@ using ApolloBank.DTOs;
 using ApolloBank.Models;
 using ApolloBank.Repositories.Interfaces;
 using ApolloBank.Services;
+using ApolloBank.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApolloBank.Repositories
@@ -12,9 +13,9 @@ namespace ApolloBank.Repositories
     {
         private readonly AppDbContext _appDbContext;
 
-        private readonly HashService _hashService;
+        private readonly IHashService _hashService;
 
-        public UserRepository(AppDbContext appDbContext, HashService hashService)
+        public UserRepository(AppDbContext appDbContext, IHashService hashService)
         {
             _appDbContext = appDbContext;
             _hashService = hashService;
