@@ -1,5 +1,4 @@
 ﻿using ApolloBank.DTOs;
-using ApolloBank.Services;
 using ApolloBank.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -81,8 +80,7 @@ namespace ApolloBank.Controllers
             }
             return Ok(produto);
         }
-
-
+        
         [HttpGet]
         public async Task<ActionResult<TransactionDTO>> GetScheduledTransaction()
         {

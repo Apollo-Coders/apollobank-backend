@@ -73,10 +73,10 @@ namespace ApolloBank.Services
             return _mapper.Map<IEnumerable<TransactionDTO>>(transaction);
         }
 
-        public async Task<IEnumerable<TransactionDTO>> GetScheduledTransaction()
+        public async Task<List<TransactionDTO>> GetScheduledTransaction()
         {
             var transaction = await _transactionsRepository.GetScheduledTransaction();
-            return _mapper.Map<IEnumerable<TransactionDTO>>(transaction);
+            return _mapper.Map<List<TransactionDTO>>(transaction);
         }
 
     
