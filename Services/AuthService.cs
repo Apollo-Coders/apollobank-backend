@@ -13,35 +13,41 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace ApolloBank.Services
 {
-    
+
     public class AuthService : IAuthService
     {
-        private readonly UserManager<IdentityUser> _userManager;
         private AppDbContext _appDbContext;
         private readonly IConfiguration _configuration;
+        private IHashService _hashService;
 
-        public AuthService(AppDbContext appDbContext, IConfiguration configuration){
+        public AuthService(AppDbContext appDbContext, IConfiguration configuration, IHashService hashService)
+        {
             _appDbContext = appDbContext;
             _configuration = configuration;
+            _hashService = hashService;
         }
 
-        public bool AuthenticateAsync(string email, string senha)
+        public async Task<bool> AuthenticateAsync(string cpf, string senha)
         {
-            var user = _appDbContext.Users.Where(u => u.Email.ToUpper() == email.ToUpper() && u.Password == senha).FirstOrDefaultAsync();
-            if(user == null){
-                return false;
-            }
-            return true;
-        }//refatorar isso, ele retorna true sempre.
-
-        public async Task<bool> FoundExistingUser(string cpf)
-        {
-            var user = await _appDbContext.Users.Where(u => u.CPF == cpf).FirstOrDefaultAsync();
-            if(user != null)
+            string hashPassword = _hashService.HashPassword(senha);
+            
+            User? user = await _appDbContext.Users.FirstOrDefaultAsync(u => u.CPF == cpf && u.Password == hashPassword);
+            if (user != null)
             {
                 return true;
             }
             return false;
+        }
+
+        public async Task<bool> FoundExistingUser(string cpf)
+        {
+            var user = await _appDbContext.Users.Where(u => u.CPF == cpf).FirstOrDefaultAsync();
+            if (user != null)
+            {
+                return true;
+            }
+            return false;
+
         }
 
         public string GenerateToken([FromBody] User user)
@@ -69,5 +75,16 @@ namespace ApolloBank.Services
             );
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        public async Task<User> FoundUserByCpf([FromBody] string cpf)
+        {
+            User? user = await _appDbContext.Users.FirstOrDefaultAsync(u => u.CPF == cpf);
+            if (user != null)
+            {
+                return user;
+            }
+            return null;
+        }
     }
+
 }
