@@ -14,5 +14,6 @@ namespace ApolloBank.Models
         public bool Policies { get; set; }
         public Guid UserId { get; set; }
         public virtual User User { get; set; } = null!;
+
     }
 }
