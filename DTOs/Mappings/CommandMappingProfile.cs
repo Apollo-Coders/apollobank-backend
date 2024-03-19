@@ -6,7 +6,7 @@ namespace ApolloBank.DTOs.Mappings
 {
     public class CommandMappingProfile : Profile
     {
-        CommandMappingProfile()
+       public CommandMappingProfile()
         {
             CreateMap<Transaction, TransactionDTO>().ReverseMap();
         }

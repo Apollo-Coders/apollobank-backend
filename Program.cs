@@ -1,12 +1,11 @@
 using ApolloBank.Data;
-using ApolloBank.Enums;
 using ApolloBank.Repositories;
 using ApolloBank.Repositories.Interfaces;
+using ApolloBank.SampleScheduler.Extensions;
+using ApolloBank.SampleScheduler.Factories;
+using ApolloBank.SampleScheduler.TimerSchedulers;
 using ApolloBank.Services;
 using ApolloBank.Services.Interfaces;
-using ApolloBank.Services;
-using Microsoft.EntityFrameworkCore;
-using ApolloBank.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +24,14 @@ builder.Services.AddControllersWithViews()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<HashService>();
+
+
+//SampleScheduler
+builder.Services.AddCronJob<TimerCheckDatabase>(c => c.CronExpression = @"0 */1 * * * *");
+//builder.Services.AddCronJob<TimerCheckDatabase>(c => c.CronExpression = "0 0 * * * *");
+builder.Services.AddTransient<IServiceScopeFactory, DefaultServiceScopeFactory>();
+
+
 
 //DI de Services
 builder.Services.AddTransient<IAuthService, AuthService>();
