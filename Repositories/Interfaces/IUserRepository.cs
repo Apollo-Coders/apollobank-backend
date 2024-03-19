@@ -9,8 +9,8 @@ namespace ApolloBank.Repositories.Interfaces
         Task<UserDetailsDTO> GetUserById(Guid id);
         Task<UserDetailsDTO> GetUserByEmail(string email);
         Task<UserDetailsDTO> GetUserByCPF(string cpf);
-        Task<User> UpdateUser(UpdateUserDTO updateUserDTOser);
-        Task<User> DeleteUser(Guid id);
+        Task<UserDetailsDTO> UpdateUser(Guid id, UpdateUserDTO updateUserDTOser);
+        Task<bool> DeleteUser(Guid id);
         Task<List<UserDetailsDTO>> GetUsers();
 
 
