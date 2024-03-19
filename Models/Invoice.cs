@@ -20,15 +20,6 @@ namespace ApolloBank.Models
             InvoicePaid = invoicePaid;
         }
 
-        public void payInvoice(double amount){
-            InvoicePaid += amount;
-            if(InvoicePaid >= InvoiceTotalAmount){
-                status = InvoiceStatus.PAIDOUT;
-            } else if(InvoicePaid < InvoiceTotalAmount && InvoiceDate > DateTime.Now){
-                status = InvoiceStatus.PENDING;
-            } else if(InvoicePaid < InvoiceTotalAmount && InvoiceDate < DateTime.Now){
-                status = InvoiceStatus.OVERDUE;
-            }
-        }
+        
     }
 }
