@@ -1,13 +1,13 @@
 using ApolloBank.Models;
-using AutoMapper;
-
+ using AutoMapper;
 namespace ApolloBank.DTOs.Mappings
 {
-    public class CommandMappingProfile : Profile
+       public class CommandMappingProfile : Profile
     {
        public CommandMappingProfile()
-        public CommandMappingProfile()
-        {
+
+        {          
+
             CreateMap<Transaction, TransactionDTO>().ReverseMap();
             CreateMap<User, CreateUserDTO>()
                 .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.FullName))
