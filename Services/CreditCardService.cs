@@ -23,20 +23,20 @@ namespace ApolloBank.Services
             _invoiceRepository = invoiceRepository;
         }
 
-        public async Task SetCardLimit(int accountNum, double newLimit, string cardNum)
+        public async Task SetCardLimit(int accountId, double newLimit, string cardNum)
         {
-            var creditCard = await _creditCardRepository.GetCardByCardNumber(cardNum) ?? throw new Exception();
-            var creditCards = new CreditCards(3232, 5121, 3232); /*await _creditCardsRepository.GetCreditById() ?? throw new Exception();*/
+            var creditCard = await _creditCardRepository.GetCardByCardNumber(cardNum);
+            var creditCards = await _creditCardsRepository.GetCreditCardsByAccountId(accountId);
 
             double actualCardLimit = creditCard.CreditLimit - creditCard.CreditUsed;
             double actualTotalLimit = creditCards.TotalCreditLimit - creditCards.TotalAlocatedCredit;
 
-
+            // Verificando se o novo limite é maior ou menor que o limite disponível
             if (newLimit > actualCardLimit)
             {
                 double availableLimit = newLimit - actualCardLimit;
 
-                //Verificar se a conta tem esse novo limite livre
+                // Verificar se a conta tem esse novo limite livre
                 if (actualTotalLimit > availableLimit)
                 {
                     double newTotalLimit = actualTotalLimit - availableLimit;
@@ -46,8 +46,8 @@ namespace ApolloBank.Services
                         try
                         {
                             await _creditCardRepository.SetLimit(newLimit, cardNum);
-                            await _creditCardsRepository.SetTotalLimit(newTotalLimit, accountNum);
-                            /*diminuir esse valor do limite total do creditCard*/
+                            await _creditCardsRepository.SetTotalLimit(newTotalLimit, accountId);
+                            // diminuir esse valor do limite total do creditCard
 
                             await transaction.CommitAsync();
                         }
@@ -69,8 +69,8 @@ namespace ApolloBank.Services
                 double availableLimit = actualCardLimit - newLimit;
 
                 double newTotalLimit = actualTotalLimit + availableLimit;
-                await _creditCardsRepository.SetTotalLimit(newTotalLimit, accountNum);
-                /*aumentar esse valor do limite total do creditCard*/
+                await _creditCardsRepository.SetTotalLimit(newTotalLimit, accountId);
+                // Aumentar esse valor do limite total do creditCard
             }
         }
 
