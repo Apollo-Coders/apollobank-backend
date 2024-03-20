@@ -14,6 +14,28 @@ namespace ApolloBank.Repositories
             _appDbContext = appDbContext;
         }
 
+        public async Task<Invoice> CreateMonthInvoice(int accountId) 
+        {
+            // Pegar a data do primeiro dia do mês atual no horário zerado
+            DateTime actualMonthDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+
+            var monthInvoice = new Invoice(actualMonthDate, accountId);
+
+            try
+            {
+                var returnedInvoice = await _appDbContext.Invoices.AddAsync(monthInvoice);
+                await _appDbContext.SaveChangesAsync();
+
+                return returnedInvoice.Entity;
+            } 
+            catch (Exception ex)
+            {
+                throw new Exception("Erro ao criar invoice do mês", ex);
+            }
+
+            
+        }
+
         public async Task AddAmountToInvoice(double amount, int accountId)
         {
             var actualMonthInvoice = await GetActualMonthInvoice(accountId);
