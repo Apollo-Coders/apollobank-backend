@@ -1,4 +1,5 @@
 ﻿using ApolloBank.DTOs;
+using ApolloBank.Models;
 
 namespace ApolloBank.Repositories.Interfaces
 {
