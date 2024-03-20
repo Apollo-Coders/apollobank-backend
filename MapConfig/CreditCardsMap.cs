@@ -9,7 +9,15 @@ namespace ApolloBank.MapConfig
     {
         public void Configure(EntityTypeBuilder<CreditCards> builder)
         {
-            
+            builder.ToTable("CreditCards");
+
+            builder.HasKey(x => x.Id);
+
+            builder.Property(x => x.TotalCreditLimit);
+
+            builder.Property(x => x.TotalCreditUsed);
+
+            builder.Property(x => x.TotalAlocatedCredit);
         }
     }
 }
