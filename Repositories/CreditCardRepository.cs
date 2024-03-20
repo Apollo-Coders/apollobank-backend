@@ -3,6 +3,7 @@ using ApolloBank.DTOs;
 using ApolloBank.Models;
 using ApolloBank.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ApolloBank.Repositories
 {
@@ -14,21 +15,32 @@ namespace ApolloBank.Repositories
         {
             _appDbContext = appDbContext;
         }
-        public void SetLimit(float limit/*esperar o numero do cartão*/)
+
+        public async Task<CreditCard?> GetCardByCardNumber(string cardNum)
         {
-            throw new NotImplementedException();
+            var creditCard = await _appDbContext.CreditCard.FirstOrDefaultAsync(c => c.Number == cardNum);
+            return creditCard;
         }
 
-        public void AddTransactionToInvoice(Transaction transaction)
+        //Esse método apenas seta um novo valor no limite do cartão
+        public async Task SetLimit(double newLimit, string cardNum)
         {
-            //transaction.From 
-                /*AQUI VAI ESTAR O NUMERO DO CARTÃO O QUAL FOI FEITO A TRANSAÇÃO, ADICIONAR O VALOR DA TRANSACTION NA FATURA DO CARTÃO E NA FATURA GERAL*/
-            throw new NotImplementedException();
+            var creditCard = await _appDbContext.CreditCard.FirstOrDefaultAsync(c => c.Number == cardNum) ?? throw new Exception();
+
+            creditCard.CreditLimit = newLimit;
+            _appDbContext.CreditCard.Update(creditCard);
+            await _appDbContext.SaveChangesAsync();
         }
 
-        public Task<bool> VerifyCreditLimit(int cardNumber)
+        //Esse método vai adicionar o valor de uma transação para o crédito usado e retirar esse valor do limite
+        public async Task AddAmountToLimit(double amount, string cardNum)
         {
-            throw new NotImplementedException();
+            var creditCard = await _appDbContext.CreditCard.FirstOrDefaultAsync(c => c.Number == cardNum) ?? throw new Exception();
+
+            creditCard.CreditUsed += amount;
+            creditCard.CreditLimit -= amount;
+            _appDbContext.CreditCard.Update(creditCard);
+            await _appDbContext.SaveChangesAsync();
         }
     }
 }

@@ -6,5 +6,7 @@ namespace ApolloBank.Repositories.Interfaces
     {
         Task<CreditCardDetailsDTO> CreateCreditCard(CreateCreditCardDTO createCreditCard);
         void BlockCreditCard(int cardId);
+
+        public Task AddAmountToTotalLimit(double amount, int accountId);
     }
 }

@@ -5,11 +5,11 @@ namespace ApolloBank.Repositories.Interfaces
 {
     public interface ICreditCardRepository
     {
-        void SetLimit(float limit);
+        public Task<CreditCard?> GetCardByCardNumber(string cardNum);
 
-        void AddTransactionToInvoice(Transaction transaction);
+        public Task SetLimit(double newLimit, string cardNum);
 
-        Task<bool> VerifyCreditLimit(int cardNumber); 
+        public Task AddAmountToLimit(double amount, string cardN);
 
     }
 }

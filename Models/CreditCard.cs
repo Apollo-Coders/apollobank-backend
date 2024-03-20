@@ -2,13 +2,13 @@
 {
     public class CreditCard
     {
-        public int? Id { get; private set; }
-        public bool? IsBlocked { get; private set; }
-        public string Number { get; private set; }
-        public int Cvc { get; private set; }
-        public DateTime ExpirationTime { get; private set; }
-        public double CreditUsed { get; private set; }
-        public double CreditLimit { get; private set; }
+        public int? Id { get; set; }
+        public bool? IsBlocked { get; set; }
+        public string Number { get; set; }
+        public int Cvc { get; set; }
+        public DateTime ExpirationTime { get; set; }
+        public double CreditUsed { get; set; }
+        public double CreditLimit { get; set; }
 
         public int? Account_Id { get; set; }
 
@@ -22,10 +22,6 @@
             CreditUsed = creditUsed;
             CreditLimit = creditLimit;
             Account_Id = account_Id;
-        }
-
-        public void setLimit(float limit){
-            CreditLimit = limit;
         }
     }
 }

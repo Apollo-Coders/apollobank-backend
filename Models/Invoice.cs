@@ -4,21 +4,25 @@ namespace ApolloBank.Models
 {
     public class Invoice
     {
-        public int Id { get; private set; }
-        public DateTime InvoiceDate { get; private set; }
-        public double InvoiceTotalAmount { get; private set; }
-        public double InvoicePaid { get; private set; }
+        public int Id { get; set; }
+        public DateTime InvoiceDate { get; set; }
+        public double InvoiceTotalAmount { get; set; }
+        public double InvoicePaid { get; set; }
 
         public InvoiceStatus status { get; private set; }
 
+        public int? AccountId { get; set; }
         public Account Account { get; set; }
 
-        public Invoice(int id, DateTime invoiceDate, double invoiceTotalAmount, double invoicePaid){
+        Invoice() { }
+
+        /*public Invoice(int id, DateTime invoiceDate, double invoiceTotalAmount, double invoicePaid, string accountId){
             Id = id;
             InvoiceDate = invoiceDate;
             InvoiceTotalAmount = invoiceTotalAmount;
             InvoicePaid = invoicePaid;
-        }
+            AccountId = accountId;
+        }*/
 
         
     }
