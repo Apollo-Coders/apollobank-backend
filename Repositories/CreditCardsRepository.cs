@@ -23,7 +23,7 @@ namespace ApolloBank.Repositories
         
 
 
-        public async Task<CreditCardDetailsDTO> CreateCreditCardd(CreateCreditCardDTO createcreditCard)
+        public async Task<CreditCardDetailsDTO> CreateCreditCard(CreateCreditCardDTO createcreditCard)
         {
 
             CreditCard creditCard = _mapper.Map<CreditCard>(createcreditCard);
@@ -39,37 +39,32 @@ namespace ApolloBank.Repositories
 
 
 
-        public async Task<CreditCardDetailsDTO> CreateCreditCard(CreateCreditCardDTO createCreditCard)
-        {
-            bool isBlocked = createCreditCard.IsBlocked;
-            DateTime expirationTime = createCreditCard.ExpirationTime;
-            double creditLimit = createCreditCard.CreditLimit;
-            double creditUsed = createCreditCard.CreditUsed;
-            string number = createCreditCard.Number;
-            int cvc = createCreditCard.Cvc;
-            int accountId = createCreditCard.AccountId;
-            CreditCard newCreditCard = new CreditCard(isBlocked, number, cvc, expirationTime, creditUsed, creditLimit, accountId);
+        //public async Task<CreditCardDetailsDTO> CreateCreditCard(CreateCreditCardDTO createCreditCard)
+        //{
+        //    bool isBlocked = createCreditCard.IsBlocked;
+        //    DateTime expirationTime = createCreditCard.ExpirationTime;
+        //    double creditLimit = createCreditCard.CreditLimit;
+        //    double creditUsed = createCreditCard.CreditUsed;
+        //    string number = createCreditCard.Number;
+        //    int cvc = createCreditCard.Cvc;
+        //    int accountId = createCreditCard.AccountId;
+        //    CreditCard newCreditCard = new CreditCard(isBlocked, number, cvc, expirationTime, creditUsed, creditLimit, accountId);
 
-            var createdCreditCard = await _appDbContext.CreditCard.AddAsync(newCreditCard);
-            await _appDbContext.SaveChangesAsync();
+        //    var createdCreditCard = await _appDbContext.CreditCard.AddAsync(newCreditCard);
+        //    await _appDbContext.SaveChangesAsync();
 
-            return new CreditCardDetailsDTO
-            {
-                Id = (int)createdCreditCard.Entity.Id,
-                IsBlocked = (bool)createdCreditCard.Entity.IsBlocked,
-                Number = createdCreditCard.Entity.Number,
-                Cvc = createdCreditCard.Entity.Cvc,
-                ExpirationTime = createdCreditCard.Entity.ExpirationTime,
-                CreditUsed = createdCreditCard.Entity.CreditUsed,
-                CreditLimit = createdCreditCard.Entity.CreditLimit,
-                AccountId = (int)createdCreditCard.Entity.Account_Id
-            };
-        }
-
-
-
-
-
+        //    return new CreditCardDetailsDTO
+        //    {
+        //        Id = (int)createdCreditCard.Entity.Id,
+        //        IsBlocked = (bool)createdCreditCard.Entity.IsBlocked,
+        //        Number = createdCreditCard.Entity.Number,
+        //        Cvc = createdCreditCard.Entity.Cvc,
+        //        ExpirationTime = createdCreditCard.Entity.ExpirationTime,
+        //        CreditUsed = createdCreditCard.Entity.CreditUsed,
+        //        CreditLimit = createdCreditCard.Entity.CreditLimit,
+        //        AccountId = (int)createdCreditCard.Entity.Account_Id
+        //    };
+        //} 
 
 
 
