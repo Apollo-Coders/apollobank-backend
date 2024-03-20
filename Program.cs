@@ -44,6 +44,7 @@ builder.Services.AddTransient<ITransactionService, TransactionService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITransactionsRepository, TransactionsRepository>();
 builder.Services.AddScoped<ICreditCardRepository, CreditCardRepository>();
+builder.Services.AddScoped<ICreditCardsRepository, CreditCardsRepository>();
 builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
