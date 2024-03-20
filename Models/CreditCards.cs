@@ -3,9 +3,9 @@
     public class CreditCards
     {
         public int? Id { get; set; }
-        public float TotalCreditLimit { get; private set; }
-        public float TotalCreditUsed { get; private set; }
-        public float TotalAlocatedCredit { get; private set; }
+        public double TotalCreditLimit { get; set; }
+        public double TotalCreditUsed { get; set; }
+        public double TotalAlocatedCredit { get; set; }
         public int? Account_Id { get; set; }
         public Account? Account { get; set; }
         public CreditCards(float totalCreditLimit, float totalCreditUsed, float totalAlocatedCredit)

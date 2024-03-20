@@ -5,7 +5,7 @@ namespace ApolloBank.Repositories.Interfaces
 {
     public interface ICreditCardRepository
     {
-        public Task<CreditCard?> GetCardByCardNumber(string cardNum);
+        public Task<CreditCard> GetCardByCardNumber(string cardNum);
 
         public Task SetLimit(double newLimit, string cardNum);
 

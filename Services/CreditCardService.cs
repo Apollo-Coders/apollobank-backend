@@ -38,7 +38,7 @@ namespace ApolloBank.Services
                 {
                     double newTotalLimit = actualTotalLimit - availableLimit;
                     await _creditCardRepository.SetLimit(newLimit, cardNum);
-                    /*await _creditCardsRepository.SetTotalLimit(newTotalLimit, accountNum);*/
+                    await _creditCardsRepository.SetTotalLimit(newTotalLimit, accountNum);
                     /*diminuir esse valor do limite total do creditCard*/
                 }
                 else
@@ -51,7 +51,7 @@ namespace ApolloBank.Services
                 double availableLimit = actualCardLimit - newLimit;
 
                 double newTotalLimit = actualTotalLimit + availableLimit;
-                /*await _creditCardsRepository.SetTotalLimit(newTotalLimit, accountNum);*/
+                await _creditCardsRepository.SetTotalLimit(newTotalLimit, accountNum);
                 /*aumentar esse valor do limite total do creditCard*/
             }
         }
@@ -67,14 +67,19 @@ namespace ApolloBank.Services
 
         public async Task AddTransactionToCreditCard(TransactionDTO transaction)
         {
-            string cardNum = transaction.From ?? throw new Exception();
+            string? cardNum = transaction.From;
+
+            if (cardNum == null) {
+                throw new Exception("Transação invalida, preencha o campo From com o número do cartão!");
+            }
+
             double amount = transaction.Amount;
 
             double availableLimit = await VerifyCardLimit(cardNum);
 
-            if (availableLimit > amount)
+            if (availableLimit < amount)
             {
-                throw new Exception();
+                throw new Exception("Compra reprovada: Cartão não possui limite suficiente");
             }
 
             await _creditCardRepository.AddAmountToLimit(amount, cardNum);

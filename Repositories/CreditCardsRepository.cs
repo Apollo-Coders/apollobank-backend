@@ -20,7 +20,6 @@ namespace ApolloBank.Repositories
             _appDbContext = appDbContext;
             _mapper = mapper;
         }
-        
 
 
         public async Task<CreditCardDetailsDTO> CreateCreditCard(CreateCreditCardDTO createcreditCard)
@@ -36,8 +35,6 @@ namespace ApolloBank.Repositories
 
 
         }
-
-
 
         //public async Task<CreditCardDetailsDTO> CreateCreditCard(CreateCreditCardDTO createCreditCard)
         //{
@@ -66,11 +63,6 @@ namespace ApolloBank.Repositories
         //    };
         //} 
 
-
-
-
-
-
         public async Task<CreditCard> BlockCreditCard(string cardNumber)
         {
             var creditCard = await _appDbContext.CreditCard.FirstOrDefaultAsync(c => c.Number.Equals(cardNumber));
@@ -86,6 +78,35 @@ namespace ApolloBank.Repositories
             await _appDbContext.SaveChangesAsync();
 
             return creditCard;
+        }
+
+        public async Task AddAmountToTotalLimit(double amount, int accountId)
+        {
+            var creditCards = await GetCreditCardsByAccountId(accountId);
+
+            creditCards.TotalCreditUsed += amount;
+            _appDbContext.CreditCards.Update(creditCards);
+            await _appDbContext.SaveChangesAsync();
+        }
+
+        public async Task<CreditCards> GetCreditCardsByAccountId(int accountId)
+        {
+            var creditCard = await _appDbContext.CreditCards.FirstOrDefaultAsync(c => c.Account_Id == accountId);
+
+            if (creditCard == null)
+            {
+                throw new Exception("Dados de limites de cartões não encontrado");
+            }
+
+            return creditCard;
+
+        }
+
+        public async Task SetTotalLimit(double newTotalLimit, int accountId)
+        {
+            var creditCards = await GetCreditCardsByAccountId(accountId);
+
+            creditCards.TotalCreditLimit += newTotalLimit;
         }
     }
 }

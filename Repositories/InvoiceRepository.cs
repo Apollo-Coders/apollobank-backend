@@ -16,12 +16,7 @@ namespace ApolloBank.Repositories
 
         public async Task AddAmountToInvoice(double amount, int accountId)
         {
-            var actualMonthInvoice = await GetActualMonthInvoice(accountId) ?? throw new Exception();
-
-            if (actualMonthInvoice != null)
-            {
-                throw new Exception();
-            }
+            var actualMonthInvoice = await GetActualMonthInvoice(accountId);
 
             actualMonthInvoice.InvoiceTotalAmount += amount;
 
@@ -29,12 +24,17 @@ namespace ApolloBank.Repositories
             await _appDbContext.SaveChangesAsync();
         }
 
-        public async Task<Invoice?> GetActualMonthInvoice(int accountId)
+        public async Task<Invoice> GetActualMonthInvoice(int accountId)
         {
             // Pegar a data do primeiro dia do mês atual no horário zerado
             DateTime actualMonthDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
 
             var actualMonthInvoice = await _appDbContext.Invoices.FirstOrDefaultAsync(i => i.InvoiceDate == actualMonthDate && i.AccountId == accountId);
+
+            if (actualMonthInvoice == null)
+            {
+                throw new Exception("Fatura do mês atual não encontrada");
+            }
 
             return actualMonthInvoice;
         }
