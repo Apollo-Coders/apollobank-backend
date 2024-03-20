@@ -1,4 +1,5 @@
-﻿using ApolloBank.DTOs;
+﻿using ApolloBank.Data;
+using ApolloBank.DTOs;
 using ApolloBank.Models;
 using ApolloBank.Repositories;
 using ApolloBank.Repositories.Interfaces;
@@ -11,9 +12,11 @@ namespace ApolloBank.Services
         public ICreditCardsRepository _creditCardsRepository;
         public IAccountRepository _accountRepository;
         public IInvoiceRepository _invoiceRepository;
+        public AppDbContext _appDbContext;
 
-        public CreditCardService(ICreditCardRepository creditCardRepository, IAccountRepository accountRepository, ICreditCardsRepository creditCardsRepository, IInvoiceRepository invoiceRepository)
+        public CreditCardService(AppDbContext appDdContext, ICreditCardRepository creditCardRepository, IAccountRepository accountRepository, ICreditCardsRepository creditCardsRepository, IInvoiceRepository invoiceRepository)
         {
+            _appDbContext = appDdContext;
             _creditCardRepository = creditCardRepository;
             _accountRepository = accountRepository;
             _creditCardsRepository = creditCardsRepository;
@@ -37,13 +40,28 @@ namespace ApolloBank.Services
                 if (actualTotalLimit > availableLimit)
                 {
                     double newTotalLimit = actualTotalLimit - availableLimit;
-                    await _creditCardRepository.SetLimit(newLimit, cardNum);
-                    await _creditCardsRepository.SetTotalLimit(newTotalLimit, accountNum);
-                    /*diminuir esse valor do limite total do creditCard*/
+
+                    using (var transaction = await _appDbContext.Database.BeginTransactionAsync())
+                    {
+                        try
+                        {
+                            await _creditCardRepository.SetLimit(newLimit, cardNum);
+                            await _creditCardsRepository.SetTotalLimit(newTotalLimit, accountNum);
+                            /*diminuir esse valor do limite total do creditCard*/
+
+                            await transaction.CommitAsync();
+                        }
+                        catch (Exception ex)
+                        {
+                            await transaction.RollbackAsync();
+                            throw new Exception("Houve um erro interno ao alterar o limite no cartão", ex);
+                        }
+                    }
+                    
                 }
                 else
                 {
-                    throw new Exception();
+                    throw new Exception("Você não tem limite em conta suficiente para adicionar a esse cartão, tente diminuir o limite de outros cartões ou pagar sua fatura");
                 }
 
             } else
@@ -65,15 +83,16 @@ namespace ApolloBank.Services
             return availableLimit;
         }
 
-        public async Task AddTransactionToCreditCard(TransactionDTO transaction)
+        public async Task AddTransactionToCreditCard(TransactionDTO transactionDetails)
         {
-            string? cardNum = transaction.From;
+            string? cardNum = transactionDetails.From;
 
-            if (cardNum == null) {
-                throw new Exception("Transação invalida, preencha o campo From com o número do cartão!");
+            if (cardNum == null)
+            {
+                throw new Exception("Transação inválida, preencha o campo From com o número do cartão!");
             }
 
-            double amount = transaction.Amount;
+            double amount = transactionDetails.Amount;
 
             double availableLimit = await VerifyCardLimit(cardNum);
 
@@ -82,9 +101,26 @@ namespace ApolloBank.Services
                 throw new Exception("Compra reprovada: Cartão não possui limite suficiente");
             }
 
-            await _creditCardRepository.AddAmountToLimit(amount, cardNum);
-            await _creditCardsRepository.AddAmountToTotalLimit(amount, transaction.Account_Id);
-            await _invoiceRepository.AddAmountToInvoice(amount, transaction.Account_Id);
+            // Inicializa uma transação
+            using (var transaction = await _appDbContext.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    await _creditCardRepository.AddAmountToLimit(amount, cardNum);
+                    await _creditCardsRepository.AddAmountToTotalLimit(amount, transactionDetails.Account_Id);
+                    await _invoiceRepository.AddAmountToInvoice(amount, transactionDetails.Account_Id);
+
+                    // Confirma a transação se todas as operações foram bem-sucedidas
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    // Reverte a transação em caso de exceção
+                    await transaction.RollbackAsync();
+                    throw new Exception("Houve um erro interno ao inserir transação na fatura", ex);
+                }
+            }
         }
+
     }
 }

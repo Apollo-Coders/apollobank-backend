@@ -16,7 +16,7 @@ namespace ApolloBank.Repositories
             _appDbContext = appDbContext;
         }
 
-        public async Task<CreditCard?> GetCardByCardNumber(string cardNum)
+        public async Task<CreditCard> GetCardByCardNumber(string cardNum)
         {
             var creditCard = await _appDbContext.CreditCard.FirstOrDefaultAsync(c => c.Number == cardNum);
             if (creditCard == null)
