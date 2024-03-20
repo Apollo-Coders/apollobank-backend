@@ -1,10 +1,11 @@
 using ApolloBank.Data;
-using ApolloBank.Enums;
 using ApolloBank.Repositories;
 using ApolloBank.Repositories.Interfaces;
+using ApolloBank.SampleScheduler.Extensions;
+using ApolloBank.SampleScheduler.Factories;
+using ApolloBank.SampleScheduler.TimerSchedulers;
 using ApolloBank.Services;
 using ApolloBank.Services.Interfaces;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,14 @@ builder.Services.AddScoped<HashService>();
 builder.Services.AddScoped<RandomNumberService>();
 
 
+
+//SampleScheduler
+builder.Services.AddCronJob<TimerCheckDatabase>(c => c.CronExpression = @"0 */1 * * * *");
+//builder.Services.AddCronJob<TimerCheckDatabase>(c => c.CronExpression = "0 0 * * * *");
+builder.Services.AddTransient<IServiceScopeFactory, DefaultServiceScopeFactory>();
+
+
+
 //DI de Services
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<ITransactionService, TransactionService>();
@@ -36,6 +45,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITransactionsRepository, TransactionsRepository>();
 builder.Services.AddScoped<ICreditCardRepository, CreditCardRepository>();
 builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
 //Automapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

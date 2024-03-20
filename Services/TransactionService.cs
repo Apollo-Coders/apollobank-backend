@@ -21,16 +21,40 @@ namespace ApolloBank.Services
 
 
 
-        #region Métodos que recebem um objeto DTO e o convertem em uma entidade 
-        public async Task AddTransaction(TransactionDTO Transaction)
+        #region Methods that receive a DTO object and convert it into an entity
+        public async Task AddTransaction(TransactionDTO transactiondto)
         {
-            var transaction = _mapper.Map<Transaction>(Transaction);
+            var transaction = _mapper.Map<Transaction>(transactiondto);
             await _transactionsRepository.AddTransaction(transaction);
+        }
+
+        public async Task Makedeposit(TransactionDTO transactiondto)
+        {
+            var transaction = _mapper.Map<Transaction>(transactiondto);
+            await _transactionsRepository.Makedeposit(transaction);
+        }
+
+        public async Task Makewithdrawal(TransactionDTO transactiondto)
+        {
+            var transaction = _mapper.Map<Transaction>(transactiondto);
+            await _transactionsRepository.Makewithdrawal(transaction);
+        }
+
+        public async Task Scheduletransaction(TransactionDTO transactionDto)
+        {
+            var transaction = _mapper.Map<Transaction>(transactionDto);
+            await _transactionsRepository.Scheduletransaction(transaction);
+        }
+
+        public async Task<bool> CompleteScheduledTransaction(int? id)
+        {
+           
+            return await _transactionsRepository.CompleteScheduledTransaction(id);
         }
         #endregion
 
 
-        #region Métodos que recebem uma entidade e a convertem em um objeto DTO
+        #region Methods that receive an entity and convert it into a DTO object
         public async Task<IEnumerable<TransactionDTO>> GetAllTransactions(int? id)
         {
             var transaction = await _transactionsRepository.GetAllTransactions(id);
@@ -48,6 +72,16 @@ namespace ApolloBank.Services
             var transaction = await _transactionsRepository.GetLastSixMonthsTransactions(id);
             return _mapper.Map<IEnumerable<TransactionDTO>>(transaction);
         }
+
+        public async Task<List<TransactionDTO>> GetScheduledTransaction()
+        {
+            var transaction = await _transactionsRepository.GetScheduledTransaction();
+            return _mapper.Map<List<TransactionDTO>>(transaction);
+        }
+
+    
+
+
         #endregion
     }
 }

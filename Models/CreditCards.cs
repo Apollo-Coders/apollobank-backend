@@ -10,11 +10,7 @@
         public int? Account_Id { get; set; }
         public Account? Account { get; set; }
 
-        public CreditCards(double totalCreditLimit, double totalCreditUsed, double totalAlocatedCredit){
-            TotalCreditLimit = totalCreditLimit;
-            TotalCreditUsed = totalCreditUsed;
-            TotalAlocatedCredit = totalAlocatedCredit;
-        }
+        
     }
     
 }

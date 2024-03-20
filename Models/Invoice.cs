@@ -14,22 +14,6 @@ namespace ApolloBank.Models
         public int? Account_Id { get; private set; }
         public Account? Account { get; private set; }
 
-        public Invoice(int id, DateTime invoiceDate, double invoiceTotalAmount, double invoicePaid){
-            Id = id;
-            InvoiceDate = invoiceDate;
-            InvoiceTotalAmount = invoiceTotalAmount;
-            InvoicePaid = invoicePaid;
-        }
-
-        public void payInvoice(double amount){
-            InvoicePaid += amount;
-            if(InvoicePaid >= InvoiceTotalAmount){
-                status = InvoiceStatus.PAIDOUT;
-            } else if(InvoicePaid < InvoiceTotalAmount && InvoiceDate > DateTime.Now){
-                status = InvoiceStatus.PENDING;
-            } else if(InvoicePaid < InvoiceTotalAmount && InvoiceDate < DateTime.Now){
-                status = InvoiceStatus.OVERDUE;
-            }
-        }
+        
     }
 }

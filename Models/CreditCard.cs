@@ -21,8 +21,7 @@
             CreditLimit = creditLimit;
         }
 
-        public void setLimit(float limit){
-            CreditLimit = limit;
-        }
+        
+
     }
 }

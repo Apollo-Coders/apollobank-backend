@@ -11,6 +11,8 @@ namespace ApolloBank.Models
         public string? To { get; private set; }
         public string? From { get; private set; }
         public DateTime Date { get; private set; } = DateTime.Now;
+        public DateTime? ScheduledDate { get; private set; }
+        public string? TransactionStatusChecker { get; set; }
         public string? Description { get; private set; }
         public TransactionType Transaction_Type { get; private set; }
         public char Direction { get; private set; }
@@ -20,9 +22,24 @@ namespace ApolloBank.Models
         public Transaction()
         { }
 
-        public Transaction(int id, double amount, string? to, string? from, DateTime date, string? description, TransactionType transaction_Type, char direction, int account_Id)
+        public Transaction(int id, double amount, string? to, string? from,DateTime date, DateTime? scheduledDate,string? transactionStatusChecker, string? description, TransactionType transaction_Type, char direction, int? account_Id, Account? account)
         {
             Id = id;
+            Amount = amount;
+            To = to;
+            From = from;
+            Date = date;
+            ScheduledDate = scheduledDate;
+            TransactionStatusChecker = transactionStatusChecker;
+            Description = description;
+            Transaction_Type = transaction_Type;
+            Direction = direction;
+            Account_Id = account_Id;
+            Account = account;
+        }
+
+        public Transaction( double amount, string? to, string? from, DateTime date, string? description, TransactionType transaction_Type, char direction, int? account_Id)
+        {
             Amount = amount;
             To = to;
             From = from;
@@ -32,5 +49,28 @@ namespace ApolloBank.Models
             Direction = direction;
             Account_Id = account_Id;
         }
+
+        public Transaction(double amount, string? to, string? from, DateTime date, DateTime? scheduledDate, string? transactionStatusChecker, string? description, TransactionType transaction_Type, char direction, int? account_Id)
+        {
+            Amount = amount;
+            To = to;
+            From = from;
+            Date = date;
+            ScheduledDate = scheduledDate;
+            TransactionStatusChecker = transactionStatusChecker;
+            Description = description;
+            Transaction_Type = transaction_Type;
+            Direction = direction;
+            Account_Id = account_Id;
+        }
+
+        public Transaction(string? transactionStatusChecker)
+        {
+            TransactionStatusChecker = transactionStatusChecker;
+        }
+
+
+
+        //OBS: INCLUIR UM CONTRUTOR SEM A DATA DE AGENDAMENTO
     }
 }
