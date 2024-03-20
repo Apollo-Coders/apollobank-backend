@@ -46,11 +46,6 @@ namespace ApolloBank.Services
             await _transactionsRepository.Scheduletransaction(transaction);
         }
 
-        public async Task<bool> CompleteScheduledTransaction(int? id)
-        {
-           
-            return await _transactionsRepository.CompleteScheduledTransaction(id);
-        }
         #endregion
 
 
@@ -71,16 +66,7 @@ namespace ApolloBank.Services
         {
             var transaction = await _transactionsRepository.GetLastSixMonthsTransactions(id);
             return _mapper.Map<IEnumerable<TransactionDTO>>(transaction);
-        }
-
-        public async Task<List<TransactionDTO>> GetScheduledTransaction()
-        {
-            var transaction = await _transactionsRepository.GetScheduledTransaction();
-            return _mapper.Map<List<TransactionDTO>>(transaction);
-        }
-
-    
-
+        }    
 
         #endregion
     }
