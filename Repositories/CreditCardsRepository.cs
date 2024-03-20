@@ -2,6 +2,7 @@
 using ApolloBank.DTOs;
 using ApolloBank.Models;
 using ApolloBank.Repositories.Interfaces;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApolloBank.Repositories
@@ -9,11 +10,35 @@ namespace ApolloBank.Repositories
     public class CreditCardsRepository : ICreditCardsRepository
     {
         private readonly AppDbContext _appDbContext;
+        private readonly IMapper _mapper; 
 
-        public CreditCardsRepository(AppDbContext appDbContext)
+
+        public CreditCardsRepository(
+            AppDbContext appDbContext,
+            IMapper mapper)
         {
             _appDbContext = appDbContext;
+            _mapper = mapper;
         }
+        
+
+
+        public async Task<CreditCardDetailsDTO> CreateCreditCardd(CreateCreditCardDTO createcreditCard)
+        {
+
+            CreditCard creditCard = _mapper.Map<CreditCard>(createcreditCard);
+
+            await _appDbContext.CreditCard.AddAsync(creditCard); 
+
+            await _appDbContext.SaveChangesAsync();
+
+            return _mapper.Map<CreditCardDetailsDTO>(creditCard);
+
+
+        }
+
+
+
         public async Task<CreditCardDetailsDTO> CreateCreditCard(CreateCreditCardDTO createCreditCard)
         {
             bool isBlocked = createCreditCard.IsBlocked;
@@ -40,6 +65,16 @@ namespace ApolloBank.Repositories
                 AccountId = (int)createdCreditCard.Entity.Account_Id
             };
         }
+
+
+
+
+
+
+
+
+
+
 
         public async Task<CreditCard> BlockCreditCard(string cardNumber)
         {
