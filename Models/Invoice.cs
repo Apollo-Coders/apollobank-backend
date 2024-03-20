@@ -14,11 +14,10 @@ namespace ApolloBank.Models
         public int? AccountId { get; set; }
         public Account? Account { get; set; }
 
-        public Invoice(int id, DateTime invoiceDate, double invoiceTotalAmount, double invoicePaid){
-            Id = id;
+        public Invoice(DateTime invoiceDate, int accountId){
             InvoiceDate = invoiceDate;
-            InvoiceTotalAmount = invoiceTotalAmount;
-            InvoicePaid = invoicePaid;
+            InvoiceTotalAmount = 0.0d;
+            InvoicePaid = 0.0d;
         }
 
        
