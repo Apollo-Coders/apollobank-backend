@@ -1,4 +1,5 @@
 ﻿using ApolloBank.DTOs;
+using ApolloBank.Migrations;
 using ApolloBank.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +25,25 @@ namespace ApolloBank.Controllers
             try
             {
                 var creditCard = await _creditCardsRepository.CreateCreditCard(createCreditCardDTO);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("{number}")]
+        public async Task<IActionResult> BlockCreditCard(string number)
+        {
+            try
+            {
+                var blockedCreditCard = await _creditCardsRepository.BlockCreditCard(number);
+
+                if (blockedCreditCard == null)
+                {
+                    return NotFound();
+                }
                 return Ok();
             }
             catch (Exception ex)

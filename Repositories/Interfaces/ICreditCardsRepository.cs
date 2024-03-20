@@ -1,10 +1,11 @@
 ﻿using ApolloBank.DTOs;
+using ApolloBank.Models;
 
 namespace ApolloBank.Repositories.Interfaces
 {
     public interface ICreditCardsRepository
     {
         Task<CreditCardDetailsDTO> CreateCreditCard(CreateCreditCardDTO createCreditCard);
-        void BlockCreditCard(int cardId);
+        Task<CreditCard> BlockCreditCard(string cardNumber);
     }
 }

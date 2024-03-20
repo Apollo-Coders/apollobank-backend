@@ -2,6 +2,7 @@
 using ApolloBank.DTOs;
 using ApolloBank.Models;
 using ApolloBank.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace ApolloBank.Repositories
 {
@@ -40,9 +41,21 @@ namespace ApolloBank.Repositories
             };
         }
 
-        public void BlockCreditCard(int cardId/*esperar o numero do cartão*/)
+        public async Task<CreditCard> BlockCreditCard(string cardNumber)
         {
-            throw new NotImplementedException();
+            var creditCard = await _appDbContext.CreditCard.FirstOrDefaultAsync(c => c.Number.Equals(cardNumber));
+
+            if (creditCard == null || creditCard.IsBlocked != false)
+            {
+                throw new Exception("Inexistent or already blocked credit card");
+            }
+
+            creditCard.IsBlocked = true;
+
+            _appDbContext.CreditCard.Update(creditCard);
+            await _appDbContext.SaveChangesAsync();
+
+            return creditCard;
         }
     }
 }
