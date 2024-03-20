@@ -24,6 +24,8 @@ builder.Services.AddControllersWithViews()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<HashService>();
+builder.Services.AddScoped<RandomNumberService>();
+
 
 
 //SampleScheduler
@@ -37,6 +39,7 @@ builder.Services.AddTransient<IServiceScopeFactory, DefaultServiceScopeFactory>(
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<ITransactionService, TransactionService>();
 
+
 //DI de Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITransactionsRepository, TransactionsRepository>();
@@ -48,6 +51,7 @@ builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddDbContext<AppDbContext>();
+
 /*options => options.UseSqlite(builder.Configuration.GetConnectionString("ApolloBankContext"))*/
 
 var app = builder.Build();
