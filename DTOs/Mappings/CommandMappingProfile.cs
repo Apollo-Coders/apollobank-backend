@@ -9,6 +9,10 @@ namespace ApolloBank.DTOs.Mappings
         CommandMappingProfile()
         {
             CreateMap<Transaction, TransactionDTO>().ReverseMap();
+
+            CreateMap<CreateCreditCardDTO, CreditCard>();
+            CreateMap<CreditCard, CreditCardDetailsDTO>(); 
+
         }
     }
 }
