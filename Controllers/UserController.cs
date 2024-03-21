@@ -1,10 +1,12 @@
 ﻿using ApolloBank.DTOs;
 using ApolloBank.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace ApolloBank.Controllers
 {
     [Route("users")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
@@ -86,7 +88,7 @@ namespace ApolloBank.Controllers
         }
 
         [HttpGet("GetUserByCPF")]
-        public async Task<ActionResult<UserDetailsDTO>> GetUserByCPF(string cpf)
+        public async Task<ActionResult<UserDetailsDTO>> GetUserByCPF([FromBody] string cpf)
         {
             var user = await _userRepository.GetUserByCPF(cpf);
             if (user == null)
