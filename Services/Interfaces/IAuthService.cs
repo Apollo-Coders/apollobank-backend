@@ -10,6 +10,6 @@ namespace ApolloBank.Services.Interfaces
         Task<bool> AuthenticateAsync(string cpf, string senha);
         public string GenerateToken(User user);
         public Task<User> FoundUserByCpf(string cpf);
-
+        TokenReturnDTO responseTokenData(string token, string fullName, double balance, int accountNumber);
     }
 }
