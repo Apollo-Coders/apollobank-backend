@@ -30,7 +30,7 @@ namespace ApolloBank.Services
         public async Task<bool> AuthenticateAsync(string cpf, string senha)
         {
             string hashPassword = _hashService.HashPassword(senha);
-            
+
             User? user = await _appDbContext.Users.FirstOrDefaultAsync(u => u.CPF == cpf && u.Password == hashPassword);
             if (user != null)
             {
@@ -84,6 +84,18 @@ namespace ApolloBank.Services
                 return user;
             }
             return null;
+        }
+
+        public TokenReturnDTO responseTokenData(string token, string userName, double balance, int accountNumber)
+        {
+            TokenReturnDTO responseUserData = new()
+            {
+                token = token,
+                userName = userName,
+                balance = balance,
+                accountNumber = accountNumber
+            };
+            return responseUserData;
         }
     }
 
