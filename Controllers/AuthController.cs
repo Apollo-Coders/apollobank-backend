@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ApolloBank.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/")]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
@@ -22,7 +22,7 @@ namespace ApolloBank.Controllers
             _userRepository = userRepository;
         }
 
-        [HttpPost("Login")]
+        [HttpPost("auth/login")]
         public async Task<ActionResult> Authenticate([FromBody] UserRequestDTO data)
         {
             if (data == null)
@@ -42,9 +42,15 @@ namespace ApolloBank.Controllers
             {
                 User user = await _authService.FoundUserByCpf(data.cpf);
                 var token = _authService.GenerateToken(user);
-                return Ok(token);
+
+                TokenReturnDTO response = _authService.responseTokenData(token, user.FullName, 300.00, 300);
+                if (response != null)
+                {
+                    return Ok(response);
+                }
+                return BadRequest("Valores nulos");
             }
-            return Unauthorized("Credenciais inválidas");
+            return Unauthorized("Credenciais inválidas.");
         }
     }
 }
