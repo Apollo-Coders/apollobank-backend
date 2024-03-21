@@ -5,10 +5,14 @@ namespace ApolloBank.Repositories.Interfaces
 {
     public interface ICreditCardsRepository
     {
-        Task<CreditCardDetailsDTO> CreateCreditCard(CreateCreditCardDTO createCreditCard);
-        public Task<CreditCard> BlockCreditCard(string cardNumber);
         public Task<CreditCards> GetCreditCardsByAccountId(int accountId);
-        public Task AddAmountToTotalLimit(double amount, int accountId);
-        public Task SetTotalLimit(double newTotalLimit, int accountId);
+        public Task<CreditCard> GetCardByCardNumber(string cardNum);
+
+        public Task<IEnumerable<CreditCard>> GetAllCardByCardNumber(int accountId);
+        public Task<CreditCard> CreateCreditCard(int accountId);
+        public Task<CreditCard> BlockCreditCard(string cardNumber);
+        public Task SetCardLimit(double newLimit, int accountId, string cardNum);
+        public Task addAmountToUsedCredit(double amount, int accountId, string cardNum);
+
     }
 }

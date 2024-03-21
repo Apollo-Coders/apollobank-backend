@@ -1,4 +1,5 @@
 ﻿using ApolloBank.Data;
+using ApolloBank.Enums;
 using ApolloBank.Models;
 using ApolloBank.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -14,12 +15,14 @@ namespace ApolloBank.Repositories
             _appDbContext = appDbContext;
         }
 
-        public async Task<Invoice> CreateMonthInvoice(int accountId) 
+        public async Task<Invoice> CreateMonthInvoice(int accountId)
         {
             // Pegar a data do primeiro dia do mês atual no horário zerado
             DateTime actualMonthDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
-
-            var monthInvoice = new Invoice(actualMonthDate, accountId);
+            double invoiceTotalAmount = 0.0d;
+            double invoicePaid = 0.0d;
+            InvoiceStatus invoiceStatus = InvoiceStatus.PENDING;
+            var monthInvoice = new Invoice(actualMonthDate, invoiceTotalAmount, invoicePaid, invoiceStatus, accountId);
 
             try
             {
@@ -32,8 +35,6 @@ namespace ApolloBank.Repositories
             {
                 throw new Exception("Erro ao criar invoice do mês", ex);
             }
-
-            
         }
 
         public async Task AddAmountToInvoice(double amount, int accountId)
