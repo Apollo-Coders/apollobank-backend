@@ -51,8 +51,8 @@ namespace ApolloBank.Repositories
         }
 
 
-        // Retorna todos os cartoes de uma conta
-        public async Task<IEnumerable<CreditCard>> GetAllCardByCardNumber(int accountId)
+        // Retorna todos os cartões de uma conta
+        public async Task<IEnumerable<CreditCard>> GetAllCardByAccountId(int accountId)
         {
             var creditCards = await _appDbContext.CreditCard.Where(c => c.Account_Id == accountId).ToListAsync();
 
@@ -103,7 +103,7 @@ namespace ApolloBank.Repositories
         }
 
 
-        //Esse método apenas seta um novo valor no limite do cartão
+        // Esse método apenas seta um novo valor no limite do cartão
         public async Task SetCardLimit(double newLimit, int accountId, string cardNum)
         {
             var creditCard = await GetCardByCardNumber(cardNum);
@@ -129,6 +129,30 @@ namespace ApolloBank.Repositories
                 await UpdateLimits(creditCard, creditCards, newLimit, limitChange);
             }
 
+        }
+
+
+        // Pagar a fatura de um cartão
+        public async Task PayCreditCard(int accountId, string cardNum)
+        {
+            var creditCard = await GetCardByCardNumber(cardNum);
+            var creditCards = await GetCreditCardsByAccountId(accountId);
+
+            using (var transaction = await _appDbContext.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    creditCards.TotalCreditUsed -= creditCard.CreditUsed;
+                    creditCard.CreditUsed = 0.0d;
+                    await _appDbContext.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    throw new Exception("Houve um erro interno ao tentar pagar o cartão", ex);
+                }
+            }
         }
 
 

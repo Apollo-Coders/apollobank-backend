@@ -1,15 +1,17 @@
-﻿using ApolloBank.DTOs;
+﻿using ApolloBank.Data;
+using ApolloBank.DTOs;
+using ApolloBank.Models;
 using ApolloBank.Repositories.Interfaces;
 using AutoMapper;
 
 namespace ApolloBank.Services
 {
-    public class CreditCardService
+    public class CreditCardsService : ICreditCardsService
     {
         public ICreditCardsRepository _creditCardsRepository;
         private readonly IMapper _mapper;
 
-        public CreditCardService(ICreditCardsRepository creditCardsRepository, IMapper mapper)
+        public CreditCardsService(ICreditCardsRepository creditCardsRepository, IMapper mapper)
         {        
             _creditCardsRepository = creditCardsRepository;
             _mapper = mapper;
@@ -21,6 +23,14 @@ namespace ApolloBank.Services
             var creditCardsInfo = await _creditCardsRepository.GetCreditCardsByAccountId(accountId);
 
             return _mapper.Map<CreditCardsDetailsDTO>(creditCardsInfo);
+        }
+
+
+        public async Task<IEnumerable<CreditCardDetailsDTO>> GetAllCardByAccountId(int accountId)
+        {
+            var creditCards = await _creditCardsRepository.GetAllCardByAccountId(accountId);
+
+            return _mapper.Map<IEnumerable<CreditCardDetailsDTO>>(creditCards); ;
         }
 
 
