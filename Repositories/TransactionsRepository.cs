@@ -20,35 +20,69 @@ namespace ApolloBank.Repositories
 
 
 
+        #region Internal methods
+        private async Task updateIncomingValue(double amount, int accountNumber)
+        {
+            Account account = await _accountRepository.GetAccountByAccountNumber(accountNumber);
+
+            account.Balance += amount;
+            _appDbContext.Accounts.Update(account);
+            await _appDbContext.SaveChangesAsync();
+        }
+        private async Task updateOutgoingValue(double amount, int accountNumbe)
+        {
+            Account account = await _accountRepository.GetAccountByAccountNumber(accountNumbe);
+
+            account.Balance -= amount;
+            _appDbContext.Accounts.Update(account);
+            await _appDbContext.SaveChangesAsync();
+        }
+        private async Task<(Account, Account)> ValidatingTransaction(Transaction transaction)
+        {
+
+            if (transaction.From == null) throw new Exception("O campo do titular da conta de origem não pode estar vazio");
+            if (transaction.To == null) throw new Exception("O campo do titular da conta de destino não pode estar vazio.");
+            Account accountFrom = await _accountRepository.GetAccountByAccountNumber(Convert.ToInt32(transaction.From));
+            if (accountFrom == null) throw new Exception("Titular da conta de origem não encontrado para o número da conta fornecido.");
+            if (accountFrom.Balance < transaction.Amount) throw new Exception("Saldo insuficiente.");
+            Account accountTo = await _accountRepository.GetAccountByAccountNumber(Convert.ToInt32(transaction.To));
+            if (accountTo == null) throw new Exception("Titular da conta de destino não encontrado para o número da conta fornecido.");
+            if (accountFrom == accountTo) throw new Exception("A conta de destino não pode ser a mesma que a conta de origem.");
+            return (accountFrom, accountTo);
+        }
+        #endregion
+
         #region Methods of adding transactions
         public async Task<Transaction> Makedeposit(Transaction transaction)
         {
+            if (transaction.From == null) throw new Exception("O campo do titular da conta de destino não pode estar vazio.");
             Account account = await _accountRepository.GetAccountByAccountNumber(Convert.ToInt32(transaction.From));
-            if (account == null) throw new Exception("Source account holder not found.");
+            if (account == null) throw new Exception("Titular da conta não encontrado para o número da conta fornecido.");
+            if (account.Id != transaction.Account_Id) throw new Exception("O ID da conta na transação não corresponde ao ID da conta atual.");
 
+            var fromTransaction = new Transaction(
+              amount: transaction.Amount,
+              from: transaction.From,
+              date: transaction.Date,
+              description: transaction.Description,
+              transaction_Type: transaction.Transaction_Type,
+              direction: 'I', // "Incoming" (Entrada)
+              account_Id: account.Id
+             );
+            using (var transactionn = await _appDbContext.Database.BeginTransactionAsync())
 
-            _appDbContext.Transactions.Add(transaction);
-
-            using (var transactionn = _appDbContext.Database.BeginTransaction())
             {
                 try
                 {
-                    string updateSql = $@"
-                            UPDATE Accounts
-                            SET Balance = CASE
-                                WHEN AccountNumber = '{account.AccountNumber}' THEN Balance + {transaction.Amount}
-                                ELSE Balance
-                            END
-                            WHERE AccountNumber IN ('{account.AccountNumber}');";
+                    _appDbContext.Transactions.Add(fromTransaction);
+                    await updateIncomingValue(transaction.Amount, account.AccountNumber);
 
-                    _appDbContext.Database.ExecuteSqlRaw(updateSql);
-
-                    transactionn.Commit();
+                    await transactionn.CommitAsync();
                 }
                 catch (Exception ex)
                 {
-                    transactionn.Rollback();
-                    throw new Exception("An error occurred while processing the transaction.'");
+                    await transactionn.RollbackAsync();
+                    throw new Exception("Ocorreu um erro ao processar a transação  de depósito.'", ex);
                 }
             }
             await _appDbContext.SaveChangesAsync();
@@ -58,32 +92,37 @@ namespace ApolloBank.Repositories
         }
         public async Task<Transaction> Makewithdrawal(Transaction transaction)
         {
+            if (transaction.From == null) throw new Exception("O campo do titular da conta de origem não pode estar vazio.");
             Account account = await _accountRepository.GetAccountByAccountNumber(Convert.ToInt32(transaction.From));
-            if (account == null) throw new Exception("Source account holder not found.");
+            if (account == null) throw new Exception("Titular da conta não encontrado para o número da conta fornecido.");
+            if(account.Id != transaction.Account_Id) throw new Exception("O ID da conta na transação não corresponde ao ID da conta atual.");
+            if (account.Balance < transaction.Amount) throw new Exception("Saldo insuficiente.");
 
+                var fromTransaction = new Transaction(
+               amount: transaction.Amount,
+               from: transaction.From,
+               date: transaction.Date,
+               description: transaction.Description,
+               transaction_Type: transaction.Transaction_Type,
+               direction: 'O', //"Outgoing" (Saída).
+               account_Id: account.Id
+              );
+       
 
-            _appDbContext.Transactions.Add(transaction);
-
-            using (var transactionn = _appDbContext.Database.BeginTransaction())
+            using (var transactionn = await _appDbContext.Database.BeginTransactionAsync())
             {
                 try
                 {
-                    string updateSql = $@"
-                            UPDATE Accounts
-                            SET Balance = CASE
-                                WHEN AccountNumber = '{account.AccountNumber}' THEN Balance - {transaction.Amount}
-                                ELSE Balance
-                            END
-                            WHERE AccountNumber IN ('{account.AccountNumber}');";
+                    _appDbContext.Transactions.Add(fromTransaction);
 
-                    _appDbContext.Database.ExecuteSqlRaw(updateSql);
-
-                    transactionn.Commit();
+                    await updateOutgoingValue(transaction.Amount, account.AccountNumber);
+                    
+                    await transactionn.CommitAsync();
                 }
                 catch (Exception ex)
                 {
-                    transactionn.Rollback();
-                    throw new Exception("An error occurred while processing the transaction.'");
+                   await transactionn.RollbackAsync();
+                    throw new Exception("Ocorreu um erro ao processar a transação  de saque.'", ex);
                 }
             }
             await _appDbContext.SaveChangesAsync();
@@ -93,15 +132,8 @@ namespace ApolloBank.Repositories
         public async Task<Transaction> AddTransaction(Transaction transaction)
         {
 
-
-            Account accountfrom = await _accountRepository.GetAccountByAccountNumber(Convert.ToInt32(transaction.From));
-            if (accountfrom == null) throw new Exception("Source account holder not found.");
-
-            Account accountTo = await _accountRepository.GetAccountByAccountNumber(Convert.ToInt32(transaction.To));
-            if (accountTo == null) throw new Exception("Destination account holder not found.");
-
-            if (accountfrom == accountTo) throw new Exception("The destination account cannot be the same as the source account.");
-
+            var (accountfrom, accountTo) = await ValidatingTransaction(transaction);
+           
             var fromTransaction = new Transaction(
                  amount: transaction.Amount,
                  to: transaction.To,
@@ -125,32 +157,24 @@ namespace ApolloBank.Repositories
              );
 
 
-            _appDbContext.Transactions.Add(fromTransaction);
-            _appDbContext.Transactions.Add(toTransaction);
-
-
-
-            using (var transactionn = _appDbContext.Database.BeginTransaction())
+            using (var transactionn = await _appDbContext.Database.BeginTransactionAsync())
             {
                 try
                 {
-                    string updateSql = $@"
-                            UPDATE Accounts
-                            SET Balance = CASE
-                                WHEN AccountNumber = '{accountfrom.AccountNumber}' THEN Balance - {transaction.Amount}
-                                WHEN AccountNumber = '{accountTo.AccountNumber}' THEN Balance + {transaction.Amount}
-                                ELSE Balance
-                            END
-                            WHERE AccountNumber IN ('{accountfrom.AccountNumber}', '{accountTo.AccountNumber}');";
 
-                    _appDbContext.Database.ExecuteSqlRaw(updateSql);
+                    _appDbContext.Transactions.Add(fromTransaction);
+                    _appDbContext.Transactions.Add(toTransaction);
 
-                    transactionn.Commit();
+                    await updateIncomingValue(transaction.Amount, accountTo.AccountNumber);
+                    await updateOutgoingValue(transaction.Amount, accountfrom.AccountNumber);
+
+
+                    await transactionn.CommitAsync();
                 }
                 catch (Exception ex)
                 {
                     transactionn.Rollback();
-                    throw new Exception("An error occurred while processing the transaction.'");
+                    throw new Exception("Ocorreu um erro ao processar a transação.'", ex);
                 }
             }
 
@@ -194,25 +218,21 @@ namespace ApolloBank.Repositories
         {
 
             DateTime today = DateTime.Now.Date;
-            var teste = await _appDbContext.Transactions
+            var Scheduledtransactions = await _appDbContext.Transactions
             .Where(t => t.ScheduledDate != null && ((DateTime)t.ScheduledDate).Date == today && t.TransactionStatusChecker == "Inprogress")
             .ToListAsync();
 
-            return teste;
+            return Scheduledtransactions;
         }
         public async Task<Transaction> Scheduletransaction(Transaction transaction)
         {
 
-            Account accountfrom = await _accountRepository.GetAccountByAccountNumber(Convert.ToInt32(transaction.From));
-            if (accountfrom == null) throw new Exception("Source account holder not found.");
-            Account accountTo = await _accountRepository.GetAccountByAccountNumber(Convert.ToInt32(transaction.To));
-            if (accountTo == null) throw new Exception("Destination account holder not found.");
-            if (accountfrom == accountTo) throw new Exception("The destination account cannot be the same as the source account.");
+            var (accountfrom, accountTo) = await ValidatingTransaction(transaction);
 
 
             var fromTransaction = new Transaction(
                  amount: transaction.Amount,
-                 to: transaction.To,
+                 to: Convert.ToString(accountTo.AccountNumber),
                  from: transaction.From,
                  date: transaction.Date,
                  scheduledDate: transaction.ScheduledDate,
@@ -224,26 +244,22 @@ namespace ApolloBank.Repositories
               );
 
             _appDbContext.Transactions.Add(fromTransaction);
-
+            await _appDbContext.SaveChangesAsync();
 
             return transaction;
         }
         public async Task<bool> CompleteScheduledTransaction(int? id)
         {
             if (id == null) throw new Exception("Transaction not found");
-
-
             Transaction transaction = await _appDbContext.Transactions.SingleAsync(x => x.Id == id);
-
             if (transaction == null) throw new Exception("Transaction not found");
+          
+            
             Account accountfrom = await _accountRepository.GetAccountByAccountNumber(Convert.ToInt32(transaction.From));
-            if (accountfrom == null) throw new Exception("Source account holder not found.");
             Account accountTo = await _accountRepository.GetAccountByAccountNumber(Convert.ToInt32(transaction.To));
-            if (accountTo == null) throw new Exception("Destination account holder not found.");
-            if (accountfrom == accountTo) throw new Exception("The destination account cannot be the same as the source account.");
 
             transaction.TransactionStatusChecker = "Complete";
-            _appDbContext.Transactions.Update(transaction);
+         
 
 
             var toTransaction = new Transaction(
@@ -259,30 +275,27 @@ namespace ApolloBank.Repositories
                  account_Id: accountTo.Id
              );
 
-            _appDbContext.Transactions.Add(toTransaction);
+     
 
 
-            using (var transactionn = _appDbContext.Database.BeginTransaction())
+            using (var transactionn = await _appDbContext.Database.BeginTransactionAsync())
             {
                 try
                 {
-                    string updateSql = $@"
-                            UPDATE Accounts
-                            SET Balance = CASE
-                                WHEN AccountNumber = '{accountfrom.AccountNumber}' THEN Balance - {transaction.Amount}
-                                WHEN AccountNumber = '{accountTo.AccountNumber}' THEN Balance + {transaction.Amount}
-                                ELSE Balance
-                            END
-                            WHERE AccountNumber IN ('{accountfrom.AccountNumber}', '{accountTo.AccountNumber}');";
+                    _appDbContext.Transactions.Update(transaction);
 
-                    _appDbContext.Database.ExecuteSqlRaw(updateSql);
+                    _appDbContext.Transactions.Add(toTransaction);
 
-                    transactionn.Commit();
+                    await updateIncomingValue(transaction.Amount, accountTo.AccountNumber);
+                    await updateOutgoingValue(transaction.Amount, accountfrom.AccountNumber);
+
+
+                    await transactionn.CommitAsync();
                 }
                 catch (Exception ex)
                 {
                     transactionn.Rollback();
-                    throw new Exception("An error occurred while processing the transaction.'");
+                    throw new Exception("Ocorreu um erro ao processar a transação.'", ex);
                 }
             }
 
@@ -291,5 +304,9 @@ namespace ApolloBank.Repositories
             return true;
         }
         #endregion
+
+
+
+
     }
 }
