@@ -1,6 +1,7 @@
 using ApolloBank.Data;
 using ApolloBank.Models;
 using ApolloBank.Repositories.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApolloBank.Repositories
@@ -23,10 +24,28 @@ namespace ApolloBank.Repositories
             {
                 return account;
             }
-            else
-            {
-                return null;
-            }
+            return null;
         }
+
+        public Task<Account> GetAccountByAccountNumber(long id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Account> GetAccountByAccountNumber(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<Account> GetAccountByUserId(Guid id)
+        {
+            var account = await _appDbContext.Accounts.FirstOrDefaultAsync(a => a.UserId == id);
+            if (account != null)
+            {
+                return account;
+            }
+            return null;
+        }
+
     }
 }
