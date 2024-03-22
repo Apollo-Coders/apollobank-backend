@@ -49,7 +49,7 @@ namespace ApolloBank.DTOs.Mappings
                 )
                 .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Address.City))
                 .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.Address.State))
-                .ForMember(dest => dest.AccountNumber, opt => opt.MapFrom(src => src.Account.AccountNumber))
+                .ForMember(dest => dest.AccountNumber, opt => opt.MapFrom(src => src.Account.AccountNumber)) // adding accountnumber
                 .ReverseMap();
             CreateMap<User, UpdateUserDTO>()
                 .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.FullName))

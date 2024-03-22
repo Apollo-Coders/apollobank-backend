@@ -25,7 +25,7 @@ namespace ApolloBank.Controllers
             }
             catch (ArgumentException ex)
             {
-                return BadRequest(new { message = ex.Message });
+                return BadRequest(new { message = ex.Message }); //modificando retorno pra voltar um objeto
             }
         }
 
