@@ -1,4 +1,5 @@
-﻿using ApolloBank.DTOs;
+﻿using System.Numerics;
+using ApolloBank.DTOs;
 using ApolloBank.Models;
 using ApolloBank.Repositories;
 using ApolloBank.Repositories.Interfaces;
@@ -15,11 +16,13 @@ namespace ApolloBank.Controllers
     {
         private readonly IAuthService _authService;
         private readonly IUserRepository _userRepository;
+        private readonly IAccountRepository _accountRepository;
 
-        public AuthController(IUserRepository userRepository, IAuthService authService)
+        public AuthController(IUserRepository userRepository, IAuthService authService, IAccountRepository accountRepository)
         {
             _authService = authService;
             _userRepository = userRepository;
+            _accountRepository = accountRepository;
         }
 
         [HttpPost("auth/login")]
@@ -43,12 +46,18 @@ namespace ApolloBank.Controllers
                 User user = await _authService.FoundUserByCpf(data.cpf);
                 var token = _authService.GenerateToken(user);
 
-                TokenReturnDTO response = _authService.responseTokenData(token, user.FullName, 300.00, 300);
-                if (response != null)
+                Account userAccount = await _accountRepository.GetAccountByUserId(user.Id);
+
+                if (userAccount != null)
                 {
-                    return Ok(response);
+                    TokenReturnDTO response = _authService.responseTokenData(token, user.FullName, userAccount.Balance, userAccount.AccountNumber);
+                    if (response != null)
+                    {
+                        return Ok(response);
+                    }
+                    return BadRequest("Valores nulos");
                 }
-                return BadRequest("Valores nulos");
+                return BadRequest("Os dados do usuário não foram encontrados." + token);
             }
             return Unauthorized("Credenciais inválidas.");
         }
