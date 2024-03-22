@@ -15,6 +15,7 @@ namespace ApolloBank.DTOs.Mappings
                 .ForMember(dest => dest.BirthDay, opt => opt.MapFrom(src => src.BirthDay))
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
                 .ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Address.Street))
+                .ForMember(dest => dest.Cep, opt => opt.MapFrom(src => src.Address.Cep))
                 .ForMember(dest => dest.Number, opt => opt.MapFrom(src => src.Address.Number))
                 .ForMember(
                     dest => dest.Complement,
@@ -36,6 +37,7 @@ namespace ApolloBank.DTOs.Mappings
                 .ForMember(dest => dest.BirthDay, opt => opt.MapFrom(src => src.BirthDay))
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
                 .ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Address.Street))
+                .ForMember(dest => dest.Cep, opt => opt.MapFrom(src => src.Address.Cep))
                 .ForMember(dest => dest.Number, opt => opt.MapFrom(src => src.Address.Number))
                 .ForMember(
                     dest => dest.Complement,
@@ -47,6 +49,7 @@ namespace ApolloBank.DTOs.Mappings
                 )
                 .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Address.City))
                 .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.Address.State))
+                .ForMember(dest => dest.AccountNumber, opt => opt.MapFrom(src => src.Account.AccountNumber)) // adding accountnumber
                 .ReverseMap();
             CreateMap<User, UpdateUserDTO>()
                 .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.FullName))
@@ -55,6 +58,7 @@ namespace ApolloBank.DTOs.Mappings
                 .ForMember(dest => dest.BirthDay, opt => opt.MapFrom(src => src.BirthDay))
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
                 .ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Address.Street))
+                .ForMember(dest => dest.Cep, opt => opt.MapFrom(src => src.Address.Cep))
                 .ForMember(dest => dest.Number, opt => opt.MapFrom(src => src.Address.Number))
                 .ForMember(
                     dest => dest.Complement,

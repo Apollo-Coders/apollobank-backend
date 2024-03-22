@@ -5,6 +5,8 @@ namespace ApolloBank.Models
     public class Address
     {
         public int Id { get; set; }
+        
+        public string Cep { get; set; } = null!; 
         public string Street { get; set; } = null!;
         public string Number { get; set; } = null!;
         public string? Complement { get; set; }
@@ -15,4 +17,5 @@ namespace ApolloBank.Models
         public Guid UserId { get; set; }
         public virtual User User { get; set; } = null!;
     }
+
 }

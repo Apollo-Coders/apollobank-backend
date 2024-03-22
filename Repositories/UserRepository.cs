@@ -37,13 +37,13 @@ namespace ApolloBank.Repositories
             );
             if (existingEmail)
             {
-                throw new ArgumentException("Email already in use.");
+                throw new ArgumentException("O email já está em uso.");
             }
 
             var existingCPF = await _appDbContext.Users.AnyAsync(u => u.CPF == createUserDTO.CPF);
             if (existingCPF)
             {
-                throw new ArgumentException("CPF already in use.");
+                throw new ArgumentException("O CPF já está em uso.");
             }
             var user = _mapper.Map<User>(createUserDTO);
             string hashedPassword = _hashService.HashPassword(createUserDTO.Password);
