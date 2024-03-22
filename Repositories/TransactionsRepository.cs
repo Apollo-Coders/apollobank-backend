@@ -87,7 +87,7 @@ namespace ApolloBank.Repositories
             }
             await _appDbContext.SaveChangesAsync();
 
-            return transaction;
+            return fromTransaction;
 
         }
         public async Task<Transaction> Makewithdrawal(Transaction transaction)
@@ -127,7 +127,7 @@ namespace ApolloBank.Repositories
             }
             await _appDbContext.SaveChangesAsync();
 
-            return transaction;
+            return fromTransaction;
         }
         public async Task<Transaction> AddTransaction(Transaction transaction)
         {
@@ -180,7 +180,7 @@ namespace ApolloBank.Repositories
 
             await _appDbContext.SaveChangesAsync();
 
-            return transaction;
+            return fromTransaction;
         }
         #endregion
 
@@ -246,7 +246,7 @@ namespace ApolloBank.Repositories
             _appDbContext.Transactions.Add(fromTransaction);
             await _appDbContext.SaveChangesAsync();
 
-            return transaction;
+            return fromTransaction;
         }
         public async Task<bool> CompleteScheduledTransaction(int? id)
         {
@@ -303,6 +303,18 @@ namespace ApolloBank.Repositories
 
             return true;
         }
+
+        public async Task<Transaction> GetTransaction(int? transaction_id, int? account_id)
+        {
+            return await _appDbContext.Transactions
+             .SingleAsync(x => x.Id == transaction_id && x.Account_Id == account_id);
+        }
+
+        
+
+
+
+
         #endregion
 
 
