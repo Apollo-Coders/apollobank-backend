@@ -6,6 +6,7 @@ namespace ApolloBank.Repositories.Interfaces
     {
 
         Task<IEnumerable<Transaction>> GetAllTransactions(int? id);
+        Task<Transaction> GetTransaction(int? transaction_id, int? account_id);
         Task<IEnumerable<Transaction>> GetLastSixMonthsTransactions(int? id);
         Task<IEnumerable<Transaction>> GetCurrentMonthTransactions(int? id);
         

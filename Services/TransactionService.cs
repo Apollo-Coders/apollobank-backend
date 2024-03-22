@@ -1,5 +1,6 @@
 ﻿using ApolloBank.DTOs;
 using ApolloBank.Models;
+using ApolloBank.Repositories;
 using ApolloBank.Repositories.Interfaces;
 using ApolloBank.Services.Interfaces;
 using AutoMapper;
@@ -22,28 +23,41 @@ namespace ApolloBank.Services
 
 
         #region Methods that receive a DTO object and convert it into an entity
-        public async Task AddTransaction(TransactionDTO transactiondto)
+        public async Task<TransactionDTO> AddTransaction(TransactionDTO transactiondto)
         {
             var transaction = _mapper.Map<Transaction>(transactiondto);
-            await _transactionsRepository.AddTransaction(transaction);
+            var transactionResult = await _transactionsRepository.AddTransaction(transaction);
+            var transactionResultDTO = _mapper.Map<TransactionDTO>(transactionResult);
+
+            return transactionResultDTO;
         }
 
-        public async Task Makedeposit(TransactionDTO transactiondto)
+        public async Task<TransactionDTO> Makedeposit(TransactionDTO transactiondto)
         {
             var transaction = _mapper.Map<Transaction>(transactiondto);
-            await _transactionsRepository.Makedeposit(transaction);
+            var transactionResult = await _transactionsRepository.Makedeposit(transaction);
+            var transactionResultDTO = _mapper.Map<TransactionDTO>(transactionResult);
+
+
+            return transactionResultDTO;
         }
 
-        public async Task Makewithdrawal(TransactionDTO transactiondto)
+        public async Task<TransactionDTO> Makewithdrawal(TransactionDTO transactiondto)
         {
             var transaction = _mapper.Map<Transaction>(transactiondto);
-            await _transactionsRepository.Makewithdrawal(transaction);
+            var transactionResult = await _transactionsRepository.Makewithdrawal(transaction);
+            var transactionResultDTO = _mapper.Map<TransactionDTO>(transactionResult);
+
+            return transactionResultDTO;
         }
 
-        public async Task Scheduletransaction(TransactionDTO transactionDto)
+        public async Task<TransactionDTO> Scheduletransaction(TransactionDTO transactionDto)
         {
             var transaction = _mapper.Map<Transaction>(transactionDto);
-            await _transactionsRepository.Scheduletransaction(transaction);
+            var transactionResult = await _transactionsRepository.Scheduletransaction(transaction);
+            var transactionResultDTO = _mapper.Map<TransactionDTO>(transactionResult);
+
+            return transactionResultDTO;
         }
 
         #endregion
@@ -66,7 +80,13 @@ namespace ApolloBank.Services
         {
             var transaction = await _transactionsRepository.GetLastSixMonthsTransactions(id);
             return _mapper.Map<IEnumerable<TransactionDTO>>(transaction);
-        }    
+        }
+
+        public async Task<TransactionDTO> GetTransaction(int? transaction_id, int? account_id)
+        {
+            var transaction = await  _transactionsRepository.GetTransaction(transaction_id, account_id);
+            return _mapper.Map<TransactionDTO>(transaction);
+        }
 
         #endregion
     }

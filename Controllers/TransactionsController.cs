@@ -1,10 +1,11 @@
 ﻿using ApolloBank.DTOs;
+using ApolloBank.Models;
 using ApolloBank.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApolloBank.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("Transactions")]
     [ApiController]
     public class TransactionsController : ControllerBase
     {
@@ -15,83 +16,130 @@ namespace ApolloBank.Controllers
             _transactionService = transactionService;
         }
 
+      
+        
         [HttpPost("AddTransaction")]
         public async Task<ActionResult> AddTransaction([FromBody] TransactionDTO transactionDTO)
         {
-            if (transactionDTO == null)
-                return BadRequest("Data Invalid");
+           try
+            {
+                if (transactionDTO == null)
+                    return BadRequest("Data Invalid");
 
-            await _transactionService.AddTransaction(transactionDTO);
+                var transactionResul = await _transactionService.AddTransaction(transactionDTO);
 
-            return Ok();
+                return CreatedAtAction(nameof(GetTransaction), new { transaction_id = transactionResul.Id, account_id = transactionResul.Account_Id }, transactionResul);
+
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost("MakeWithdrawal")]
         public async Task<ActionResult> MakeWithdrawal([FromBody] TransactionDTO transactionDTO)
         {
-            if (transactionDTO == null)
-                return BadRequest("Data Invalid");
+            try
+            {
+                if (transactionDTO == null)
+                    return BadRequest("Data Invalid");
 
-            await _transactionService.Makewithdrawal(transactionDTO);
+                var transactionResul = await _transactionService.Makewithdrawal(transactionDTO);
 
-            return Ok();
+                return CreatedAtAction(nameof(GetTransaction), new { transaction_id = transactionResul.Id, account_id = transactionResul.Account_Id }, transactionResul);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
 
         [HttpPost("Makedeposit")]
         public async Task<ActionResult> Makedeposit([FromBody] TransactionDTO transactionDTO)
         {
-            if (transactionDTO == null)
-                return BadRequest("Data Invalid");
+            try 
+            {
+                if (transactionDTO == null)
+                    return BadRequest("Data Invalid");
 
-            await _transactionService.Makedeposit(transactionDTO);
+                var transactionResul = await _transactionService.Makedeposit(transactionDTO);
 
-            return Ok();
+                return CreatedAtAction(nameof(GetTransaction), new { transaction_id = transactionResul.Id, account_id = transactionResul.Account_Id }, transactionResul);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("Scheduletransaction")]
+        public async Task<ActionResult> Scheduletransaction([FromBody] TransactionDTO transactionDTO)
+        {
+            try
+            {
+                if (transactionDTO == null)
+                    return BadRequest("Data Invalid");
+
+                var transactionResul = await _transactionService.Scheduletransaction(transactionDTO);
+
+                return CreatedAtAction(nameof(GetTransaction), new { transaction_id = transactionResul.Id, account_id = transactionResul.Account_Id }, transactionResul);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
 
         [HttpGet("GetCurrentMonthTransactions/{id}")]
         public async Task<ActionResult<TransactionDTO>> GetCurrentMonthTransactions(int id)
         {
-            var produto = await _transactionService.GetCurrentMonthTransactions(id);
-            if (produto == null)
+            var Transactions = await _transactionService.GetCurrentMonthTransactions(id);
+            if (Transactions == null)
             {
                 return NotFound("Transaction not found");
             }
-            return Ok(produto);
+            return Ok(Transactions);
         }
 
         [HttpGet("GetLastSixMonthsTransactions/{id}")]
         public async Task<ActionResult<TransactionDTO>> GetLastSixMonthsTransactions(int id)
         {
-            var produto = await _transactionService.GetLastSixMonthsTransactions(id);
-            if (produto == null)
+            var Transactions = await _transactionService.GetLastSixMonthsTransactions(id);
+            if (Transactions == null)
             {
                 return NotFound("Transaction not found");
             }
-            return Ok(produto);
+            return Ok(Transactions);
         }
 
         [HttpGet("GetAllTransactions/{id}")]
         public async Task<ActionResult<TransactionDTO>> GetAllTransactions(int id)
         {
-            var produto = await _transactionService.GetAllTransactions(id);
-            if (produto == null)
+            var Transactions = await _transactionService.GetAllTransactions(id);
+            if (Transactions == null)
             {
                 return NotFound("Transaction not found");
             }
-            return Ok(produto);
+            return Ok(Transactions);
         }
-       
 
-        [HttpPost("Scheduletransaction")]
-        public async Task<ActionResult> Scheduletransaction([FromBody] TransactionDTO transactionDTO)
+
+        [HttpGet("GetTransaction/{transaction_id}/{account_id}")]
+        public async Task<ActionResult<TransactionDTO>> GetTransaction(int transaction_id, int account_id)
         {
-            if (transactionDTO == null)
-                return BadRequest("Data Invalid");
-
-            await _transactionService.Scheduletransaction(transactionDTO);
-
-            return Ok();
+            var Transactions = await _transactionService.GetTransaction(transaction_id, account_id);
+            if (Transactions == null)
+            {
+                return NotFound("Transaction not found");
+            }
+            return Ok(Transactions);
         }
+
+
+     
 
        
     }
