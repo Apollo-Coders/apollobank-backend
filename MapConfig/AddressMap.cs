@@ -12,6 +12,8 @@ namespace ApolloBank.MapConfig
 
             builder.HasKey(a => a.Id);
 
+            builder.Property(a => a.Cep).IsRequired().HasMaxLength(8);
+
             builder.Property(a => a.Street).IsRequired().HasMaxLength(200);
 
             builder.Property(a => a.Number).IsRequired().HasMaxLength(20);
