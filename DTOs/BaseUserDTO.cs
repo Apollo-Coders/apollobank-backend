@@ -38,6 +38,10 @@ namespace ApolloBank.DTOs
 
         public bool Active { get; set; } = true;
 
+        [Required(ErrorMessage = "Cep is required.")]
+        [RegularExpression(@"^\d{8}$", ErrorMessage = "Formato inválido de CEP. Use apenas dígitos.")]
+        public string Cep { get; set; } = null!; 
+
         [Required(ErrorMessage = "Street is required.")]
         public string Street { get; set; } = null!;
 
