@@ -6,7 +6,6 @@ namespace ApolloBank.Controllers
 {
     [Route("users")]
     [ApiController]
-    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
@@ -97,7 +96,7 @@ namespace ApolloBank.Controllers
             }
             return Ok(user);
         }
-        
+
         [HttpGet("GetUsers")]
         public async Task<ActionResult<UserDetailsDTO>> GetUsers()
         {
