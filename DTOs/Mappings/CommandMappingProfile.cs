@@ -15,6 +15,7 @@ namespace ApolloBank.DTOs.Mappings
                 .ForMember(dest => dest.BirthDay, opt => opt.MapFrom(src => src.BirthDay))
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
                 .ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Address.Street))
+                .ForMember(dest => dest.Cep, opt => opt.MapFrom(src => src.Address.Cep))
                 .ForMember(dest => dest.Number, opt => opt.MapFrom(src => src.Address.Number))
                 .ForMember(
                     dest => dest.Complement,
@@ -36,6 +37,7 @@ namespace ApolloBank.DTOs.Mappings
                 .ForMember(dest => dest.BirthDay, opt => opt.MapFrom(src => src.BirthDay))
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
                 .ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Address.Street))
+                .ForMember(dest => dest.Cep, opt => opt.MapFrom(src => src.Address.Cep))
                 .ForMember(dest => dest.Number, opt => opt.MapFrom(src => src.Address.Number))
                 .ForMember(
                     dest => dest.Complement,
@@ -55,6 +57,7 @@ namespace ApolloBank.DTOs.Mappings
                 .ForMember(dest => dest.BirthDay, opt => opt.MapFrom(src => src.BirthDay))
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
                 .ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Address.Street))
+                .ForMember(dest => dest.Cep, opt => opt.MapFrom(src => src.Address.Cep))
                 .ForMember(dest => dest.Number, opt => opt.MapFrom(src => src.Address.Number))
                 .ForMember(
                     dest => dest.Complement,
