@@ -15,6 +15,17 @@ namespace ApolloBank.Services
             }
             return int.Parse(number);
         }
+
+        public string GenerateRandomNumberString(int length)
+        {
+            var random = new Random();
+            string number = "";
+            for (int i = 0; i < length; i++)
+            {
+                number += random.Next(0, 10).ToString();
+            }
+            return number;
+        }
     }
 
     
