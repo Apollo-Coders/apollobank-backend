@@ -54,7 +54,7 @@ namespace ApolloBank.Repositories
             return _mapper.Map<UserDetailsDTO>(user);           
         }
 
-        private int GenerateRandomAccountNumber()
+        private int GenerateRandomAccountNumber(int length = 6)
         {
             var random = new Random();
             string number = random.Next(1, 10).ToString();

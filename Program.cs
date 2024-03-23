@@ -7,11 +7,12 @@ using ApolloBank.SampleScheduler.TimerSchedulers;
 using ApolloBank.Services;
 using ApolloBank.Services.Interfaces;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
-
-
-// Adding cors
+IConfiguration configuration = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .Build();
 
 builder.Services.AddCors(options =>
 {
@@ -26,8 +27,6 @@ builder.Services.AddCors(options =>
 });
 
 
-
-
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -36,12 +35,34 @@ builder.Services.AddControllersWithViews()
     {
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
     });
+builder.Services.AddAuthentication(opt =>
+{
+    opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+
+        ValidIssuer = configuration["jwt:issuer"],
+        ValidAudience = configuration["jwt:audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(configuration["jwt:secretKey"])),
+        ClockSkew = TimeSpan.Zero
+    };
+});
 
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IHashService, HashService>(); //estava apenas com o "HashService", ent�o n�o conseguia fazer a inje��o.
 builder.Services.AddScoped<HashService>();
 builder.Services.AddScoped<RandomNumberService>();
 
@@ -57,6 +78,7 @@ builder.Services.AddTransient<IServiceScopeFactory, DefaultServiceScopeFactory>(
 //DI de Services
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<ITransactionService, TransactionService>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
 
 //DI de Repositories
@@ -87,7 +109,10 @@ app.UseCors("AnotherPolicy");
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
+
+
 
 app.MapControllers();
 
