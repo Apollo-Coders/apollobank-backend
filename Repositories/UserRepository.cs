@@ -45,9 +45,10 @@ namespace ApolloBank.Repositories
             {
                 throw new ArgumentException("O CPF já está em uso.");
             }
-            var user = _mapper.Map<User>(createUserDTO);
+            User user = _mapper.Map<User>(createUserDTO);
             string hashedPassword = _hashService.HashPassword(createUserDTO.Password);
-            user.Account = new Account { AccountNumber = GenerateRandomAccountNumber() };
+            user.Account = new Account { AccountNumber = GenerateRandomAccountNumber(), UserId = user.Id, Balance = 3000, CreditLimit = 5000 };
+            user.Password = hashedPassword;
 
             await _appDbContext.Users.AddAsync(user);
             await _appDbContext.SaveChangesAsync();

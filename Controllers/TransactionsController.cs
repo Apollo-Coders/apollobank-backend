@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApolloBank.Controllers
 {
-    [Route("Transactions")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class TransactionsController : ControllerBase
     {
@@ -18,7 +18,7 @@ namespace ApolloBank.Controllers
 
       
         
-        [HttpPost("AddTransaction")]
+        [HttpPost()]
         public async Task<ActionResult> AddTransaction([FromBody] TransactionDTO transactionDTO)
         {
            try
@@ -37,7 +37,7 @@ namespace ApolloBank.Controllers
             }
         }
 
-        [HttpPost("MakeWithdrawal")]
+        [HttpPost()]
         public async Task<ActionResult> MakeWithdrawal([FromBody] TransactionDTO transactionDTO)
         {
             try
@@ -56,7 +56,7 @@ namespace ApolloBank.Controllers
 
         }
 
-        [HttpPost("Makedeposit")]
+        [HttpPost()]
         public async Task<ActionResult> Makedeposit([FromBody] TransactionDTO transactionDTO)
         {
             try 
@@ -74,7 +74,7 @@ namespace ApolloBank.Controllers
             }
         }
 
-        [HttpPost("Scheduletransaction")]
+        [HttpPost()]
         public async Task<ActionResult> Scheduletransaction([FromBody] TransactionDTO transactionDTO)
         {
             try
@@ -93,7 +93,7 @@ namespace ApolloBank.Controllers
 
         }
 
-        [HttpGet("GetCurrentMonthTransactions/{id}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<TransactionDTO>> GetCurrentMonthTransactions(int id)
         {
             var Transactions = await _transactionService.GetCurrentMonthTransactions(id);
@@ -104,7 +104,7 @@ namespace ApolloBank.Controllers
             return Ok(Transactions);
         }
 
-        [HttpGet("GetLastSixMonthsTransactions/{id}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<TransactionDTO>> GetLastSixMonthsTransactions(int id)
         {
             var Transactions = await _transactionService.GetLastSixMonthsTransactions(id);
@@ -115,7 +115,7 @@ namespace ApolloBank.Controllers
             return Ok(Transactions);
         }
 
-        [HttpGet("GetAllTransactions/{id}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<TransactionDTO>> GetAllTransactions(int id)
         {
             var Transactions = await _transactionService.GetAllTransactions(id);
@@ -127,7 +127,7 @@ namespace ApolloBank.Controllers
         }
 
 
-        [HttpGet("GetTransaction/{transaction_id}/{account_id}")]
+        [HttpGet("{transaction_id}/{account_id}")]
         public async Task<ActionResult<TransactionDTO>> GetTransaction(int transaction_id, int account_id)
         {
             var Transactions = await _transactionService.GetTransaction(transaction_id, account_id);

@@ -3,6 +3,7 @@ using ApolloBank.Models;
 using ApolloBank.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Principal;
 
 namespace ApolloBank.Repositories
 {
@@ -39,12 +40,13 @@ namespace ApolloBank.Repositories
 
         public async Task<Account> GetAccountByUserId(Guid id)
         {
-            var account = await _appDbContext.Accounts.FirstOrDefaultAsync(a => a.UserId == id);
-            if (account != null)
+            var account = await _appDbContext.Accounts.FirstOrDefaultAsync(a => a.User.Id == id);
+            if (account == null)
             {
-                return account;
+                throw new Exception("Erro ao encontrar a conta");
             }
-            return null;
+
+            return account;
         }
 
     }

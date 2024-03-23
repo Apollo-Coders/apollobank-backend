@@ -1,4 +1,6 @@
-﻿using ApolloBank.Services.Interfaces;
+﻿using ApolloBank.Services;
+using ApolloBank.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApolloBank.Controllers
@@ -8,14 +10,21 @@ namespace ApolloBank.Controllers
     public class InvoiceController : ControllerBase
     {
         private readonly IInvoiceService _invoiceService;
-        public InvoiceController(IInvoiceService invoiceService)
+        private readonly IAuthService _authService;
+
+        public InvoiceController(IInvoiceService invoiceService, IAuthService authService)
         {
             _invoiceService = invoiceService;
+            _authService = authService;
         }
 
-        [HttpGet("{accountId}")]
-        public async Task<IActionResult> GetActualMonthInvoice(int accountId)
+
+        [Authorize]
+        [HttpGet()]
+        public async Task<IActionResult> GetActualMonthInvoice()
         {
+            int accountId = _authService.GetTokenDateByHtppContext(HttpContext).AccountId;
+
             try
             {
                 var actualMonthInvoice = await _invoiceService.GetActualMonthInvoice(accountId);
@@ -31,9 +40,13 @@ namespace ApolloBank.Controllers
             }
         }
 
-        [HttpGet("{accountId}")]
-        public async Task<IActionResult> GetAllInvoices(int accountId)
+
+        [Authorize]
+        [HttpGet()]
+        public async Task<IActionResult> GetAllInvoices()
         {
+            int accountId = _authService.GetTokenDateByHtppContext(HttpContext).AccountId;
+
             try
             {
                 var allInvoices = await _invoiceService.GetAllInvoices(accountId);
@@ -49,6 +62,8 @@ namespace ApolloBank.Controllers
             }
         }
 
+
+        [Authorize]
         [HttpPost("{cardNum}")]
         public async Task<IActionResult> PayParcialMonthInvoice(string cardNum)
         {
@@ -64,9 +79,12 @@ namespace ApolloBank.Controllers
             }
         }
 
+
+        [Authorize]
         [HttpPost()]
-        public async Task<IActionResult> PayTotalMonthInvoice(int accountId)
+        public async Task<IActionResult> PayTotalMonthInvoice()
         {
+            int accountId = _authService.GetTokenDateByHtppContext(HttpContext).AccountId;
             DateTime datetime = DateTime.Now;
 
             try

@@ -1,17 +1,14 @@
-﻿using System.Numerics;
-using ApolloBank.DTOs;
+﻿using ApolloBank.DTOs;
 using ApolloBank.Models;
-using ApolloBank.Repositories;
 using ApolloBank.Repositories.Interfaces;
 using ApolloBank.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApolloBank.Controllers
 {
     [ApiController]
-    [Route("api/")]
+    [Route("api/[controller]/[action]")]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
@@ -25,7 +22,10 @@ namespace ApolloBank.Controllers
             _accountRepository = accountRepository;
         }
 
-        [HttpPost("auth/login")]
+
+
+        [AllowAnonymous]
+        [HttpPost()]
         public async Task<ActionResult> Authenticate([FromBody] UserRequestDTO data)
         {
             if (data == null)
@@ -41,6 +41,7 @@ namespace ApolloBank.Controllers
             }
 
             bool isAuthenticated = await _authService.AuthenticateAsync(data.cpf, data.password);
+
             if (isAuthenticated)
             {
                 User user = await _authService.FoundUserByCpf(data.cpf);

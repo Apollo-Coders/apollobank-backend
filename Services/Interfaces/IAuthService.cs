@@ -1,6 +1,5 @@
 ﻿using ApolloBank.DTOs;
 using ApolloBank.Models;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ApolloBank.Services.Interfaces
 {
@@ -11,5 +10,6 @@ namespace ApolloBank.Services.Interfaces
         public string GenerateToken(User user);
         public Task<User> FoundUserByCpf(string cpf);
         public TokenReturnDTO ResponseTokenData(string token, string fullName, double balance, int accountNumber);
+        public TokenInfoDTO GetTokenDateByHtppContext(HttpContext httpContext);
     }
 }

@@ -1,21 +1,26 @@
 ﻿using ApolloBank.DTOs;
 using ApolloBank.Repositories.Interfaces;
+using ApolloBank.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApolloBank.Controllers
 {
-    [Route("users")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
+        private readonly IAuthService _authService;
 
-        public UserController(IUserRepository userRepository)
+        public UserController(IUserRepository userRepository, IAuthService authService)
         {
             _userRepository = userRepository;
+            _authService = authService;
         }
 
+
+        [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult<CreateUserDTO>> CreateUser(CreateUserDTO createUserDTO)
         {
@@ -30,9 +35,12 @@ namespace ApolloBank.Controllers
             }
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<UserDetailsDTO>> GetUser(Guid id)
+
+        [HttpGet()]
+        public async Task<ActionResult<UserDetailsDTO>> GetUser()
         {
+            Guid id = _authService.GetTokenDateByHtppContext(HttpContext).UserId;
+
             var user = await _userRepository.GetUserById(id);
             if (user == null)
             {
@@ -41,12 +49,15 @@ namespace ApolloBank.Controllers
             return Ok(user);
         }
 
-        [HttpPut("{id}")]
+
+        [Authorize]
+        [HttpPut()]
         public async Task<ActionResult<UserDetailsDTO>> UpdateUser(
-            Guid id,
             UpdateUserDTO updateUserDTO
         )
         {
+            Guid id = _authService.GetTokenDateByHtppContext(HttpContext).UserId;
+
             try
             {
                 var updatedUser = await _userRepository.UpdateUser(id, updateUserDTO);
@@ -62,9 +73,13 @@ namespace ApolloBank.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteUser(Guid id)
+
+        [Authorize]
+        [HttpDelete()]
+        public async Task<ActionResult> DeleteUser()
         {
+            Guid id = _authService.GetTokenDateByHtppContext(HttpContext).UserId;
+
             var user = await _userRepository.DeleteUser(id);
             if (user == null)
             {
@@ -73,7 +88,9 @@ namespace ApolloBank.Controllers
             return Ok("User deleted successfully");
         }
 
-        [HttpGet("GetUserByEmail")]
+
+        [Authorize]
+        [HttpGet()]
         public async Task<ActionResult<UserDetailsDTO>> GetUserByEmail(string email)
         {
             var user = await _userRepository.GetUserByEmail(email);
@@ -84,8 +101,10 @@ namespace ApolloBank.Controllers
             return Ok(user);
         }
 
-        [HttpGet("GetUserByCPF")]
-        public async Task<ActionResult<UserDetailsDTO>> GetUserByCPF([FromBody] string cpf)
+
+        [Authorize]
+        [HttpGet("{cpf}")]
+        public async Task<ActionResult<UserDetailsDTO>> GetUserByCPF(string cpf)
         {
             var user = await _userRepository.GetUserByCPF(cpf);
             if (user == null)
@@ -95,6 +114,8 @@ namespace ApolloBank.Controllers
             return Ok(user);
         }
 
+
+        [Authorize]
         [HttpGet("GetUsers")]
         public async Task<ActionResult<UserDetailsDTO>> GetUsers()
         {

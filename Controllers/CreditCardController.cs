@@ -2,6 +2,8 @@
 using ApolloBank.Migrations;
 using ApolloBank.Models;
 using ApolloBank.Services;
+using ApolloBank.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,13 +14,16 @@ namespace ApolloBank.Controllers
     public class CreditCardController : ControllerBase
     {
         private readonly ICreditCardsService _creditCardsService;
+        private readonly IAuthService _authService;
 
-        public CreditCardController(ICreditCardsService creditCardsService)
+        public CreditCardController(ICreditCardsService creditCardsService, IAuthService authService)
         {
             _creditCardsService = creditCardsService;
+            _authService = authService;
         }
 
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateCreditCard(CreateCreditCardDTO createCreditCardDTO)
         {
@@ -35,6 +40,7 @@ namespace ApolloBank.Controllers
         }
 
 
+        [Authorize]
         [HttpPut("{cardNum}")]
         public async Task<IActionResult> BlockCreditCard(string cardNum)
         {
@@ -56,9 +62,12 @@ namespace ApolloBank.Controllers
         }
 
 
-        [HttpGet("{accountid}")]
-        public async Task<IActionResult> GetCreditCardsByAccountId(int accountId)
+        [Authorize]
+        [HttpGet()]
+        public async Task<IActionResult> GetCreditCardsByAccountId()
         {
+            int accountId = _authService.GetTokenDateByHtppContext(HttpContext).AccountId;
+
             try
             {
                 var creditCard = await _creditCardsService.GetCreditCardsByAccountId(accountId);
@@ -75,9 +84,12 @@ namespace ApolloBank.Controllers
         }
 
 
-        [HttpGet("{accountid}")]
-        public async Task<IActionResult> GetAllCardByCardNumber(int accountId)
+        [Authorize]
+        [HttpGet()]
+        public async Task<IActionResult> GetAllCardByCardNumber()
         {
+            int accountId = _authService.GetTokenDateByHtppContext(HttpContext).AccountId;
+
             try
             {
                 var creditCard = await _creditCardsService.GetAllCardByAccountId(accountId);
@@ -97,6 +109,7 @@ namespace ApolloBank.Controllers
             }
         }
 
+        [Authorize]
         [HttpPut()]
         public async Task<IActionResult> SetCardLimit([FromBody] SetCardLimitDTO setLimitData)
         {
