@@ -35,7 +35,7 @@ namespace ApolloBank.Controllers
         }
 
 
-        [HttpPut("/{cardNum}")]
+        [HttpPut("{cardNum}")]
         public async Task<IActionResult> BlockCreditCard(string cardNum)
         {
             try
@@ -56,7 +56,7 @@ namespace ApolloBank.Controllers
         }
 
 
-        [HttpGet("/{accountid}")]
+        [HttpGet("{accountid}")]
         public async Task<IActionResult> GetCreditCardsByAccountId(int accountId)
         {
             try
@@ -75,7 +75,7 @@ namespace ApolloBank.Controllers
         }
 
 
-        [HttpGet("/{accountid}")]
+        [HttpGet("{accountid}")]
         public async Task<IActionResult> GetAllCardByCardNumber(int accountId)
         {
             try
