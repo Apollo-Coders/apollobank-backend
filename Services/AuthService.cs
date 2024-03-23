@@ -50,7 +50,7 @@ namespace ApolloBank.Services
 
         }
 
-        public string GenerateToken([FromBody] User user)
+        public string GenerateToken(User user)
         {
             var claims = new[]
             {
@@ -76,17 +76,17 @@ namespace ApolloBank.Services
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public async Task<User> FoundUserByCpf([FromBody] string cpf)
+        public async Task<User> FoundUserByCpf(string cpf)
         {
             User? user = await _appDbContext.Users.FirstOrDefaultAsync(u => u.CPF == cpf);
-            if (user != null)
+            if (user == null)
             {
-                return user;
+                throw new Exception("CPF não cadastrado");
             }
-            return null;
+            return user;
         }
 
-        public TokenReturnDTO responseTokenData(string token, string userName, double balance, int accountNumber)
+        public TokenReturnDTO ResponseTokenData(string token, string userName, double balance, int accountNumber)
         {
             TokenReturnDTO responseUserData = new()
             {

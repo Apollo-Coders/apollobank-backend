@@ -62,7 +62,7 @@ namespace ApolloBank.Services
         }
 
 
-        public async Task addAmountToUsedCredit(TransactionDTO transactionDetails, int accountId)
+        public async Task AddAmountToUsedCredit(TransactionDTO transactionDetails, int accountId)
         {
             string? cardNum = transactionDetails.From;
 
@@ -74,7 +74,7 @@ namespace ApolloBank.Services
             }
 
 
-            await _creditCardsRepository.addAmountToUsedCredit(amount, accountId, cardNum);
+            await _creditCardsRepository.AddAmountToUsedCredit(amount, accountId, cardNum);
         }
 
     }

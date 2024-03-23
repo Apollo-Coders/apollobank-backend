@@ -135,7 +135,7 @@ namespace ApolloBank.Repositories
         // Pagar a fatura total de uma vez (paga todos os cartões)
         public async Task<Invoice> PayTotalMonthInvoice(int accountId, DateTime monthInvoiceDate)
         {
-            var creditCardList = await _creditCardsRepository.GetAllCardByCardNumber(accountId);
+            var creditCardList = await _creditCardsRepository.GetAllCardByAccountId(accountId);
 
            
 

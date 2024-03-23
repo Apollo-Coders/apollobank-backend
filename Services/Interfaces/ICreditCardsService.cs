@@ -1,6 +1,4 @@
 ﻿using ApolloBank.DTOs;
-using ApolloBank.Repositories.Interfaces;
-using AutoMapper;
 
 namespace ApolloBank.Services
 {
@@ -12,6 +10,6 @@ namespace ApolloBank.Services
         public Task<CreditCardDetailsDTO> CreateCreditCard(CreateCreditCardDTO creditCardDTO);
         public Task<CreditCardDetailsDTO> BlockCreditCard(string cardNumber);
         public Task SetCardLimit(double newLimit, int accountId, string cardNum);
-        public Task addAmountToUsedCredit(TransactionDTO transactionDetails, int accountId);
+        public Task AddAmountToUsedCredit(TransactionDTO transactionDetails, int accountId);
     }
 }

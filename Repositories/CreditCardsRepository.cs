@@ -176,7 +176,7 @@ namespace ApolloBank.Repositories
 
 
         // Método que contém a lógica de adicionar uma o valor de uma transação no limite usado de crédito (será usado na transaction)
-        public async Task addAmountToUsedCredit(double amount, int accountId, string cardNum)
+        public async Task AddAmountToUsedCredit(double amount, int accountId, string cardNum)
         {
             var creditCards = await GetCreditCardsByAccountId(accountId);
             var creditCard = await GetCardByCardNumber(cardNum);

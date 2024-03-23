@@ -50,7 +50,7 @@ namespace ApolloBank.Controllers
 
                 if (userAccount != null)
                 {
-                    TokenReturnDTO response = _authService.responseTokenData(token, user.FullName, userAccount.Balance, userAccount.AccountNumber);
+                    TokenReturnDTO response = _authService.ResponseTokenData(token, user.FullName, userAccount.Balance, userAccount.AccountNumber);
                     if (response != null)
                     {
                         return Ok(response);

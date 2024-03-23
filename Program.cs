@@ -6,7 +6,9 @@ using ApolloBank.SampleScheduler.Factories;
 using ApolloBank.SampleScheduler.TimerSchedulers;
 using ApolloBank.Services;
 using ApolloBank.Services.Interfaces;
-
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -78,15 +80,16 @@ builder.Services.AddTransient<IServiceScopeFactory, DefaultServiceScopeFactory>(
 //DI de Services
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<ITransactionService, TransactionService>();
-builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+/*builder.Services.AddTransient<ICreditCardsService, CreditCardsService>();
+builder.Services.AddTransient<IInvoiceService, InvoiceService>();*/
 
 
 //DI de Repositories
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITransactionsRepository, TransactionsRepository>();
-builder.Services.AddScoped<ICreditCardRepository, CreditCardRepository>();
-builder.Services.AddScoped<ICreditCardsRepository, CreditCardsRepository>();
-builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+/*builder.Services.AddScoped<ICreditCardsRepository, CreditCardsRepository>();
+builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();*/
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
 //Automapper
