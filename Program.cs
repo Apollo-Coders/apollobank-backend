@@ -13,8 +13,6 @@ using System.Text;
 
 
 var builder = WebApplication.CreateBuilder(args);
-// builder.Configuration.AddJsonFile("appsettings.json");
-// var configuration = builder.Configuration;
 
 IConfiguration configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -73,6 +71,7 @@ builder.Services.AddScoped<IHashService, HashService>(); //estava apenas com o "
 //DI de Services
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<ITransactionService, TransactionService>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
 //DI de Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
