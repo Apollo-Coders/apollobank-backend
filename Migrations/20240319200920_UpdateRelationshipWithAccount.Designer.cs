@@ -3,6 +3,7 @@ using System;
 using ApolloBank.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApolloBank.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240319200920_UpdateRelationshipWithAccount")]
+    partial class UpdateRelationshipWithAccount
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
@@ -45,10 +48,6 @@ namespace ApolloBank.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("Cep")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("City")
                         .IsRequired()
@@ -95,7 +94,7 @@ namespace ApolloBank.Migrations
 
             modelBuilder.Entity("ApolloBank.Models.CreditCard", b =>
                 {
-                    b.Property<int?>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -103,8 +102,7 @@ namespace ApolloBank.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("Account_Id")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("Account_Id");
+                        .HasColumnType("INTEGER");
 
                     b.Property<double>("CreditLimit")
                         .HasColumnType("REAL");
@@ -118,23 +116,19 @@ namespace ApolloBank.Migrations
                     b.Property<DateTime>("ExpirationTime")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool?>("IsBlocked")
+                    b.Property<int>("Number")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("Number")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId");
 
-                    b.ToTable("CreditCard", (string)null);
+                    b.ToTable("CreditCard");
                 });
 
             modelBuilder.Entity("ApolloBank.Models.CreditCards", b =>
                 {
-                    b.Property<int?>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -155,16 +149,19 @@ namespace ApolloBank.Migrations
                     b.HasIndex("Account_Id")
                         .IsUnique();
 
-                    b.ToTable("CreditCards", (string)null);
+                    b.ToTable("CreditCards");
                 });
 
             modelBuilder.Entity("ApolloBank.Models.Invoice", b =>
                 {
-                    b.Property<int?>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("AccountId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("Account_Id")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("InvoiceDate")
@@ -176,7 +173,7 @@ namespace ApolloBank.Migrations
                     b.Property<double>("InvoiceTotalAmount")
                         .HasColumnType("REAL");
 
-                    b.Property<int>("Status")
+                    b.Property<int>("status")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -213,13 +210,7 @@ namespace ApolloBank.Migrations
                     b.Property<string>("From")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("ScheduledDate")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("To")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("TransactionStatusChecker")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Transaction_Type")
@@ -306,9 +297,11 @@ namespace ApolloBank.Migrations
 
             modelBuilder.Entity("ApolloBank.Models.CreditCard", b =>
                 {
-                    b.HasOne("ApolloBank.Models.Account", null)
+                    b.HasOne("ApolloBank.Models.Account", "Account")
                         .WithMany("CreditCard")
                         .HasForeignKey("AccountId");
+
+                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("ApolloBank.Models.CreditCards", b =>

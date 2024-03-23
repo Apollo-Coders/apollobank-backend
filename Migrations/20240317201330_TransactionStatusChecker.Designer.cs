@@ -3,6 +3,7 @@ using System;
 using ApolloBank.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApolloBank.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240317201330_TransactionStatusChecker")]
+    partial class TransactionStatusChecker
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
@@ -32,8 +35,8 @@ namespace ApolloBank.Migrations
                     b.Property<double>("CreditLimit")
                         .HasColumnType("REAL");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -46,56 +49,39 @@ namespace ApolloBank.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Cep")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("City")
                         .IsRequired()
-                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Complement")
-                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Neighborhood")
                         .IsRequired()
-                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Number")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Number")
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("Policies")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("State")
                         .IsRequired()
-                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Street")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("UserId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Addresses", (string)null);
+                    b.ToTable("Address");
                 });
 
             modelBuilder.Entity("ApolloBank.Models.CreditCard", b =>
                 {
-                    b.Property<int?>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -103,8 +89,7 @@ namespace ApolloBank.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("Account_Id")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("Account_Id");
+                        .HasColumnType("INTEGER");
 
                     b.Property<double>("CreditLimit")
                         .HasColumnType("REAL");
@@ -118,23 +103,19 @@ namespace ApolloBank.Migrations
                     b.Property<DateTime>("ExpirationTime")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool?>("IsBlocked")
+                    b.Property<int>("Number")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("Number")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId");
 
-                    b.ToTable("CreditCard", (string)null);
+                    b.ToTable("CreditCard");
                 });
 
             modelBuilder.Entity("ApolloBank.Models.CreditCards", b =>
                 {
-                    b.Property<int?>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -155,16 +136,19 @@ namespace ApolloBank.Migrations
                     b.HasIndex("Account_Id")
                         .IsUnique();
 
-                    b.ToTable("CreditCards", (string)null);
+                    b.ToTable("CreditCards");
                 });
 
             modelBuilder.Entity("ApolloBank.Models.Invoice", b =>
                 {
-                    b.Property<int?>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("AccountId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("Account_Id")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("InvoiceDate")
@@ -176,7 +160,7 @@ namespace ApolloBank.Migrations
                     b.Property<double>("InvoiceTotalAmount")
                         .HasColumnType("REAL");
 
-                    b.Property<int>("Status")
+                    b.Property<int>("status")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -234,9 +218,9 @@ namespace ApolloBank.Migrations
 
             modelBuilder.Entity("ApolloBank.Models.User", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("AccountId")
                         .HasColumnType("INTEGER");
@@ -244,12 +228,14 @@ namespace ApolloBank.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("AddressId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("BirthDay")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("CPF")
                         .IsRequired()
-                        .HasMaxLength(11)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
@@ -260,17 +246,14 @@ namespace ApolloBank.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("FullName")
                         .IsRequired()
-                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("PhoneNumber")
@@ -284,31 +267,19 @@ namespace ApolloBank.Migrations
                     b.HasIndex("AccountId")
                         .IsUnique();
 
-                    b.HasIndex("CPF")
+                    b.HasIndex("AddressId")
                         .IsUnique();
 
-                    b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.ToTable("Users", (string)null);
-                });
-
-            modelBuilder.Entity("ApolloBank.Models.Address", b =>
-                {
-                    b.HasOne("ApolloBank.Models.User", "User")
-                        .WithOne("Address")
-                        .HasForeignKey("ApolloBank.Models.Address", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("ApolloBank.Models.CreditCard", b =>
                 {
-                    b.HasOne("ApolloBank.Models.Account", null)
+                    b.HasOne("ApolloBank.Models.Account", "Account")
                         .WithMany("CreditCard")
                         .HasForeignKey("AccountId");
+
+                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("ApolloBank.Models.CreditCards", b =>
@@ -346,7 +317,13 @@ namespace ApolloBank.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ApolloBank.Models.Address", "Address")
+                        .WithOne("User")
+                        .HasForeignKey("ApolloBank.Models.User", "AddressId");
+
                     b.Navigation("Account");
+
+                    b.Navigation("Address");
                 });
 
             modelBuilder.Entity("ApolloBank.Models.Account", b =>
@@ -361,10 +338,9 @@ namespace ApolloBank.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ApolloBank.Models.User", b =>
+            modelBuilder.Entity("ApolloBank.Models.Address", b =>
                 {
-                    b.Navigation("Address")
-                        .IsRequired();
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

@@ -2,6 +2,7 @@
 using ApolloBank.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 namespace ApolloBank.Controllers
 {
     [Route("users")]
@@ -25,7 +26,7 @@ namespace ApolloBank.Controllers
             }
             catch (ArgumentException ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new { message = ex.Message }); //modificando retorno pra voltar um objeto
             }
         }
 
@@ -35,28 +36,25 @@ namespace ApolloBank.Controllers
             var user = await _userRepository.GetUserById(id);
             if (user == null)
             {
-                return NotFound();
+                return NotFound("User not found.");
             }
             return Ok(user);
         }
 
-
         [HttpPut("{id}")]
-        public async Task<ActionResult<UserDetailsDTO>> UpdateUser(Guid id, UpdateUserDTO updateUserDTO)
+        public async Task<ActionResult<UserDetailsDTO>> UpdateUser(
+            Guid id,
+            UpdateUserDTO updateUserDTO
+        )
         {
-            if (id != Guid.Parse(updateUserDTO.Id.ToString()))
-            {
-                return BadRequest("User not found.");
-            }
-
             try
             {
-                var updatedUser = await _userRepository.UpdateUser(updateUserDTO);
+                var updatedUser = await _userRepository.UpdateUser(id, updateUserDTO);
                 if (updatedUser == null)
                 {
-                    return NotFound();
+                    return NotFound("User not found.");
                 }
-                return NoContent();
+                return CreatedAtAction(nameof(GetUser), new { id = updatedUser.Id }, updatedUser);
             }
             catch (ArgumentException ex)
             {
@@ -65,14 +63,14 @@ namespace ApolloBank.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<UserDetailsDTO>> DeleteUser(Guid id)
+        public async Task<ActionResult> DeleteUser(Guid id)
         {
             var user = await _userRepository.DeleteUser(id);
             if (user == null)
             {
-                return NotFound();
+                return NotFound("User not found.");
             }
-            return NoContent();
+            return Ok("User deleted successfully");
         }
 
         [HttpGet("GetUserByEmail")]
@@ -81,7 +79,7 @@ namespace ApolloBank.Controllers
             var user = await _userRepository.GetUserByEmail(email);
             if (user == null)
             {
-                return NotFound();
+                return NotFound("User not found.");
             }
             return Ok(user);
         }
@@ -92,7 +90,7 @@ namespace ApolloBank.Controllers
             var user = await _userRepository.GetUserByCPF(cpf);
             if (user == null)
             {
-                return NotFound();
+                return NotFound("User not found.");
             }
             return Ok(user);
         }

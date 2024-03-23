@@ -4,32 +4,25 @@ namespace ApolloBank.Models
 {
     public class Invoice
     {
-        public int Id { get; private set; }
-        public DateTime InvoiceDate { get; private set; }
-        public double InvoiceTotalAmount { get; private set; }
-        public double InvoicePaid { get; private set; }
+        public int? Id { get; set; }
+        public DateTime InvoiceDate { get; set; }
+        public double InvoiceTotalAmount { get; set; }
+        public double InvoicePaid { get; set; }
 
-        public InvoiceStatus status { get; private set; }
+        public InvoiceStatus Status { get; private set; }
 
-        public int? Account_Id { get; private set; }
-        public Account? Account { get; private set; }
+        public int? AccountId { get; set; }
+        public Account? Account { get; set; }
 
-        public Invoice(int id, DateTime invoiceDate, double invoiceTotalAmount, double invoicePaid){
-            Id = id;
+        public Invoice() { }
+        public Invoice(DateTime invoiceDate, int accountId){
             InvoiceDate = invoiceDate;
-            InvoiceTotalAmount = invoiceTotalAmount;
-            InvoicePaid = invoicePaid;
+            InvoiceTotalAmount = 0.0d;
+            InvoicePaid = 0.0d;
+            Status = InvoiceStatus.PENDING;
+            AccountId = accountId;
         }
 
-        public void payInvoice(double amount){
-            InvoicePaid += amount;
-            if(InvoicePaid >= InvoiceTotalAmount){
-                status = InvoiceStatus.PAIDOUT;
-            } else if(InvoicePaid < InvoiceTotalAmount && InvoiceDate > DateTime.Now){
-                status = InvoiceStatus.PENDING;
-            } else if(InvoicePaid < InvoiceTotalAmount && InvoiceDate < DateTime.Now){
-                status = InvoiceStatus.OVERDUE;
-            }
-        }
+       
     }
 }
