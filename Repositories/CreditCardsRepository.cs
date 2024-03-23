@@ -1,9 +1,7 @@
 ﻿using ApolloBank.Data;
-using ApolloBank.DTOs;
 using ApolloBank.Models;
 using ApolloBank.Repositories.Interfaces;
 using ApolloBank.Services;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApolloBank.Repositories

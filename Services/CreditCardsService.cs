@@ -1,6 +1,4 @@
-﻿using ApolloBank.Data;
-using ApolloBank.DTOs;
-using ApolloBank.Models;
+﻿using ApolloBank.DTOs;
 using ApolloBank.Repositories.Interfaces;
 using AutoMapper;
 

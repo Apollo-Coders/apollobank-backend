@@ -1,12 +1,7 @@
 ﻿using ApolloBank.DTOs;
-using ApolloBank.Models;
 using ApolloBank.Repositories.Interfaces;
 using ApolloBank.Services.Interfaces;
 using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ApolloBank.Services
 {
