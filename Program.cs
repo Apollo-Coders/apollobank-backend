@@ -20,6 +20,19 @@ IConfiguration configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .Build();
 
+builder.Services.AddCors(options =>
+{
+
+    options.AddPolicy("AnotherPolicy",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+        });
+});
+
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -55,7 +68,7 @@ builder.Services.AddAuthentication(opt =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IHashService, HashService>(); //estava apenas com o "HashService", então não conseguia fazer a injeção.
+builder.Services.AddScoped<IHashService, HashService>(); //estava apenas com o "HashService", ent�o n�o conseguia fazer a inje��o.
 
 //DI de Services
 builder.Services.AddTransient<IAuthService, AuthService>();
