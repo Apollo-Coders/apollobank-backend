@@ -7,3 +7,4 @@ namespace ApolloBank.DTOs
         public int AccountId { get; set; }
     }
 }
+                

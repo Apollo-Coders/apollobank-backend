@@ -11,6 +11,7 @@
         public double CreditLimit { get; set; }
 
         public int? Account_Id { get; set; }
+        public Account Account { get; set; }
 
         public CreditCard() { }
         public CreditCard(string number, int cvc, DateTime expirationTime, double creditUsed, double creditLimit, int account_Id)

@@ -25,6 +25,7 @@ namespace ApolloBank.Controllers
             try
             {
                 var creditCard = await _creditCardsService.CreateCreditCard(createCreditCardDTO);
+
                 return CreatedAtAction(nameof(GetAllCardByCardNumber), new { cardNum = creditCard.Number }, creditCard);
             }
             catch (Exception ex)
@@ -34,7 +35,7 @@ namespace ApolloBank.Controllers
         }
 
 
-        [HttpPut("/block/{cardNum}")]
+        [HttpPut("/{cardNum}")]
         public async Task<IActionResult> BlockCreditCard(string cardNum)
         {
             try
@@ -55,7 +56,7 @@ namespace ApolloBank.Controllers
         }
 
 
-        [HttpGet("/creditcards/{accountid}")]
+        [HttpGet("/{accountid}")]
         public async Task<IActionResult> GetCreditCardsByAccountId(int accountId)
         {
             try
@@ -65,10 +66,7 @@ namespace ApolloBank.Controllers
                 {
                     return NotFound();
                 }
-                else
-                {
                     return Ok(creditCard);
-                }
             }
             catch (Exception ex)
             {
@@ -77,7 +75,7 @@ namespace ApolloBank.Controllers
         }
 
 
-        [HttpGet("/allcards/{accountid}")]
+        [HttpGet("/{accountid}")]
         public async Task<IActionResult> GetAllCardByCardNumber(int accountId)
         {
             try
@@ -99,7 +97,7 @@ namespace ApolloBank.Controllers
             }
         }
 
-        [HttpPut("setlimit")]
+        [HttpPut()]
         public async Task<IActionResult> SetCardLimit([FromBody] SetCardLimitDTO setLimitData)
         {
             double newLimit = setLimitData.NewLimit;
