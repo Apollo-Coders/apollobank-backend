@@ -89,5 +89,14 @@ namespace ApolloBank.Services
         }
 
         #endregion
+
+        public async Task<TransactionDTO> AddTransactionCredit(TransactionDTO transactionDto)
+        {
+            var transaction = _mapper.Map<Transaction>(transactionDto);
+            var transactionResult = await _transactionsRepository.AddTransactionCredit(transaction);
+            var transactionResultDTO = _mapper.Map<TransactionDTO>(transactionResult);
+
+            return transactionResultDTO;
+        }
     }
 }

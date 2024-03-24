@@ -17,6 +17,6 @@ namespace ApolloBank.Services.Interfaces
 
 
         Task<TransactionDTO> Scheduletransaction(TransactionDTO transactionDto);
-
+        Task<TransactionDTO> AddTransactionCredit(TransactionDTO transactionDto);
     }
 }
