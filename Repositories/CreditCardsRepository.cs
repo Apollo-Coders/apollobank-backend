@@ -175,44 +175,9 @@ namespace ApolloBank.Repositories
         }
 
 
-        // Método que contém a lógica de adicionar uma o valor de uma transação no limite usado de crédito (será usado na transaction)
-        public async Task AddAmountToUsedCredit(double amount, int accountId, string cardNum)
-        {
-            var creditCards = await GetCreditCardsByAccountId(accountId);
-            var creditCard = await GetCardByCardNumber(cardNum);
+ 
 
-            double availableLimit = VerifyCardLimit(creditCard);
-
-            if (availableLimit < amount)
-            {
-                throw new Exception("Compra reprovada: Cartão não possui limite suficiente");
-            }
-
-
-            using (var transaction = await _appDbContext.Database.BeginTransactionAsync())
-            {
-                try
-                {
-                    creditCards.TotalCreditUsed += amount;
-                    creditCard.CreditUsed += amount;
-
-                    _appDbContext.CreditCards.Update(creditCards);
-                    _appDbContext.CreditCard.Update(creditCard);
-                    await _invoiceRepository.AddAmountToInvoice(amount, accountId);
-
-                    await _appDbContext.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    throw new Exception("Houve um erro interno ao alterar o limite no cartão", ex);
-                }
-
-            }
-        }
-
-        private double VerifyCardLimit(CreditCard creditCard)
+        public double VerifyCardLimit(CreditCard creditCard)
         {
             double availableLimit = creditCard.CreditLimit - creditCard.CreditUsed;
 

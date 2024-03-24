@@ -369,11 +369,6 @@ namespace ApolloBank.Repositories
 
             if (transaction.From == null) throw new Exception("O campo do numero do cartao do titular da conta de origem não pode estar vazio.");
             CreditCard card = await _creditCardsRepository.GetCardByCardNumber(transaction.From);
-
-
-
-
-
             Account account = await _accountRepository.GetAccountByAccountId(Convert.ToInt32(card.Account_Id));
             if (account == null) throw new Exception("Titular da conta não encontrado para o número da conta fornecido.");
             if (account.Id != transaction.Account_Id) throw new Exception("O ID da conta na transação não corresponde ao ID da conta atual.");

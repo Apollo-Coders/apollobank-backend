@@ -28,7 +28,8 @@ namespace ApolloBank.Repositories
 
             if (actualMonthInvoice == null)
             {
-                throw new Exception("Fatura do mês atual não encontrada");
+                return null;
+                //throw new Exception("Fatura do mês atual não encontrada");
             }
 
             return actualMonthInvoice;

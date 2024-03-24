@@ -11,8 +11,7 @@ namespace ApolloBank.Repositories.Interfaces
         public Task<CreditCard> CreateCreditCard(int accountId);
         public Task<CreditCard> BlockCreditCard(string cardNumber);
         public Task SetCardLimit(double newLimit, int accountId, string cardNum);
-        public Task AddAmountToUsedCredit(double amount, int accountId, string cardNum);
         public Task PayCreditCard(int accountId, string cardNum);
-
+        public double VerifyCardLimit(CreditCard creditCard);
     }
 }
