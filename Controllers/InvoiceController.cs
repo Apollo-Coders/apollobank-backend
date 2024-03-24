@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApolloBank.Controllers
 {
+    /// <summary>
+    /// Controlador responsável por operações relacionadas a faturas (invoices).
+    /// </summary>
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class InvoiceController : ControllerBase
@@ -12,13 +15,21 @@ namespace ApolloBank.Controllers
         private readonly IInvoiceService _invoiceService;
         private readonly IAuthService _authService;
 
+        /// <summary>
+        /// Construtor da classe InvoiceController.
+        /// </summary>
+        /// <param name="invoiceService">Serviço de faturas.</param>
+        /// <param name="authService">Serviço de autenticação.</param>
         public InvoiceController(IInvoiceService invoiceService, IAuthService authService)
         {
             _invoiceService = invoiceService;
             _authService = authService;
         }
 
-
+        /// <summary>
+        /// Endpoint utilizado para obter as faturas do mês atual para o usuário autenticado.
+        /// </summary>
+        /// <returns>Retorna as faturas do mês atual.</returns>
         [Authorize]
         [HttpGet()]
         public async Task<IActionResult> GetActualMonthInvoice()
@@ -40,7 +51,10 @@ namespace ApolloBank.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Endpoint utilizado para obter todas as faturas para o usuário autenticado.
+        /// </summary>
+        /// <returns>Retorna todas as faturas do usuário.</returns>
         [Authorize]
         [HttpGet()]
         public async Task<IActionResult> GetAllInvoices()
@@ -62,7 +76,11 @@ namespace ApolloBank.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Endpoint utilizado para pagar parcialmente a fatura do mês atual com o número do cartão especificado.
+        /// </summary>
+        /// <param name="cardNum">Número do cartão.</param>
+        /// <returns>Retorna Ok se a operação for bem-sucedida.</returns>
         [Authorize]
         [HttpPost("{cardNum}")]
         public async Task<IActionResult> PayParcialMonthInvoice(string cardNum)
@@ -79,7 +97,10 @@ namespace ApolloBank.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Endpoint utilizado para pagar totalmente a fatura do mês atual para o usuário autenticado.
+        /// </summary>
+        /// <returns>Retorna Ok se a operação for bem-sucedida.</returns>
         [Authorize]
         [HttpPost()]
         public async Task<IActionResult> PayTotalMonthInvoice()
