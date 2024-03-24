@@ -9,7 +9,7 @@ namespace ApolloBank.Services.Interfaces
         Task<bool> AuthenticateAsync(string cpf, string senha);
         public string GenerateToken(User user);
         public Task<User> FoundUserByCpf(string cpf);
-        public TokenReturnDTO ResponseTokenData(string token, string fullName, double balance, int accountNumber);
+        public TokenReturnDTO ResponseTokenData(string token, string fullName, double balance, int accountNumber, int accountId);
         public TokenInfoDTO GetTokenDateByHtppContext(HttpContext httpContext);
     }
 }

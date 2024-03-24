@@ -14,7 +14,7 @@ namespace ApolloBank.Models
         public DateTime? ScheduledDate { get; private set; }
         public string? TransactionStatusChecker { get;  set; }
         public string? Description { get; private set; }
-        public TransactionType Transaction_Type { get; private set; }
+        public TransactionType TransactionType { get; private set; }
         public char Direction { get; private set; }
         public int? AccountId { get; set; }
         public Account? Account { get; set; }
@@ -22,7 +22,7 @@ namespace ApolloBank.Models
         public Transaction()
         { }
 
-        public Transaction(int id, double amount, string? to, string? from,DateTime date, DateTime? scheduledDate,string? transactionStatusChecker, string? description, TransactionType transaction_Type, char direction, int? account_Id, Account? account)
+        public Transaction(int id, double amount, string? to, string? from,DateTime date, DateTime? scheduledDate,string? transactionStatusChecker, string? description, TransactionType transactionType, char direction, int? account_Id, Account? account)
         {
             Id = id;
             Amount = amount;
@@ -32,25 +32,25 @@ namespace ApolloBank.Models
             ScheduledDate = scheduledDate;
             TransactionStatusChecker = transactionStatusChecker;
             Description = description;
-            Transaction_Type = transaction_Type;
+            TransactionType = transactionType;
             Direction = direction;
             AccountId = account_Id;
             Account = account;
         }
 
-        public Transaction( double amount, string? to, string? from, DateTime date, string? description, TransactionType transaction_Type, char direction, int? account_Id)
+        public Transaction( double amount, string? to, string? from, DateTime date, string? description, TransactionType transactionType, char direction, int? account_Id)
         {
             Amount = amount;
             To = to;
             From = from;
             Date = date;
             Description = description;
-            Transaction_Type = transaction_Type;
+            TransactionType = transactionType;
             Direction = direction;
             AccountId = account_Id;
         }
 
-        public Transaction(double amount, string? to, string? from, DateTime date, DateTime? scheduledDate, string? transactionStatusChecker, string? description, TransactionType transaction_Type, char direction, int? account_Id)
+        public Transaction(double amount, string? to, string? from, DateTime date, DateTime? scheduledDate, string? transactionStatusChecker, string? description, TransactionType transactionType, char direction, int? account_Id)
         {
             Amount = amount;
             To = to;
@@ -59,18 +59,18 @@ namespace ApolloBank.Models
             ScheduledDate = scheduledDate;
             TransactionStatusChecker = transactionStatusChecker;
             Description = description;
-            Transaction_Type = transaction_Type;
+            TransactionType = transactionType;
             Direction = direction;
             AccountId = account_Id;
         }
 
-        public Transaction(double amount, string? from, DateTime date, string? description, TransactionType transaction_Type, char direction, int? account_Id)
+        public Transaction(double amount, string? from, DateTime date, string? description, TransactionType transactionType, char direction, int? account_Id)
         {
             Amount = amount;
             From = from;
             Date = date;
             Description = description;
-            Transaction_Type = transaction_Type;
+            TransactionType = transactionType;
             Direction = direction;
             AccountId = account_Id;
         }

@@ -1,5 +1,6 @@
 ﻿using ApolloBank.DTOs;
 using ApolloBank.Models;
+using ApolloBank.Services;
 using ApolloBank.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +11,12 @@ namespace ApolloBank.Controllers
     public class TransactionsController : ControllerBase
     {
         private readonly ITransactionService _transactionService;
+        private readonly IAuthService _authService;
 
-        public TransactionsController(ITransactionService transactionService)
+        public TransactionsController(ITransactionService transactionService, IAuthService authService)
         {
             _transactionService = transactionService;
+            _authService = authService;
         }
 
       
@@ -28,7 +31,7 @@ namespace ApolloBank.Controllers
 
                 var transactionResul = await _transactionService.AddTransaction(transactionDTO);
 
-                return CreatedAtAction(nameof(GetTransaction), new { transaction_id = transactionResul.Id, account_id = transactionResul.Account_Id }, transactionResul);
+                return CreatedAtAction(nameof(GetTransaction), new { transaction_id = transactionResul.Id, account_id = transactionResul.AccountId }, transactionResul);
 
             }
             catch (ArgumentException ex)
@@ -47,7 +50,7 @@ namespace ApolloBank.Controllers
 
                 var transactionResul = await _transactionService.Makewithdrawal(transactionDTO);
 
-                return CreatedAtAction(nameof(GetTransaction), new { transaction_id = transactionResul.Id, account_id = transactionResul.Account_Id }, transactionResul);
+                return CreatedAtAction(nameof(GetTransaction), new { transaction_id = transactionResul.Id, account_id = transactionResul.AccountId }, transactionResul);
             }
             catch (ArgumentException ex)
             {
@@ -66,7 +69,7 @@ namespace ApolloBank.Controllers
 
                 var transactionResul = await _transactionService.Makedeposit(transactionDTO);
 
-                return CreatedAtAction(nameof(GetTransaction), new { transaction_id = transactionResul.Id, account_id = transactionResul.Account_Id }, transactionResul);
+                return CreatedAtAction(nameof(GetTransaction), new { transaction_id = transactionResul.Id, account_id = transactionResul.AccountId }, transactionResul);
             }
             catch (ArgumentException ex)
             {
@@ -84,7 +87,7 @@ namespace ApolloBank.Controllers
 
                 var transactionResul = await _transactionService.Scheduletransaction(transactionDTO);
 
-                return CreatedAtAction(nameof(GetTransaction), new { transaction_id = transactionResul.Id, account_id = transactionResul.Account_Id }, transactionResul);
+                return CreatedAtAction(nameof(GetTransaction), new { transaction_id = transactionResul.Id, account_id = transactionResul.AccountId }, transactionResul);
             }
             catch (ArgumentException ex)
             {
@@ -103,7 +106,7 @@ namespace ApolloBank.Controllers
 
                 var transactionResul = await _transactionService.AddTransactionCredit(transactionDTO);
 
-                return CreatedAtAction(nameof(GetTransaction), new { transaction_id = transactionResul.Id, account_id = transactionResul.Account_Id }, transactionResul);
+                return CreatedAtAction(nameof(GetTransaction), new { transaction_id = transactionResul.Id, account_id = transactionResul.AccountId }, transactionResul);
 
             }
             catch (ArgumentException ex)
@@ -113,10 +116,12 @@ namespace ApolloBank.Controllers
         }
 
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TransactionDTO>> GetCurrentMonthTransactions(int id)
+        [HttpGet()]
+        public async Task<ActionResult<TransactionDTO>> GetCurrentMonthTransactions()
         {
-            var Transactions = await _transactionService.GetCurrentMonthTransactions(id);
+            int accountId = _authService.GetTokenDateByHtppContext(HttpContext).AccountId;
+
+            var Transactions = await _transactionService.GetCurrentMonthTransactions(accountId);
             if (Transactions == null)
             {
                 return NotFound("Transaction not found");
@@ -124,10 +129,11 @@ namespace ApolloBank.Controllers
             return Ok(Transactions);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TransactionDTO>> GetLastSixMonthsTransactions(int id)
+        [HttpGet()]
+        public async Task<ActionResult<TransactionDTO>> GetLastSixMonthsTransactions()
         {
-            var Transactions = await _transactionService.GetLastSixMonthsTransactions(id);
+            int accountId = _authService.GetTokenDateByHtppContext(HttpContext).AccountId;
+            var Transactions = await _transactionService.GetLastSixMonthsTransactions(accountId);
             if (Transactions == null)
             {
                 return NotFound("Transaction not found");
@@ -135,10 +141,11 @@ namespace ApolloBank.Controllers
             return Ok(Transactions);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TransactionDTO>> GetAllTransactions(int id)
+        [HttpGet()]
+        public async Task<ActionResult<TransactionDTO>> GetAllTransactions()
         {
-            var Transactions = await _transactionService.GetAllTransactions(id);
+            int accountId = _authService.GetTokenDateByHtppContext(HttpContext).AccountId;
+            var Transactions = await _transactionService.GetAllTransactions(accountId);
             if (Transactions == null)
             {
                 return NotFound("Transaction not found");
@@ -147,10 +154,11 @@ namespace ApolloBank.Controllers
         }
 
 
-        [HttpGet("{transaction_id}/{account_id}")]
-        public async Task<ActionResult<TransactionDTO>> GetTransaction(int transaction_id, int account_id)
+        [HttpGet("{transactionId}")]
+        public async Task<ActionResult<TransactionDTO>> GetTransaction(int transactionId)
         {
-            var Transactions = await _transactionService.GetTransaction(transaction_id, account_id);
+            int accountId = _authService.GetTokenDateByHtppContext(HttpContext).AccountId;
+            var Transactions = await _transactionService.GetTransaction(transactionId, accountId);
             if (Transactions == null)
             {
                 return NotFound("Transaction not found");

@@ -70,7 +70,7 @@ namespace ApolloBank.Repositories
               from: transaction.From,
               date: transaction.Date,
               description: transaction.Description,
-              transaction_Type: transaction.Transaction_Type,
+              transactionType: transaction.TransactionType,
               direction: 'I', // "Incoming" (Entrada)
               account_Id: account.Id
              );
@@ -108,7 +108,7 @@ namespace ApolloBank.Repositories
                from: transaction.From,
                date: transaction.Date,
                description: transaction.Description,
-               transaction_Type: transaction.Transaction_Type,
+               transactionType: transaction.TransactionType,
                direction: 'O', //"Outgoing" (Saída).
                account_Id: account.Id
               );
@@ -145,7 +145,7 @@ namespace ApolloBank.Repositories
                  from: transaction.From,
                  date: transaction.Date,
                  description: transaction.Description,
-                 transaction_Type: transaction.Transaction_Type,
+                 transactionType: transaction.TransactionType,
                  direction: 'O', //"Outgoing" (Saída).
                  account_Id: accountfrom.Id
               );
@@ -156,7 +156,7 @@ namespace ApolloBank.Repositories
                  from: transaction.From,
                  date: transaction.Date,
                  description: transaction.Description,
-                 transaction_Type: transaction.Transaction_Type,
+                 transactionType: transaction.TransactionType,
                  direction: 'I', // "Incoming" (Entrada)
                  account_Id: accountTo.Id
              );
@@ -243,7 +243,7 @@ namespace ApolloBank.Repositories
                  scheduledDate: transaction.ScheduledDate,
                  transactionStatusChecker: "Inprogress",
                  description: transaction.Description,
-                 transaction_Type: transaction.Transaction_Type,
+                 transactionType: transaction.TransactionType,
                  direction: 'O', //"Outgoing" (Saída).
                  account_Id: accountfrom.Id
               );
@@ -275,7 +275,7 @@ namespace ApolloBank.Repositories
                   scheduledDate: transaction.ScheduledDate,
                  transactionStatusChecker: "Complete",
                  description: transaction.Description,
-                 transaction_Type: transaction.Transaction_Type,
+                 transactionType: transaction.TransactionType,
                  direction: 'I',
                  account_Id: accountTo.Id
              );
@@ -384,7 +384,7 @@ namespace ApolloBank.Repositories
                  from: transaction.From, //Numero do cartao de credito 
                  date: transaction.Date,
                  description: transaction.Description,
-                 transaction_Type: transaction.Transaction_Type,
+                 transactionType: transaction.TransactionType,
                  direction: 'I', // "Incoming" (Entrada)
                  account_Id: account.Id
              );

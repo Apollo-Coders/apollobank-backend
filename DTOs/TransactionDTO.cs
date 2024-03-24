@@ -6,7 +6,7 @@ namespace ApolloBank.DTOs
 {
     public class TransactionDTO
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
        
         [Required(ErrorMessage = "The Amount is Required")]
         public double Amount { get; set; }
@@ -25,10 +25,10 @@ namespace ApolloBank.DTOs
         [DisplayName("Description")]
         public string? Description { get; set; }
         
-        public TransactionType Transaction_Type { get; set; }
+        public TransactionType TransactionType { get; set; }
         public char Direction { get; set; }
 
-        public int Account_Id { get; set; }
+        public int? AccountId { get; set; }
 
         public TransactionDTO()
         {

@@ -64,7 +64,8 @@ namespace ApolloBank.Services
 
             var credentials = new SigningCredentials(privateKey, SecurityAlgorithms.HmacSha256);
 
-            var expiration = DateTime.UtcNow.AddMinutes(15);
+            //var expiration = DateTime.UtcNow.AddMinutes(15);
+            var expiration = DateTime.UtcNow.AddMinutes(15).AddDays(2);
 
             JwtSecurityToken token = new JwtSecurityToken(
                 issuer: _configuration["jwt:issuer"],
@@ -86,14 +87,15 @@ namespace ApolloBank.Services
             return user;
         }
 
-        public TokenReturnDTO ResponseTokenData(string token, string userName, double balance, int accountNumber)
+        public TokenReturnDTO ResponseTokenData(string token, string userName, double balance, int accountNumber, int accountId)
         {
             TokenReturnDTO responseUserData = new()
             {
                 token = token,
                 userName = userName,
                 balance = balance,
-                accountNumber = accountNumber
+                accountNumber = accountNumber,
+                accountId = accountId
             };
             return responseUserData;
         }
