@@ -22,7 +22,11 @@ namespace ApolloBank.Controllers
             _accountRepository = accountRepository; 
         }
 
-
+        /// <summary>
+        /// Endpoint utilizado para criar um novo usuário.
+        /// </summary>
+        /// <param name="createUserDTO">Dados necessários para criar um novo usuário.</param>
+        /// <returns>Retorna um objeto ActionResult contendo um CreateUserDTO em caso de sucesso, ou uma mensagem de erro em caso de falha na criação do usuário.</returns>
         [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult<CreateUserDTO>> CreateUser(CreateUserDTO createUserDTO)
@@ -39,6 +43,10 @@ namespace ApolloBank.Controllers
         }
 
 
+        /// <summary>
+        /// Endpoint utilizado para obter detalhes de um usuário pelo seu ID.
+        /// </summary>
+        /// <returns>Retorna um objeto ActionResult contendo os detalhes do usuário em caso de sucesso, ou uma mensagem de erro em caso de usuário não encontrado.</returns>
         [HttpGet()]
         public async Task<ActionResult<UserDetailsDTO>> GetUser()
         {
@@ -52,9 +60,13 @@ namespace ApolloBank.Controllers
             return Ok(user);
         }
 
-       
 
 
+        /// <summary>
+        /// Endpoint utilizado para atualizar informações de um usuário autenticado.
+        /// </summary>
+        /// <param name="updateUserDTO">Dados necessários para atualizar as informações do usuário.</param>
+        /// <returns>Retorna um objeto ActionResult contendo os detalhes atualizados do usuário em caso de sucesso, ou uma mensagem de erro em caso de falha na atualização.</returns>
         [Authorize]
         [HttpPut()]
         public async Task<ActionResult<UserDetailsDTO>> UpdateUser(
@@ -78,7 +90,10 @@ namespace ApolloBank.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Endpoint utilizado para excluir um usuário autenticado.
+        /// </summary>
+        /// <returns>Retorna um objeto ActionResult indicando o resultado da operação de exclusão. Em caso de sucesso, retorna um status 200 OK com uma mensagem indicando que o usuário foi excluído com sucesso. Em caso de falha, retorna um status 404 Not Found com uma mensagem indicando que o usuário não foi encontrado.</returns>
         [Authorize]
         [HttpDelete()]
         public async Task<ActionResult> DeleteUser()
@@ -94,6 +109,11 @@ namespace ApolloBank.Controllers
         }
 
 
+        /// <summary>
+        /// Endpoint utilizado para obter detalhes de um usuário pelo seu endereço de e-mail.
+        /// </summary>
+        /// <param name="email">O endereço de e-mail do usuário.</param>
+        /// <returns>Retorna um objeto ActionResult contendo os detalhes do usuário em caso de sucesso, ou uma mensagem de erro em caso de usuário não encontrado.</returns>
         [Authorize]
         [HttpGet()]
         public async Task<ActionResult<UserDetailsDTO>> GetUserByEmail(string email)
@@ -107,6 +127,11 @@ namespace ApolloBank.Controllers
         }
 
 
+        /// <summary>
+        /// Endpoint utilizado para obter detalhes de um usuário pelo seu CPF.
+        /// </summary>
+        /// <param name="cpf">O número de CPF do usuário.</param>
+        /// <returns>Retorna um objeto ActionResult contendo os detalhes do usuário em caso de sucesso, ou uma mensagem de erro em caso de usuário não encontrado.</returns>
         [Authorize]
         [HttpGet("{cpf}")]
         public async Task<ActionResult<UserDetailsDTO>> GetUserByCPF(string cpf)
@@ -119,7 +144,10 @@ namespace ApolloBank.Controllers
             return Ok(user);
         }
 
-
+        /// <summary>
+        /// Endpoint utilizado para obter detalhes de todos os usuários.
+        /// </summary>
+        /// <returns>Retorna um objeto ActionResult contendo os detalhes de todos os usuários em caso de sucesso.</returns>
         [Authorize]
         [HttpGet("GetUsers")]
         public async Task<ActionResult<UserDetailsDTO>> GetUsers()
@@ -128,6 +156,11 @@ namespace ApolloBank.Controllers
             return Ok(users);
         }
 
+        /// <summary>
+        /// Endpoint utilizado para obter informações de uma conta pelo seu número de identificação.
+        /// </summary>
+        /// <param name="id">O número de identificação da conta.</param>
+        /// <returns>Retorna um objeto ActionResult contendo as informações da conta em caso de sucesso, ou um status NotFound em caso de conta não encontrada.</returns>
         [Authorize]
         [HttpGet("GetAccount/{id}")]
 
