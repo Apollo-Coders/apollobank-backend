@@ -7,8 +7,6 @@ namespace ApolloBank.Models
         public int Id { get; set; }
         public double Balance { get; set; }
         public int AccountNumber { get; set; }
-
-        public double CreditLimit { get; set; }
         public CreditCards? CreditCards { get; set; }
         public List<CreditCard>? CreditCard { get; set; }
 
