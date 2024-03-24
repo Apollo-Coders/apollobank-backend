@@ -11,12 +11,17 @@ namespace ApolloBank.Repositories
     {
         private readonly AppDbContext _appDbContext;
         private readonly IAccountRepository _accountRepository;
+        private readonly IInvoiceRepository _invoiceRepository;
+        private readonly ICreditCardsRepository _creditCardsRepository;
 
-        public TransactionsRepository(AppDbContext appDbContext, IAccountRepository accountRepository)
+        public TransactionsRepository(AppDbContext appDbContext, IAccountRepository accountRepository, IInvoiceRepository invoiceRepository, ICreditCardsRepository creditCardsRepository)
         {
             _appDbContext = appDbContext;
             _accountRepository = accountRepository;
+            _invoiceRepository = invoiceRepository;
+            _creditCardsRepository = creditCardsRepository;
         }
+
 
 
 
@@ -310,7 +315,7 @@ namespace ApolloBank.Repositories
              .SingleAsync(x => x.Id == transaction_id && x.Account_Id == account_id);
         }
 
-        
+
 
 
 
@@ -318,7 +323,102 @@ namespace ApolloBank.Repositories
         #endregion
 
 
+        // Método que contém a lógica de adicionar uma o valor de uma transação no limite usado de crédito (será usado na transaction)
+        public async Task AddAmountToUsedCredit(double amount, int accountId, string cardNum)
+        {
+            var creditCards = await _creditCardsRepository.GetCreditCardsByAccountId(accountId);
+            var creditCard = await _creditCardsRepository.GetCardByCardNumber(cardNum);
 
+            double availableLimit = _creditCardsRepository.VerifyCardLimit(creditCard);
+            var invoice = await _invoiceRepository.GetActualMonthInvoice(accountId);
+
+            if (invoice == null) await _invoiceRepository.CreateMonthInvoice(accountId);
+
+
+            if (availableLimit < amount)
+            {
+                throw new Exception("Compra reprovada: Cartão não possui limite suficiente");
+            }
+
+
+            using (var transaction = await _appDbContext.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    creditCards.TotalCreditUsed += amount;
+                    creditCard.CreditUsed += amount;
+
+                    _appDbContext.CreditCards.Update(creditCards);
+                    _appDbContext.CreditCard.Update(creditCard);
+                    await _invoiceRepository.AddAmountToInvoice(amount, accountId);
+
+                    await _appDbContext.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    throw new Exception("Houve um erro interno ao alterar o limite no cartão", ex);
+                }
+
+            }
+        }
+
+        public async Task<Transaction> AddTransactionCredit(Transaction transaction)
+        {
+
+            if (transaction.From == null) throw new Exception("O campo do numero do cartao do titular da conta de origem não pode estar vazio.");
+            CreditCard card = await _creditCardsRepository.GetCardByCardNumber(transaction.From);
+
+
+
+
+
+            Account account = await _accountRepository.GetAccountByAccountId(Convert.ToInt32(card.Account_Id));
+            if (account == null) throw new Exception("Titular da conta não encontrado para o número da conta fornecido.");
+            if (account.Id != transaction.Account_Id) throw new Exception("O ID da conta na transação não corresponde ao ID da conta atual.");
+            if (account.CreditLimit < transaction.Amount) throw new Exception("Saldo insuficiente.");
+
+            var transactionCreditCard = new Transaction(
+                 amount: transaction.Amount,
+                 from: transaction.From, //Numero do cartao de credito 
+                 date: transaction.Date,
+                 description: transaction.Description,
+                 transaction_Type: transaction.Transaction_Type,
+                 direction: 'I', // "Incoming" (Entrada)
+                 account_Id: account.Id
+             );
+
+
+            using (var transactionn = await _appDbContext.Database.BeginTransactionAsync())
+            {
+                try
+                {
+
+                    _appDbContext.Transactions.Add(transactionCreditCard);
+
+
+
+
+                    await transactionn.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    transactionn.Rollback();
+                    throw new Exception("Ocorreu um erro ao processar a transação.'", ex);
+                }
+            }
+
+            await _appDbContext.SaveChangesAsync();
+
+            await AddAmountToUsedCredit(transaction.Amount, account.Id, card.Number);
+            return transactionCreditCard;
+
+
+
+
+            throw new NotImplementedException();
+        }
 
     }
 }
