@@ -19,8 +19,11 @@ namespace ApolloBank.Repositories.Interfaces
         Task<List<Transaction>> GetScheduledTransaction();
         Task<Transaction> Scheduletransaction(Transaction transaction);
         Task<bool> CompleteScheduledTransaction(int? id);
-   
-        
+
+
+        public Task AddAmountToUsedCredit(double amount, int accountId, string cardNum);
+        Task<Transaction> AddTransactionCredit(Transaction transaction);
+
 
 
 
