@@ -18,7 +18,8 @@ namespace ApolloBank.Controllers
         /// Inicializa uma nova instância da classe TransactionsController.
         /// </summary>
         /// <param name="transactionService">O serviço de transações a ser injetado.</param>
-        public TransactionsController(ITransactionService transactionService)
+        /// <param name="authService">Serviço de autenticação.</param>
+        public TransactionsController(ITransactionService transactionService, IAuthService authService)
         {
             _transactionService = transactionService;
             _authService = authService;
