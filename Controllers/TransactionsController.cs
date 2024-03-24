@@ -93,6 +93,26 @@ namespace ApolloBank.Controllers
 
         }
 
+        [HttpPost()]
+        public async Task<ActionResult> AddTransactionCredit([FromBody] TransactionDTO transactionDTO)
+        {
+            try
+            {
+                if (transactionDTO == null)
+                    return BadRequest("Data Invalid");
+
+                var transactionResul = await _transactionService.AddTransactionCredit(transactionDTO);
+
+                return CreatedAtAction(nameof(GetTransaction), new { transaction_id = transactionResul.Id, account_id = transactionResul.Account_Id }, transactionResul);
+
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
         [HttpGet("{id}")]
         public async Task<ActionResult<TransactionDTO>> GetCurrentMonthTransactions(int id)
         {
