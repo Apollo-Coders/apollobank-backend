@@ -8,6 +8,8 @@ namespace ApolloBank.DTOs.Mappings
         {          
 
             CreateMap<Transaction, TransactionDTO>().ReverseMap();
+            CreateMap<CreditCard, CreditCardDetailsDTO>().ReverseMap();
+            CreateMap<CreditCards, CreditCardsDetailsDTO>().ReverseMap();
             CreateMap<User, CreateUserDTO>()
                 .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.FullName))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
