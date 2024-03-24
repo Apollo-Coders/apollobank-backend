@@ -10,6 +10,5 @@ namespace ApolloBank.Services
         public Task<CreditCardDetailsDTO> CreateCreditCard(CreateCreditCardDTO creditCardDTO);
         public Task<CreditCardDetailsDTO> BlockCreditCard(string cardNumber);
         public Task SetCardLimit(double newLimit, int accountId, string cardNum);
-        public Task AddAmountToUsedCredit(TransactionDTO transactionDetails, int accountId);
     }
 }

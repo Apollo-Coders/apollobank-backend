@@ -61,21 +61,5 @@ namespace ApolloBank.Services
             await _creditCardsRepository.SetCardLimit(newLimit, accountId, cardNum);
         }
 
-
-        public async Task AddAmountToUsedCredit(TransactionDTO transactionDetails, int accountId)
-        {
-            string? cardNum = transactionDetails.From;
-
-            double amount = transactionDetails.Amount;
-
-            if (cardNum == null)
-            {
-                throw new Exception("Transação inválida, preencha o campo From com o número do cartão!");
-            }
-
-
-            await _creditCardsRepository.AddAmountToUsedCredit(amount, accountId, cardNum);
-        }
-
     }
 }
