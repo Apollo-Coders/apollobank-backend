@@ -8,19 +8,28 @@ namespace ApolloBank.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
+
     public class TransactionsController : ControllerBase
     {
         private readonly ITransactionService _transactionService;
         private readonly IAuthService _authService;
 
-        public TransactionsController(ITransactionService transactionService, IAuthService authService)
+        /// <summary>
+        /// Inicializa uma nova instância da classe TransactionsController.
+        /// </summary>
+        /// <param name="transactionService">O serviço de transações a ser injetado.</param>
+        public TransactionsController(ITransactionService transactionService)
         {
             _transactionService = transactionService;
             _authService = authService;
         }
 
-      
-        
+
+        /// <summary>
+        /// Endpoint utilizado para adicionar uma nova transação.
+        /// </summary>
+        /// <param name="transactionDTO">Objeto contendo os dados da transação.</param>
+        /// <returns>ActionResult que representa a resposta HTTP.</returns>
         [HttpPost()]
         public async Task<ActionResult> AddTransaction([FromBody] TransactionDTO transactionDTO)
         {
@@ -40,6 +49,12 @@ namespace ApolloBank.Controllers
             }
         }
 
+
+        /// <summary>
+        /// Endpoint utilizado para realizar um saque.
+        /// </summary>
+        /// <param name="transactionDTO">Objeto contendo os dados da transação de saque.</param>
+        /// <returns>ActionResult que representa a resposta HTTP.</returns>
         [HttpPost()]
         public async Task<ActionResult> MakeWithdrawal([FromBody] TransactionDTO transactionDTO)
         {
@@ -59,6 +74,12 @@ namespace ApolloBank.Controllers
 
         }
 
+
+        /// <summary>
+        /// Endpoint utilizado para realizar um depósito.
+        /// </summary>
+        /// <param name="transactionDTO">Objeto contendo os dados da transação de depósito.</param>
+        /// <returns>ActionResult que representa a resposta HTTP.</returns>
         [HttpPost()]
         public async Task<ActionResult> Makedeposit([FromBody] TransactionDTO transactionDTO)
         {
@@ -77,6 +98,13 @@ namespace ApolloBank.Controllers
             }
         }
 
+
+
+        /// <summary>
+        /// Endpoint utilizado para agendar uma transação.
+        /// </summary>
+        /// <param name="transactionDTO">Objeto contendo os dados da transação a ser agendada.</param>
+        /// <returns>ActionResult que representa a resposta HTTP.</returns>
         [HttpPost()]
         public async Task<ActionResult> Scheduletransaction([FromBody] TransactionDTO transactionDTO)
         {
@@ -96,6 +124,12 @@ namespace ApolloBank.Controllers
 
         }
 
+
+        /// <summary>
+        /// Endpoint utilizado para adicionar uma transação de crédito.
+        /// </summary>
+        /// <param name="transactionDTO">Objeto contendo os dados da transação de crédito a ser adicionada.</param>
+        /// <returns>ActionResult que representa a resposta HTTP.</returns>
         [HttpPost()]
         public async Task<ActionResult> AddTransactionCredit([FromBody] TransactionDTO transactionDTO)
         {
@@ -116,6 +150,11 @@ namespace ApolloBank.Controllers
         }
 
 
+
+        /// <summary>
+        /// Endpoint utilizado para obter as transações do mês atual para uma determinada conta.
+        /// </summary>
+        /// <returns>ActionResult contendo as transações do mês atual.</returns>
         [HttpGet()]
         public async Task<ActionResult<TransactionDTO>> GetCurrentMonthTransactions()
         {

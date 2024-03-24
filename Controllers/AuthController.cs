@@ -24,6 +24,11 @@ namespace ApolloBank.Controllers
 
 
 
+        /// <summary>
+        /// Endpoint utilizado para autenticar um usuário.
+        /// </summary>
+        /// <param name="data">Dados de entrada do usuário (CPF e senha).</param>
+        /// <returns>Retorna um token de autenticação em caso de sucesso, ou mensagens de erro em caso de falha na autenticação.</returns>
         [AllowAnonymous]
         [HttpPost()]
         public async Task<ActionResult> Authenticate([FromBody] UserRequestDTO data)
