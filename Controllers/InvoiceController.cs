@@ -27,7 +27,7 @@ namespace ApolloBank.Controllers
         }
 
         /// <summary>
-        /// Endpoint que obtém as faturas do mês atual para o usuário autenticado.
+        /// Endpoint utilizado para obter as faturas do mês atual para o usuário autenticado.
         /// </summary>
         /// <returns>Retorna as faturas do mês atual.</returns>
         [Authorize]
@@ -52,7 +52,7 @@ namespace ApolloBank.Controllers
         }
 
         /// <summary>
-        /// Endpoint que obtém todas as faturas para o usuário autenticado.
+        /// Endpoint utilizado para obter todas as faturas para o usuário autenticado.
         /// </summary>
         /// <returns>Retorna todas as faturas do usuário.</returns>
         [Authorize]
@@ -77,7 +77,7 @@ namespace ApolloBank.Controllers
         }
 
         /// <summary>
-        /// Endpoint que paga parcialmente a fatura do mês atual com o número do cartão especificado.
+        /// Endpoint utilizado para pagar parcialmente a fatura do mês atual com o número do cartão especificado.
         /// </summary>
         /// <param name="cardNum">Número do cartão.</param>
         /// <returns>Retorna Ok se a operação for bem-sucedida.</returns>
@@ -98,7 +98,7 @@ namespace ApolloBank.Controllers
         }
 
         /// <summary>
-        /// Endpoint que paga totalmente a fatura do mês atual para o usuário autenticado.
+        /// Endpoint utilizado para pagar totalmente a fatura do mês atual para o usuário autenticado.
         /// </summary>
         /// <returns>Retorna Ok se a operação for bem-sucedida.</returns>
         [Authorize]
