@@ -8,7 +8,7 @@ namespace ApolloBank.DTOs
     {
         public int? Id { get; set; }
        
-        [Required(ErrorMessage = "The Amount is Required")]
+        [Required(ErrorMessage = "Valor da transação não informado.")]
         public double Amount { get; set; }
         
         public string? To { get; set; }

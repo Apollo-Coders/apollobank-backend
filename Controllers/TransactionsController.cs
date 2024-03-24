@@ -37,7 +37,7 @@ namespace ApolloBank.Controllers
            try
             {
                 if (transactionDTO == null)
-                    return BadRequest("Data Invalid");
+                    return BadRequest("Dados inválidos");
 
                 var transactionResul = await _transactionService.AddTransaction(transactionDTO);
 
@@ -87,7 +87,7 @@ namespace ApolloBank.Controllers
             try 
             {
                 if (transactionDTO == null)
-                    return BadRequest("Data Invalid");
+                    return BadRequest("Dados inválidos");
 
                 var transactionResul = await _transactionService.Makedeposit(transactionDTO);
 
@@ -112,7 +112,7 @@ namespace ApolloBank.Controllers
             try
             {
                 if (transactionDTO == null)
-                    return BadRequest("Data Invalid");
+                    return BadRequest("Dados inválidos");
 
                 var transactionResul = await _transactionService.Scheduletransaction(transactionDTO);
 
@@ -137,7 +137,7 @@ namespace ApolloBank.Controllers
             try
             {
                 if (transactionDTO == null)
-                    return BadRequest("Data Invalid");
+                    return BadRequest("Dados inválidos");
 
                 var transactionResul = await _transactionService.AddTransactionCredit(transactionDTO);
 
@@ -164,7 +164,7 @@ namespace ApolloBank.Controllers
             var Transactions = await _transactionService.GetCurrentMonthTransactions(accountId);
             if (Transactions == null)
             {
-                return NotFound("Transaction not found");
+                return NotFound("Transação não encontrada");
             }
             return Ok(Transactions);
         }
@@ -176,7 +176,7 @@ namespace ApolloBank.Controllers
             var Transactions = await _transactionService.GetLastSixMonthsTransactions(accountId);
             if (Transactions == null)
             {
-                return NotFound("Transaction not found");
+                return NotFound("Transação não encontrada");
             }
             return Ok(Transactions);
         }
@@ -188,7 +188,7 @@ namespace ApolloBank.Controllers
             var Transactions = await _transactionService.GetAllTransactions(accountId);
             if (Transactions == null)
             {
-                return NotFound("Transaction not found");
+                return NotFound("Transação não encontrada");
             }
             return Ok(Transactions);
         }
@@ -201,7 +201,7 @@ namespace ApolloBank.Controllers
             var Transactions = await _transactionService.GetTransaction(transactionId, accountId);
             if (Transactions == null)
             {
-                return NotFound("Transaction not found");
+                return NotFound("Transação não encontrada");
             }
             return Ok(Transactions);
         }

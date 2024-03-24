@@ -6,60 +6,60 @@ namespace ApolloBank.DTOs
 {
     public class BaseUserDTO
     {
-        [Required(ErrorMessage = "Name is required.")]
-        [MinLength(3, ErrorMessage = "Name must have at least 3 characteres.")]
-        [MaxLength(100, ErrorMessage = "Name must have at most 100 characteres.")]
+        [Required(ErrorMessage = "Nome não informado.")]
+        [MinLength(3, ErrorMessage = "Nome deve ter pelo menos 3 caracteres.")]
+        [MaxLength(100, ErrorMessage = "Nome deve ter no máximo 100 caracteres.")]
         [RegularExpression(
             @"^[a-zA-Zçãõáéíóúàèìòùâêîôûäëïöüñ\s]*$",
-            ErrorMessage = "Name must have only letters."
+            ErrorMessage = "Name só pode conter letras"
         )]
 
         public string FullName { get; set; } = null!;
 
-        [Required(ErrorMessage = "Email is required.")]
-        [EmailAddress(ErrorMessage = "The email address must be a valid email.")]
+        [Required(ErrorMessage = "Email não informado.")]
+        [EmailAddress(ErrorMessage = "O endereço de Email precisa ser um email válido.")]
         
         public string Email { get; set; } = null!;
 
-        [Required(ErrorMessage = "DDD is required.")]
-        [Range(11, 99, ErrorMessage = "DDD must have 2 digits.")]
+        [Required(ErrorMessage = "DDD não informado.")]
+        [Range(11, 99, ErrorMessage = "DDD Precisa ter 2 digítos.")]
         public int DDD { get; set; }
 
-        [Required(ErrorMessage = "Phone Number is required.")]
-        [RegularExpression(@"^[0-9]*$", ErrorMessage = "Phone Number must have only numbers.")]
+        [Required(ErrorMessage = "Número de telefone não informado.")]
+        [RegularExpression(@"^[0-9]*$", ErrorMessage = "Número de telefone deve possuir apenas números.")]
         public int PhoneNumber { get; set; }
 
         public DateTime BirthDay { get; set; }
 
-        [Required(ErrorMessage = "CPF is required.")]
-        [StringLength(11, ErrorMessage = "CPF must have 11 digits.")]
-        [RegularExpression(@"^[0-9]*$", ErrorMessage = "CPF must have only numbers.")]
+        [Required(ErrorMessage = "CPF não informado.")]
+        [StringLength(11, ErrorMessage = "CPF deve possuir 11 números")]
+        [RegularExpression(@"^[0-9]*$", ErrorMessage = "CPF deve possuir apenas números.")]
         public string CPF { get; set; } = null!;
 
         public bool Active { get; set; } = true;
 
-        [Required(ErrorMessage = "Cep is required.")]
+        [Required(ErrorMessage = "Cep não informado.")]
         [RegularExpression(@"^\d{8}$", ErrorMessage = "Formato inválido de CEP. Use apenas dígitos.")]
         public string Cep { get; set; } = null!; 
 
-        [Required(ErrorMessage = "Street is required.")]
+        [Required(ErrorMessage = "Rua não informado.")]
         public string Street { get; set; } = null!;
 
-        [Required(ErrorMessage = "Number is required.")]
+        [Required(ErrorMessage = "Número de endereço não informado.")]
         public string Number { get; set; } = null!;
 
         public string Complement { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Neighborhood is required.")]
+        [Required(ErrorMessage = "Bairro não informado.")]
         public string Neighborhood { get; set; } = null!;
 
-        [Required(ErrorMessage = "City is required.")]
-        [RegularExpression(@"^[a-zA-Zçãõáéíóúàèìòùâêîôûäëïöüñ\s]*$", ErrorMessage = "City must have only letters.")]
+        [Required(ErrorMessage = "Cidade não informado.")]
+        [RegularExpression(@"^[a-zA-Zçãõáéíóúàèìòùâêîôûäëïöüñ\s]*$", ErrorMessage = "Campo cidade só pode ter letras.")]
         public string City { get; set; } = null!;
 
-        [Required(ErrorMessage = "State is required.")]
-        [StringLength(2, ErrorMessage = "State must have 2 characters.")]
-        [RegularExpression(@"^[a-zA-Z]*$", ErrorMessage = "State must have only letters.")]
+        [Required(ErrorMessage = "Rua não informado.")]
+        [StringLength(2, ErrorMessage = "Campo rua deve possuir ao menos 2 letras.")]
+        [RegularExpression(@"^[a-zA-Z]*$", ErrorMessage = "Campo Rua só pode ter letras.")]
         public string State { get; set; } = null!;
     }
 }

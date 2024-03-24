@@ -6,9 +6,9 @@ namespace ApolloBank.DTOs
     {
 
 
-        [Required(ErrorMessage = "Password is required.")]
-        [MinLength(6, ErrorMessage = "Password must have at least 6 digits.")]
-        [RegularExpression(@"^[0-9]*$", ErrorMessage = "Password must have only numbers.")]
+        [Required(ErrorMessage = "Senha não informada.")]
+        [MinLength(6, ErrorMessage = "Senha precisa ter 6 digítos.")]
+        [RegularExpression(@"^[0-9]*$", ErrorMessage = "Senha deve possuir apenas números.")]
         public string Password { get; set; } = null!;
     }
 }

@@ -210,11 +210,13 @@ namespace ApolloBank.Repositories
         {
 
             DateTime currentDate = DateTime.Now;
-            DateTime firstDayOfCurrentMonth = new DateTime(currentDate.Year, currentDate.Month, 1);
-            DateTime firstDayOfSixMonthsAgo = firstDayOfCurrentMonth.AddMonths(-6);
-            return await _appDbContext.Transactions
-                .Where(x => x.AccountId == id && x.Date >= firstDayOfSixMonthsAgo && x.Date < firstDayOfCurrentMonth)
+            DateTime sixMonthsAgo = currentDate.AddMonths(-6);
+
+            var transactions = await _appDbContext.Transactions
+                .Where(x => x.AccountId == id && x.Date >= sixMonthsAgo)
                 .ToListAsync();
+
+            return transactions;
         }
         #endregion
 
