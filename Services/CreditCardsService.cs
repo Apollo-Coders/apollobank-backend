@@ -40,9 +40,9 @@ namespace ApolloBank.Services
         }
 
 
-        public async Task<CreditCardDetailsDTO> CreateCreditCard(CreateCreditCardDTO creditCardDTO)
+        public async Task<CreditCardDetailsDTO> CreateCreditCard(int accountId)
         {
-           var creditCard = await _creditCardsRepository.CreateCreditCard(creditCardDTO.AccountId);
+           var creditCard = await _creditCardsRepository.CreateCreditCard(accountId);
 
             return _mapper.Map<CreditCardDetailsDTO>(creditCard);
         }

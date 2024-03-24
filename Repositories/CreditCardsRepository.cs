@@ -24,14 +24,15 @@ namespace ApolloBank.Repositories
         // Retorna os cados de limites gerais da conta
         public async Task<CreditCards> GetCreditCardsByAccountId(int accountId)
         {
-            var creditCard = await _appDbContext.CreditCards.FirstOrDefaultAsync(c => c.Account_Id == accountId);
+            var account = await _appDbContext.Accounts.FirstOrDefaultAsync(a => a.Id == accountId);
+            var creditCards = await _appDbContext.CreditCards.FirstOrDefaultAsync(c => c.Account!.Id == accountId);
 
-            if (creditCard == null)
+            if (creditCards == null)
             {
                 throw new Exception("Dados de limites de cartões não encontrado");
             }
 
-            return creditCard;
+            return creditCards;
 
         }
 
@@ -52,7 +53,7 @@ namespace ApolloBank.Repositories
         // Retorna todos os cartões de uma conta
         public async Task<IEnumerable<CreditCard>> GetAllCardByAccountId(int accountId)
         {
-            var creditCards = await _appDbContext.CreditCard.Where(c => c.Account_Id == accountId).ToListAsync();
+            var creditCards = await _appDbContext.CreditCard.Where(c => c.AccountId == accountId).ToListAsync();
 
             return creditCards;
         }

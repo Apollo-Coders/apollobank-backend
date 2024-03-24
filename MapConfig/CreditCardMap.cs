@@ -24,7 +24,7 @@ namespace ApolloBank.MapConfig
 
             builder.Property(x => x.CreditLimit);
 
-            builder.Property(x => x.Account_Id).HasColumnName("Account_Id");
+            builder.Property(x => x.AccountId).HasColumnName("AccountId");
 
             /*builder.HasOne(u => u.Account)
             .WithOne()

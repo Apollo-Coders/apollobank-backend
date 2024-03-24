@@ -8,15 +8,16 @@ namespace ApolloBank.MapConfig
     {
         public void Configure(EntityTypeBuilder<Account> builder)
         {
-
+            builder.
+                HasKey(a => a.Id);
             builder
                 .HasOne(a => a.CreditCards)
                 .WithOne(c => c.Account)
-                .HasForeignKey<CreditCards>(a => a.Account_Id);
+                .HasForeignKey<CreditCards>(a => a.AccountId);
             builder
                 .HasMany(a => a.Transactions)
                 .WithOne(t => t.Account)
-                .HasForeignKey(t => t.Account_Id);
+                .HasForeignKey(t => t.AccountId);
             builder
                 .HasOne(a => a.User)
                 .WithOne(u => u.Account)

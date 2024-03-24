@@ -47,11 +47,28 @@ namespace ApolloBank.Repositories
             }
             User user = _mapper.Map<User>(createUserDTO);
             string hashedPassword = _hashService.HashPassword(createUserDTO.Password);
-            user.Account = new Account { AccountNumber = GenerateRandomAccountNumber(), UserId = user.Id, Balance = 3000, CreditLimit = 5000 };
+
+            var account = new Account { AccountNumber = GenerateRandomAccountNumber(), UserId = user.Id, Balance = 3000 };
+            var createdAccount = await _appDbContext.Accounts.AddAsync(account);
+            await _appDbContext.SaveChangesAsync();
+
+            user.Account = createdAccount.Entity;
+            user.AccountId = createdAccount.Entity.Id;
             user.Password = hashedPassword;
 
-            await _appDbContext.Users.AddAsync(user);
+            var createdUser = await _appDbContext.Users.AddAsync(user);
+
+            var creditCards = new CreditCards();
+            creditCards.TotalCreditUsed = 0.0d;
+            creditCards.TotalCreditLimit = 5000;
+            creditCards.TotalAlocatedCredit = 0.0d;
+            creditCards.AccountId = createdUser.Entity.AccountId;
+
+            Console.WriteLine(creditCards.AccountId);
+
+            await _appDbContext.CreditCards.AddAsync(creditCards);
             await _appDbContext.SaveChangesAsync();
+
             return _mapper.Map<UserDetailsDTO>(user);           
         }
 

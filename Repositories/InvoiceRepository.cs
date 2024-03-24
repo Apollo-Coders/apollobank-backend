@@ -103,7 +103,7 @@ namespace ApolloBank.Repositories
         {
             var creditCard = await _creditCardsRepository.GetCardByCardNumber(cardNum);
 
-            int accountId = creditCard.Account_Id ?? -1;
+            int accountId = creditCard.AccountId ?? -1;
             double amountToPay = creditCard.CreditUsed;
 
             var invoiceToPay = await GetMonthInvoice(accountId, monthInvoiceDate);

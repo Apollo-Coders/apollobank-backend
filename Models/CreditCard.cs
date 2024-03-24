@@ -10,11 +10,11 @@
         public double CreditUsed { get; set; }
         public double CreditLimit { get; set; }
 
-        public int? Account_Id { get; set; }
+        public int? AccountId { get; set; }
         public Account Account { get; set; }
 
         public CreditCard() { }
-        public CreditCard(string number, int cvc, DateTime expirationTime, double creditUsed, double creditLimit, int account_Id)
+        public CreditCard(string number, int cvc, DateTime expirationTime, double creditUsed, double creditLimit, int accountId)
         {
             IsBlocked = false;
             Number = number;
@@ -22,7 +22,7 @@
             ExpirationTime = expirationTime;
             CreditUsed = creditUsed;
             CreditLimit = creditLimit;
-            Account_Id = account_Id;
+            AccountId = accountId;
         }
     }
 }

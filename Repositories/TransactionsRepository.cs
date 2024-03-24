@@ -63,7 +63,7 @@ namespace ApolloBank.Repositories
             if (transaction.From == null) throw new Exception("O campo do titular da conta de destino não pode estar vazio.");
             Account account = await _accountRepository.GetAccountByAccountNumber(Convert.ToInt32(transaction.From));
             if (account == null) throw new Exception("Titular da conta não encontrado para o número da conta fornecido.");
-            if (account.Id != transaction.Account_Id) throw new Exception("O ID da conta na transação não corresponde ao ID da conta atual.");
+            if (account.Id != transaction.AccountId) throw new Exception("O ID da conta na transação não corresponde ao ID da conta atual.");
 
             var fromTransaction = new Transaction(
               amount: transaction.Amount,
@@ -100,7 +100,7 @@ namespace ApolloBank.Repositories
             if (transaction.From == null) throw new Exception("O campo do titular da conta de origem não pode estar vazio.");
             Account account = await _accountRepository.GetAccountByAccountNumber(Convert.ToInt32(transaction.From));
             if (account == null) throw new Exception("Titular da conta não encontrado para o número da conta fornecido.");
-            if(account.Id != transaction.Account_Id) throw new Exception("O ID da conta na transação não corresponde ao ID da conta atual.");
+            if(account.Id != transaction.AccountId) throw new Exception("O ID da conta na transação não corresponde ao ID da conta atual.");
             if (account.Balance < transaction.Amount) throw new Exception("Saldo insuficiente.");
 
                 var fromTransaction = new Transaction(
@@ -192,7 +192,7 @@ namespace ApolloBank.Repositories
         #region Methods of search
         public async Task<IEnumerable<Transaction>> GetAllTransactions(int? id)
         {
-            return await _appDbContext.Transactions.Where(x => x.Account_Id == id).ToListAsync();
+            return await _appDbContext.Transactions.Where(x => x.AccountId == id).ToListAsync();
         }
         public async Task<IEnumerable<Transaction>> GetCurrentMonthTransactions(int? id)
         {
@@ -203,7 +203,7 @@ namespace ApolloBank.Repositories
 
 
             return await _appDbContext.Transactions
-                .Where(x => x.Account_Id == id && x.Date >= firstDayOfMonth && x.Date < firstDayOfNextMonth)
+                .Where(x => x.AccountId == id && x.Date >= firstDayOfMonth && x.Date < firstDayOfNextMonth)
                 .ToListAsync();
         }
         public async Task<IEnumerable<Transaction>> GetLastSixMonthsTransactions(int? id)
@@ -213,7 +213,7 @@ namespace ApolloBank.Repositories
             DateTime firstDayOfCurrentMonth = new DateTime(currentDate.Year, currentDate.Month, 1);
             DateTime firstDayOfSixMonthsAgo = firstDayOfCurrentMonth.AddMonths(-6);
             return await _appDbContext.Transactions
-                .Where(x => x.Account_Id == id && x.Date >= firstDayOfSixMonthsAgo && x.Date < firstDayOfCurrentMonth)
+                .Where(x => x.AccountId == id && x.Date >= firstDayOfSixMonthsAgo && x.Date < firstDayOfCurrentMonth)
                 .ToListAsync();
         }
         #endregion
@@ -312,7 +312,7 @@ namespace ApolloBank.Repositories
         public async Task<Transaction> GetTransaction(int? transaction_id, int? account_id)
         {
             return await _appDbContext.Transactions
-             .SingleAsync(x => x.Id == transaction_id && x.Account_Id == account_id);
+             .SingleAsync(x => x.Id == transaction_id && x.AccountId == account_id);
         }
 
 
@@ -368,11 +368,16 @@ namespace ApolloBank.Repositories
         {
 
             if (transaction.From == null) throw new Exception("O campo do numero do cartao do titular da conta de origem não pode estar vazio.");
+
             CreditCard card = await _creditCardsRepository.GetCardByCardNumber(transaction.From);
-            Account account = await _accountRepository.GetAccountByAccountId(Convert.ToInt32(card.Account_Id));
+            Account account = await _accountRepository.GetAccountByAccountId(Convert.ToInt32(card.AccountId));
+
+            double availableLimit = card.CreditLimit - card.CreditUsed;
+
             if (account == null) throw new Exception("Titular da conta não encontrado para o número da conta fornecido.");
-            if (account.Id != transaction.Account_Id) throw new Exception("O ID da conta na transação não corresponde ao ID da conta atual.");
-            if (account.CreditLimit < transaction.Amount) throw new Exception("Saldo insuficiente.");
+            if (account.Id != transaction.AccountId) throw new Exception("O ID da conta na transação não corresponde ao ID da conta atual.");
+            if (card.IsBlocked) throw new Exception("Compra recusada: Cartão bloqueado.");
+            if (availableLimit < transaction.Amount) throw new Exception("Compra recusada: Crédito insuficiente");
 
             var transactionCreditCard = new Transaction(
                  amount: transaction.Amount,

@@ -21,21 +21,23 @@ namespace ApolloBank.Repositories
             var account = await _appDbContext.Accounts.FirstOrDefaultAsync(
                 a => a.AccountNumber == accountNumber
             );
-            if (account != null)
+
+            if (account == null)
             {
-                return account;
+                throw new Exception("Conta não encontrada");
             }
-            return null;
+            return account;
         }
         public async Task<Account> GetAccountByAccountId(int id)
         {
             var account = await _appDbContext.Accounts.FirstOrDefaultAsync(
               a => a.Id == id);
-            if (account != null)
+
+            if (account == null)
             {
-                return account;
+                throw new Exception("Conta não encontrada");
             }
-            return null;
+            return account;
         }
 
         public Task<Account> GetAccountByAccountNumber(long id)
@@ -51,11 +53,11 @@ namespace ApolloBank.Repositories
         public async Task<Account> GetAccountByUserId(Guid id)
         {
             var account = await _appDbContext.Accounts.FirstOrDefaultAsync(a => a.User.Id == id);
+
             if (account == null)
             {
-                throw new Exception("Erro ao encontrar a conta");
+                throw new Exception("Conta não encontrada");
             }
-
             return account;
         }
 

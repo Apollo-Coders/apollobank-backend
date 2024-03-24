@@ -25,11 +25,12 @@ namespace ApolloBank.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> CreateCreditCard(CreateCreditCardDTO createCreditCardDTO)
+        public async Task<IActionResult> CreateCreditCard()
         {
             try
             {
-                var creditCard = await _creditCardsService.CreateCreditCard(createCreditCardDTO);
+                int accountId = _authService.GetTokenDateByHtppContext(HttpContext).AccountId;
+                var creditCard = await _creditCardsService.CreateCreditCard(accountId);
 
                 return CreatedAtAction(nameof(GetAllCardByCardNumber), new { cardNum = creditCard.Number }, creditCard);
             }
