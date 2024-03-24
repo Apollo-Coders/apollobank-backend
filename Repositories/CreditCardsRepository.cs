@@ -10,14 +10,14 @@ namespace ApolloBank.Repositories
     {
         private readonly AppDbContext _appDbContext;
         private readonly RandomNumberService _randomNumberService;
-        private readonly IInvoiceRepository _invoiceRepository;
 
 
-        public CreditCardsRepository(AppDbContext appDbContext, RandomNumberService randomNumberService, IInvoiceRepository invoiceRepository)
+
+        public CreditCardsRepository(AppDbContext appDbContext, RandomNumberService randomNumberService)
         {
             _appDbContext = appDbContext;
             _randomNumberService = randomNumberService;
-            _invoiceRepository = invoiceRepository;
+ 
         }
 
 
