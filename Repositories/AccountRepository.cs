@@ -27,6 +27,16 @@ namespace ApolloBank.Repositories
             }
             return null;
         }
+        public async Task<Account> GetAccountByAccountId(int id)
+        {
+            var account = await _appDbContext.Accounts.FirstOrDefaultAsync(
+              a => a.Id == id);
+            if (account != null)
+            {
+                return account;
+            }
+            return null;
+        }
 
         public Task<Account> GetAccountByAccountNumber(long id)
         {
