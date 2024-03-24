@@ -1,4 +1,5 @@
 ﻿using ApolloBank.DTOs;
+using ApolloBank.Models;
 using ApolloBank.Repositories.Interfaces;
 using ApolloBank.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -12,11 +13,13 @@ namespace ApolloBank.Controllers
     {
         private readonly IUserRepository _userRepository;
         private readonly IAuthService _authService;
+        private readonly IAccountRepository _accountRepository; 
 
-        public UserController(IUserRepository userRepository, IAuthService authService)
+        public UserController(IUserRepository userRepository, IAuthService authService, IAccountRepository accountRepository)
         {
             _userRepository = userRepository;
             _authService = authService;
+            _accountRepository = accountRepository; 
         }
 
 
@@ -48,6 +51,8 @@ namespace ApolloBank.Controllers
             }
             return Ok(user);
         }
+
+       
 
 
         [Authorize]
@@ -122,5 +127,17 @@ namespace ApolloBank.Controllers
             var users = await _userRepository.GetUsers();
             return Ok(users);
         }
+
+        [Authorize]
+        [HttpGet("GetAccount/{id}")]
+
+        public async Task <ActionResult<Account>> GetAccountInformation(int id)
+        {
+            var account = await _accountRepository.GetAccountByAccountNumber(id); 
+            return Ok(account);
+
+        }
+
+
     }
 }
