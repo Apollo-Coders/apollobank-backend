@@ -29,10 +29,10 @@ O tempo também foi impetuoso, apesar do que o que planejamos foi desenvolvido, 
 ## Sobre as melhorias
 
 Devido ao curto tempo temos muito onde podemos aprimorar:
-No frontend referente a experiencia de usuário
-Mas no backend podemos citar a parte de exceções que não deu tempo de criar exceções personalizadas para cada caso.
-Testes unitários e e2e.
-A parte de cartões de crédito e fatura, na integração com o front não foi totalmente concluida.
+* No frontend referente a experiencia de usuário
+* No backend podemos citar a parte de exceções que não deu tempo de criar exceções personalizadas para cada caso.
+* Testes unitários e e2e.
+* A parte de cartões de crédito e fatura, na integração com o front não foi totalmente concluida.
 
 ## Documentação 
 
