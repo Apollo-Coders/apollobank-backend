@@ -29,9 +29,6 @@ namespace ApolloBank.Migrations
                     b.Property<double>("Balance")
                         .HasColumnType("REAL");
 
-                    b.Property<double>("CreditLimit")
-                        .HasColumnType("REAL");
-
                     b.Property<Guid>("UserId")
                         .HasColumnType("TEXT");
 

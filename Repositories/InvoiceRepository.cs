@@ -28,8 +28,8 @@ namespace ApolloBank.Repositories
 
             if (actualMonthInvoice == null)
             {
-                return null;
-                //throw new Exception("Fatura do mês atual não encontrada");
+                var invoice = await CreateMonthInvoice(accountId);
+                return invoice;
             }
 
             return actualMonthInvoice;
@@ -46,6 +46,11 @@ namespace ApolloBank.Repositories
 
             if (monthInvoice == null)
             {
+                if(monthInvoiceDate.Month == DateTime.Now.Month && monthInvoiceDate.Year == DateTime.Now.Year)
+                {
+                    var invoice = await CreateMonthInvoice(accountId);
+                    return invoice;
+                }
                 throw new Exception("Fatura do mês informado não encontrada");
             }
 
