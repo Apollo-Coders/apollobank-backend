@@ -1,6 +1,7 @@
 ﻿using ApolloBank.Enums;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ApolloBank.Models
 {
@@ -14,6 +15,8 @@ namespace ApolloBank.Models
         public DateTime? ScheduledDate { get; private set; }
         public string? TransactionStatusChecker { get;  set; }
         public string? Description { get; private set; }
+
+        [Column("Transaction_Type")]
         public TransactionType TransactionType { get; private set; }
         public char Direction { get; private set; }
         public int? AccountId { get; set; }

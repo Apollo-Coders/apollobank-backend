@@ -1,4 +1,38 @@
 # ApolloBank
+
+## Sobre o projeto
+
+Nossa entidade principal seria a Account, onde se concentra as principais informações da conta do usuário, e suas relações, onde teremos o saldo, transações, cartões e demais. E complementado-o teremos o User junto com Address que armazenará os dados do usuário e suas credenciais de acesso.
+A principal diferença no nosso banco é que decidimos incluir um sistema de crédito individual para cartões, ou seja, teremos um total de crédito geral para a conta, e esse crédito pode ser alocado para os cartões, essa ideia se deu devido a casos reais, em outros bancos, quando os dados de um cartão de um cliente são vazados, e um criminoso consegue fazer uso desse cartão, já que os clientes, em geral, não configuram um limite baixo para seu uso. Em nosso banco, é possível criar vários cartões e separar a utilidade de cada um deles setando um limite especial para cada.
+Foram implementados todos os métodos solicitados com rotas extras.
+Em relação a transações, temos tipo PIX, transferência, cartão, depósito e saque.
+Criamos uma tabela que define o fatura do cliente no mês.
+E os métodos comuns de cartão, pagar fatura, bloquear e alterar limite.
+
+## Sobre o Desenvolvimento
+
+A equipe foi dívida em duplas, cada dupla ficaria responsável por um Controller, sendo eles:
+UserController
+TransationsController
+CreditCardsController, InvoiceController (Nesse caso ambos são relacionados então ficou como uma)
+AuthController
+
+Essas responsabilidades foram extraidas para Tasks dentro do Trello, os monitores (Guilherme e Luiza) ficaram responsável por essa distrubuição de tarefa e pela descrição detalhada de cada uma dessas tasks.
+
+## Sobre as Dificuldades
+
+No projeto em geral tivemos dúvidas pontuais, que com ajuda de estudo e dos colegas foi possível resolver. 
+Mas para destacar as princípais dificuldades, temos o tempo e a organização do projeto. Como simples escoteiros mirins nesse enorme mundo da programação, coisas tal organização e planejamento prévio de projeto é algo bem difícil, tivemos impasses referentes a organização do projeto, pois a arquitetura pensada conflitava em alguns pontos e tivemos que remediar a situação de outra forma, então serviu como aprendizado.
+O tempo também foi impetuoso, apesar do que o que planejamos foi desenvolvido, uma das partes principais para um código bom não conseguimos desenvolver bem, que seria os testes, seja testes manuais ou automatizados.
+
+## Sobre as melhorias
+
+Devido ao curto tempo temos muito onde podemos aprimorar:
+No frontend referente a experiencia de usuário
+Mas no backend podemos citar a parte de exceções que não deu tempo de criar exceções personalizadas para cada caso.
+Testes unitários e e2e.
+A parte de cartões de crédito e fatura, na integração com o front não foi totalmente concluida.
+
 ## Version: v1
 
 ![image](https://github.com/Apollo-Coders/apollobank-backend/assets/139771003/b4ba4fcb-fe19-4933-a43d-6e7155190173)

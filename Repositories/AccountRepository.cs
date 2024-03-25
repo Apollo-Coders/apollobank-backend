@@ -40,6 +40,9 @@ namespace ApolloBank.Repositories
             return account;
         }
 
+        
+     
+
         public async Task<Account> GetAccountByUserId(Guid id)
         {
             var account = await _appDbContext.Accounts.FirstOrDefaultAsync(a => a.User.Id == id);
