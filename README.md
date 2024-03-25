@@ -33,7 +33,7 @@ Mas no backend podemos citar a parte de exceções que não deu tempo de criar e
 Testes unitários e e2e.
 A parte de cartões de crédito e fatura, na integração com o front não foi totalmente concluida.
 
-## Version: v1
+## Documentação 
 
 ![image](https://github.com/Apollo-Coders/apollobank-backend/assets/139771003/b4ba4fcb-fe19-4933-a43d-6e7155190173)
 
