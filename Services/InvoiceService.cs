@@ -40,16 +40,14 @@ namespace ApolloBank.Services
             return _mapper.Map<InvoiceDetailsDTO>(newInvoice);
         }
 
-        public async Task<InvoiceDetailsDTO> PayParcialMonthInvoice(string cardNum, DateTime monthInvoiceDate)
+        public async Task PayParcialMonthInvoice(string cardNum, DateTime monthInvoiceDate)
         {
             var paidInvoice = await _invoiceRepository.PayParcialMonthInvoice(cardNum, monthInvoiceDate);
-            return _mapper.Map<InvoiceDetailsDTO>(paidInvoice);
         }
 
-        public async Task<InvoiceDetailsDTO> PayTotalMonthInvoice(int accountId, DateTime monthInvoiceDate)
+        public async Task PayTotalMonthInvoice(int accountId, DateTime monthInvoiceDate)
         {
             var paidInvoice = await _invoiceRepository.PayTotalMonthInvoice(accountId, monthInvoiceDate);
-            return _mapper.Map<InvoiceDetailsDTO>(paidInvoice);
         }
     }
 }

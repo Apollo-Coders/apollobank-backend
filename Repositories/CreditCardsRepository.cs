@@ -136,21 +136,15 @@ namespace ApolloBank.Repositories
         {
             var creditCard = await GetCardByCardNumber(cardNum);
             var creditCards = await GetCreditCardsByAccountId(accountId);
-
-            using (var transaction = await _appDbContext.Database.BeginTransactionAsync())
+            try
             {
-                try
-                {
-                    creditCards.TotalCreditUsed -= creditCard.CreditUsed;
-                    creditCard.CreditUsed = 0.0d;
-                    await _appDbContext.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    throw new Exception("Houve um erro interno ao tentar pagar o cartão", ex);
-                }
+                creditCards.TotalCreditUsed -= creditCard.CreditUsed;
+                creditCard.CreditUsed = 0.0d;
+                await _appDbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Houve um erro interno ao tentar pagar o cartão", ex);
             }
         }
 
