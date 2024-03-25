@@ -2,12 +2,13 @@
 
 ## Sobre o projeto
 
-Nossa entidade principal seria a Account, onde se concentra as principais informações da conta do usuário, e suas relações, onde teremos o saldo, transações, cartões e demais. E complementado-o teremos o User junto com Address que armazenará os dados do usuário e suas credenciais de acesso.
-A principal diferença no nosso banco é que decidimos incluir um sistema de crédito individual para cartões, ou seja, teremos um total de crédito geral para a conta, e esse crédito pode ser alocado para os cartões, essa ideia se deu devido a casos reais, em outros bancos, quando os dados de um cartão de um cliente são vazados, e um criminoso consegue fazer uso desse cartão, já que os clientes, em geral, não configuram um limite baixo para seu uso. Em nosso banco, é possível criar vários cartões e separar a utilidade de cada um deles setando um limite especial para cada.
-Foram implementados todos os métodos solicitados com rotas extras.
-Em relação a transações, temos tipo PIX, transferência, cartão, depósito e saque.
-Criamos uma tabela que define o fatura do cliente no mês.
-E os métodos comuns de cartão, pagar fatura, bloquear e alterar limite.
+Nossa entidade principal é a Account, onde se concentram as principais informações da conta do usuário, juntamente com suas relações, tais como saldo, transações, cartões e outros dados pertinentes. Complementando-a, temos o User, juntamente com o Address, que armazenará os dados do usuário e suas credenciais de acesso.
+
+Uma característica distintiva de nosso banco é a inclusão de um sistema de crédito individual para cartões. Em outras palavras, teremos um limite de crédito global para a conta, o qual pode ser alocado para os diferentes cartões. Essa abordagem foi motivada por casos reais ocorridos em outros bancos, nos quais os dados de um cartão de cliente foram comprometidos, permitindo que criminosos o utilizassem. Isso ocorre frequentemente devido ao fato de os clientes, geralmente, não configurarem limites de gastos baixos para seus cartões. Em nossa instituição, é possível criar vários cartões e definir limites especiais para cada um, o que aumenta a segurança.
+
+Todos os métodos solicitados foram implementados, juntamente com rotas adicionais. Em relação às transações,   oferecemos diversos tipos, como PIX, transferência, pagamento com cartão, depósito e saque. Em relação ao cadastro de usuários e ao login com JWT token, implementamos um sistema robusto visando a segurança dos dados e a autenticação dos usuários. Para o cadastro de usuários, desenvolvemos um formulário abrangente que captura informações essenciais, como nome, endereço, e-mail e senha. Além disso, implementamos medidas de validação para garantir a integridade dos dados fornecidos pelos usuários durante o processo de cadastro. Para o login, adotamos o padrão JWT (JSON Web Token), que oferece uma maneira segura de autenticar usuários e gerenciar sessões. Ao fazer login, o sistema gera um token JWT exclusivo para o usuário, contendo informações de autenticação codificadas, como identificação do usuário e permissões. Esse token é então enviado de volta ao cliente e armazenado de forma segura. Portanto, sempre que o usuário realizar uma requisição a uma rota protegida, o token JWT é enviado junto à requisição para verificar a autenticidade e autorização do usuário.  Além das medidas mencionadas anteriormente, implementamos a criptografia das senhas dos usuários para garantir uma camada adicional de segurança. Ao registrar uma nova conta de usuário, a senha fornecida pelo usuário é submetida a um algoritmo de hash seguro antes de ser armazenada no banco de dados.
+
+Foi desenvolvida uma tabela para registrar a fatura do cliente a cada mês. Além disso, disponibilizamos métodos comuns para cartões, tais como pagamento de fatura, bloqueio e alteração de limite.
 
 ## Sobre o Desenvolvimento
 
