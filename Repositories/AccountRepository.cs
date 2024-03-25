@@ -40,15 +40,7 @@ namespace ApolloBank.Repositories
             return account;
         }
 
-        public Task<Account> GetAccountByAccountNumber(long id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Account> GetAccountByAccountNumber(Guid id)
-        {
-            throw new NotImplementedException();
-        }
+     
 
         public async Task<Account> GetAccountByUserId(Guid id)
         {

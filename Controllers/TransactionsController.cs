@@ -41,7 +41,7 @@ namespace ApolloBank.Controllers
 
                 var transactionResul = await _transactionService.AddTransaction(transactionDTO);
 
-                return CreatedAtAction(nameof(GetTransaction), new { transaction_id = transactionResul.Id, account_id = transactionResul.AccountId }, transactionResul);
+                return Ok(201);
 
             }
             catch (ArgumentException ex)
@@ -66,7 +66,7 @@ namespace ApolloBank.Controllers
 
                 var transactionResul = await _transactionService.Makewithdrawal(transactionDTO);
 
-                return CreatedAtAction(nameof(GetTransaction), new { transaction_id = transactionResul.Id, account_id = transactionResul.AccountId }, transactionResul);
+                return Ok(201);
             }
             catch (ArgumentException ex)
             {
@@ -91,7 +91,7 @@ namespace ApolloBank.Controllers
 
                 var transactionResul = await _transactionService.Makedeposit(transactionDTO);
 
-                return CreatedAtAction(nameof(GetTransaction), new { transaction_id = transactionResul.Id, account_id = transactionResul.AccountId }, transactionResul);
+                return Ok(201); // CreatedAtAction(nameof(GetTransaction), new { transaction_id = transactionResul.Id, account_id = transactionResul.AccountId }, transactionResul);
             }
             catch (ArgumentException ex)
             {
